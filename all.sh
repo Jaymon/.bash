@@ -14,15 +14,16 @@
 
 #set -x
 
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 function getBashDir(){
-  source="${BASH_SOURCE[0]}"
-  while [ -h "$source" ]; do # resolve $source until the file is no longer a symlink
-    dir="$( cd -P "$( dirname "$source" )" && pwd )"
-    source="$(readlink "$source")"
+  src="${BASH_SOURCE[0]}"
+  while [ -h "$src" ]; do # resolve $source until the file is no longer a symlink
+    dir="$( cd -P "$( dirname "$src" )" && pwd )"
+    src="$(readlink "$src")"
     # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-    [[ $source != /* ]] && source="$dir/$source" 
+    [[ $src != /* ]] && src="$dir/$src" 
   done
-  dir="$( cd -P "$( dirname "$source" )" && pwd )"
+  dir="$( cd -P "$( dirname "$src" )" && pwd )"
   echo "$dir"
 }
 
