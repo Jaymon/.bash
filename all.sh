@@ -45,7 +45,7 @@ done
 # this will print out the input string in the form of "cmd - desc"
 function printHelp(){
 
-  regex='\s*(.+)\s*->\s*(.*)'
+  regex='[[:space:]]*(.+)[[:space:]]*->[[:space:]]*(.*)'
   if [[ "$1" =~ $regex ]]; then
 
     # figure out how much whitespace between cmd and desc should have
@@ -151,10 +151,10 @@ function bashHelp(){
   echo -e "${BLUE}= = = = = = Useful Commands${NONE}"
 
   printHelp "cd - -> go to the previous directory (similar to pop)"
-  printHelp "!N:p -> instead of running history line N, place it on the prompt"
+  printHelp "!N:p -> do not run, place history line N on the prompt"
 
   # http://stackoverflow.com/a/68429/5006
-  printHelp "sudo !! -> run the last command, but with sudo"
+  printHelp "sudo !! -> run the last command with sudo"
 
   # http://stackoverflow.com/a/171938/5006
   printHelp "ls -d */ -> list only subdirectories of the current dir"
