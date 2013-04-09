@@ -71,3 +71,36 @@ function cd_func ()
 # ? cd -N -> go to dir specified at N (N found via cd --)
 #alias cd=cd_func
 
+# http://www.linuxjournal.com/content/bash-regular-expressions
+# http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_04_01.html
+# http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_04_03.html
+# man 7 regex to figure out how regex works in bash
+#? regex <REGEX> <STR1> [...] -> compare strings against bash regexp
+function regex(){
+  if [[ $# -lt 2 ]]; then
+      echo "Usage: $0 PATTERN STRINGS..."
+      exit 1
+  fi
+  regex=$1
+  shift
+  echo "regex: $regex"
+  echo
+
+  while [[ $1 ]]
+  do
+      if [[ $1 =~ $regex ]]; then
+          echo -e "\t\E[42;37m${1} - matches\E[33;0m"
+          i=1
+          n=${#BASH_REMATCH[*]}
+          while [[ $i -lt $n ]]
+          do
+              echo -e "\t\t\E[43;37mcapture[$i]: ${BASH_REMATCH[$i]}\E[33;0m"
+              let i++
+          done
+      else
+          echo -e "\t\E[41;37m${1} - does not match\E[33;0m"
+      fi
+      shift
+  done
+}
+
