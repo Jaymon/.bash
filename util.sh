@@ -7,19 +7,82 @@
 
 # this is a helper function to allow easy testing of an int
 # if you want to use this in an if: [ $(is_int <VALUE>; echo $?) -eq 0 ]
+# or the simpler: [ $(is_int <value> -eq 0 ]
 # return 0 if input is an int, not zero otherwise
 function is_int(){
 
+  #set -x
   # canary, only one value is allowed
-  if [ $# -gt 1 ]; then return 1; fi
+  if [ $# -gt 1 ]; then
+    echo "1"
+    return 1;
+  fi
 
   # this will set the $? as either 0 or 1
-  echo "$1" | grep -P "^\d+$" > /dev/null 2>&1
+  echo "$1" | grep -E "^[[:digit:]]+$" > /dev/null 2>&1
+  retcode=$?
+  echo $retcode
+  #set +x
+  return $retcode
+
 }
 
-# http://noopsi.com/item/14345/find_linux_version_linux_learned/
-#? version -> return linux version information
-alias version='cat /etc/lsb-release'
+#? tolower <VAR> ... -> change all passed in vars to lowercase
+function tolower(){
+  echo $@ | tr '[:upper:]' '[:lower:]'
+}
+
+# http://stackoverflow.com/questions/2264428/converting-string-to-lower-case-in-bash-shell-scripting
+#? toupper <VAR> ... -> change all passed in vars to uppercase
+function toupper(){
+  echo $@ | tr '[:lower:]' '[:upper:]'
+}
+
+# is_os <name> -> true if name and os match
+function is_os(){
+
+  # canary, only one value is allowed
+  if [ $# -gt 1 ]; then 
+    echo "1"
+    return 1;
+  fi
+  
+  if [ "$(tolower $(uname))" == "$(tolower $1)" ]; then 
+    echo "0"
+    return 0;
+  else
+    echo "1"
+    return 1;
+  fi
+
+}
+
+#? version -> return version information
+#alias version='cat /etc/lsb-release'
+function version(){
+  if [ $(is_os Darwin) -eq 0 ]; then
+    # http://apple.wikia.com/wiki/List_of_Mac_OS_versions
+    version=$(sw_vers -productVersion)
+    if [[ "$version" < "10.4" ]]; then
+      echo "Panther"
+    elif [[ "$version" < "10.5" ]]; then
+      echo "Tiger"
+    elif [[ "$version" < "10.6" ]]; then
+      echo "Leopard"
+    elif [[ "$version" < "10.7" ]]; then
+      echo "Snow Leopard"
+    elif [[ "$version" < "10.8" ]]; then
+      echo "Lion"
+    elif [[ "$version" < "10.9" ]]; then
+      echo "Mountain Lion"
+    fi
+    sw_vers
+    uname -a
+    echo "type system_profiler for even more information"
+  else
+    cat /etc/lsb-release
+  fi
+}
 alias v='version'
 
 # some more ls aliases
@@ -49,14 +112,18 @@ alias less='less -M'
 # 5-30-12
 function ncpu(){
 
-  num_cpus=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
-  if [ $num_cpus -eq 0 ]; then num_cpus=1; fi
+  if [ $(is_os Darwin) -eq 0 ]; then
+    system_profiler SPHardwareDataType
+  else
+    num_cpus=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
+    if [ $num_cpus -eq 0 ]; then num_cpus=1; fi
 
-  num_cores=$(grep -c ^processor /proc/cpuinfo)
-  
-  echo "number of cpus: $num_cpus"
-  echo "number of cores: $num_cores"
-  echo "number of cores per cpu: $(($num_cores / $num_cpus))"
+    num_cores=$(grep -c ^processor /proc/cpuinfo)
+    
+    echo "number of cpus: $num_cpus"
+    echo "number of cores: $num_cores"
+    echo "number of cores per cpu: $(($num_cores / $num_cpus))"
+  fi
 
 }
 
@@ -82,7 +149,6 @@ function zombies(){
   ps -A -ostat,ppid,pid,cmd | grep -e '^[Zz]'
 }
 
-# http://noopsi.com/item/12779/check_disk_space_linux_learned_linux_cmdline/
 #? disk [PATH] [COUNT] -> return biggest [COUNT=25] file sizes in [PATH=/] 
 function disk(){
 
@@ -98,7 +164,7 @@ function disk(){
     
       pth=$1
       
-      if [ $(is_int $2; echo $?) -eq 0 ]; then
+      if [ $(is_int $2) -eq 0 ]; then
       
         cnt=$2
       
@@ -107,7 +173,7 @@ function disk(){
     
     else
     
-      if [ $(is_int $1; echo $?) -eq 0 ]; then
+      if [ $(is_int) -eq 0 ]; then
     
         cnt=$1
         
@@ -167,7 +233,7 @@ alias r=running
 # get the running time of the process that match user passed in value
 #? rtime <NAME> -> get running time of processes matching name'
 function rtime(){
-	ps -eo pid,etime,cmd | grep -v "grep" | grep $1
+	ps -eo pid,etime,comm | grep -v "grep" | grep $1
 }
 
 #? murder <NAME> -> run every process that matches NAME through sudo kill -9
@@ -175,12 +241,12 @@ function rtime(){
 # http://stackoverflow.com/questions/262597/how-to-kill-a-linux-process-by-stime-dangling-svnserve-processes
 function murder(){
   echo -e "${RED}These will be killed:${NONE}"
-  ps -eo pid,cmd | grep -v "grep" | grep $1
+  ps -eo pid,comm | grep -v "grep" | grep $1
   # first 3 commands find the right running processes
   # sed - gets rid of any whitespace from the front of the command
   # cut - gets the first column (in this case, the pid)
   # xargs - runs each found pid through the kill command
-  ps -eo pid,cmd | grep -v "grep" | grep "$1" | sed "s/^ *//" | cut -d' ' -f1 | xargs -i sudo kill -9 "{}"
+  ps -eo pid,comm | grep -v "grep" | grep "$1" | sed "s/^ *//" | cut -d' ' -f1 | xargs -i sudo kill -9 "{}"
 }
 
 # find all the folders of passed in value
@@ -227,7 +293,7 @@ function hist(){
 
     history | tail -n 25
 
-  elif [ $(is_int $1; echo $?) -eq 0 ]; then
+  elif [ $(is_int $1) -eq 0 ]; then
   
     history | tail -n $1
   
@@ -242,16 +308,23 @@ function hist(){
 }
 alias h=hist
 
-# added 2-18-12
-#? idr,initd <NAME> -> init.d restart <NAME>
-function idr(){
-  echo "/etc/init.d/$1 restart"
-  sudo /etc/init.d/$1 restart
+# make init.d scripts more supervisor like
+#? irestart <NAME> -> init.d restart <NAME>
+function irestart(){
+  idid restart $1
 }
-alias initr=idr
-alias initd=idr
-alias itd=idr
-alias itr=idr
+#? istart <NAME> -> init.d start <NAME>
+function istart(){
+  idid start $1
+}
+#? istop <NAME> -> init.d stop <NAME>
+function istop(){
+  idid stop $1
+}
+function idid(){
+  echo "/etc/init.d/$2 $1"
+  sudo /etc/init.d/$2 $1
+}
 
 #? .. -> cd ..
 alias ..='cd ..' 

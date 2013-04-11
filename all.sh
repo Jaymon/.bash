@@ -164,6 +164,7 @@ function bashHelp(){
   printHelp "cmd &> file -> pipe the cmd stderr output to a file"
   printHelp "cmd > file 2>&1 -> pipe all cmd output to a file or /dev/null"
   printHelp ". file -> pull aliases and functions from file into shell"
+  printHelp "set -x/set +x -> turn on/off bash shell debugging"
   
   # http://www.cyberciti.biz/tips/linux-debian-package-management-cheat-sheet.html
   printHelp "dpkg -L <NAME> -> list files owned by the installed package NAME"
