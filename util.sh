@@ -147,7 +147,7 @@ function mkcd(){
 # since 3-12-12
 # http://www.debian-administration.org/articles/261
 function zombies(){
-  ps -A -ostat,ppid,pid,cmd | grep -e '^[Zz]'
+  ps -A -ostat,ppid,pid,args | grep -e '^[Zz]'
 }
 
 #? disk [PATH] [COUNT] -> return biggest [COUNT=25] file sizes in [PATH=/] 
@@ -234,7 +234,7 @@ alias r=running
 # get the running time of the process that match user passed in value
 #? rtime <NAME> -> get running time of processes matching name'
 function rtime(){
-	ps -eo pid,etime,comm | grep -v "grep" | grep $1
+	ps -eo pid,etime,args | grep -v "grep" | grep $1
 }
 
 #? murder <NAME> -> run every process that matches NAME through sudo kill -9
@@ -242,12 +242,12 @@ function rtime(){
 # http://stackoverflow.com/questions/262597/how-to-kill-a-linux-process-by-stime-dangling-svnserve-processes
 function murder(){
   echo -e "${RED}These will be killed:${NONE}"
-  ps -eo pid,comm | grep -v "grep" | grep $1
+  ps -eo pid,args | grep -v "grep" | grep $1
   # first 3 commands find the right running processes
   # sed - gets rid of any whitespace from the front of the command
   # cut - gets the first column (in this case, the pid)
   # xargs - runs each found pid through the kill command
-  ps -eo pid,comm | grep -v "grep" | grep "$1" | sed "s/^ *//" | cut -d' ' -f1 | xargs -i sudo kill -9 "{}"
+  ps -eo pid,args | grep -v "grep" | grep "$1" | sed "s/^ *//" | cut -d' ' -f1 | xargs -i sudo kill -9 "{}"
 }
 
 # find all the folders of passed in value
