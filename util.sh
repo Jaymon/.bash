@@ -7,7 +7,7 @@
 
 # this is a helper function to allow easy testing of an int
 # if you want to use this in an if: [ $(is_int <VALUE>; echo $?) -eq 0 ]
-# or the simpler: [ $(is_int <value> -eq 0 ]
+# or the simpler: [ $(is_int <value>) -eq 0 ]
 # return 0 if input is an int, not zero otherwise
 function is_int(){
 
@@ -38,6 +38,7 @@ function toupper(){
   echo $@ | tr '[:lower:]' '[:upper:]'
 }
 
+# http://stackoverflow.com/questions/394230/detect-the-os-from-a-bash-script
 # is_os <name> -> true if name and os match
 function is_os(){
 
