@@ -3,6 +3,16 @@
 # util.sh
 #
 # functions/aliases that help me do things easier
+#
+# Things I always forget:
+#   [[ ]] and [ ] syntax:
+#     http://stackoverflow.com/questions/669452/is-preferable-over-in-bash-scripts
+#     http://mywiki.wooledge.org/BashFAQ/031
+#
+# The IFS variable: http://en.wikipedia.org/wiki/Internal_field_separator
+#
+#
+#
 ###############################################################################
 
 # this is a helper function to allow easy testing of an int
@@ -56,6 +66,34 @@ function is_os(){
     return 1;
   fi
 
+}
+
+#? get_tmp -> get the system appropriate temp directory
+function get_tmp(){
+  tmp_dir="/tmp/" 
+
+  if [ "$TMPDIR" != "" ]; then
+    tmp_dir="$TMPDIR"
+  elif [ "$TMP" != "" ]; then
+    tmp_dir="$TMP"
+  elif [ "$TEMP" != "" ]; then
+    tmp_dir="$TEMP"
+  fi
+
+  # make sure last char is a /
+  # http://www.unix.com/shell-programming-scripting/14462-testing-last-character-string.html
+  if [[ $tmp_dir != */ ]]; then
+    tmp_dir="$tmp_dir"/
+  fi
+
+  # http://stackoverflow.com/questions/12283463/in-bash-how-do-i-join-n-parameters-together-as-a-string
+  if [ $# -gt 0 ]; then
+    IFS="/"
+    tmp_dir="$tmp_dir""$*"
+    unset IFS
+  fi
+
+  echo "$tmp_dir"
 }
 
 #? version -> return version information
@@ -343,3 +381,41 @@ function pycrm(){
 }
 alias rmpyc=pycrm
 
+#? exportglobal KEY=VAL -> exports the env variable to all new shells
+function exportglobal(){
+  if [ "$#" -eq 0 ]; then
+    echo "HELP: exportglobal NAME=val"
+    return 1
+  fi
+
+  fn=$(get_tmp exportglobal.sh)
+  fn_exports=""
+  if [[ -f $fn ]]; then
+    fn_exports=$(cat "$fn")
+  fi
+
+  # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
+  for var in "$@"; do
+    echo "export $var"
+    # clear the var from the global export file
+    # http://stackoverflow.com/questions/2680274/string-manipulation-in-bash-removing-leading-section
+    # http://stackoverflow.com/questions/10638538/split-string-with-bash-with-symbol
+    fn_exports=$(echo "$fn_exports" | grep -v "${var%=*}")
+    export "$var"
+    # http://stackoverflow.com/questions/9139401/trying-to-embed-newline-in-a-variable-in-bash
+    fn_exports+="\nexport ${var%=*}=\"${var#*=}\""
+  done
+
+  echo -e "$fn_exports" > "$fn"
+
+}
+
+#? loadenv -> will load the global exported environment vars
+function loadenv(){
+  fn=$(get_tmp exportglobal.sh)
+  if [[ -f $fn ]]; then
+    . "$fn"
+  fi
+}
+# actually do importing of environment variables if the exportglobal file exists on source of this file
+loadenv

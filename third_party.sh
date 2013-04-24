@@ -104,3 +104,14 @@ function regex(){
   done
 }
 
+#? sticker <delim> <vars...> -> joins <vars> by <delim>
+# http://stackoverflow.com/a/12283900
+function sticker() {
+  delim=$1      # join delimiter
+  shift
+  oldIFS=$IFS   # save IFS, the field separator
+  IFS=$delim
+  result="$*"
+  IFS=$oldIFS   # restore IFS
+  echo $result
+}
