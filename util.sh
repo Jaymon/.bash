@@ -291,13 +291,23 @@ function murder(){
 # find all the folders of passed in value
 #? where <NAME> -> find all folders with NAME (supports * wildcard)
 function where(){
+  whered $@
+  wheref $@
+  #sudo find / -type d | grep $1
+}
+
+#? whered <NAME> -> find all directories matching <NAME>
+function whered(){
   echo " = = = = Directories"
 	echo "sudo find / -type d -iname $1"
 	sudo find / -type d -iname $1
+}
+
+#? wheref <NAME> -> find all files matching <NAME>
+function wheref(){
 	echo " = = = = Files"
 	echo "sudo find / -type f -iname $1"
   sudo find / -type f -iname $1
-  #sudo find / -type d | grep $1
 }
 
 # http://stackoverflow.com/a/68600/5006
@@ -381,18 +391,30 @@ function pycrm(){
 }
 alias rmpyc=pycrm
 
-#? exportglobal KEY=VAL -> exports the env variable to all new shells
+#? envglobal -> print all exported global environment variables
+function envglobal(){
+  fn=$(get_tmp exportglobal.sh)
+  if [ "$#" -eq 0 ]; then
+    fn_exports=""
+    if [[ -f $fn ]]; then
+      fn_exports=$(cat "$fn")
+    fi
+    if [[ -n $fn_exports ]]; then
+      echo -e "$fn_exports"
+    fi
+  else
+    echo "$fn"
+  fi
+}
+
+#? exportglobal KEY=VAL -> exports the env variable to current and all new shells
 function exportglobal(){
   if [ "$#" -eq 0 ]; then
     echo "HELP: exportglobal NAME=val"
     return 1
   fi
 
-  fn=$(get_tmp exportglobal.sh)
-  fn_exports=""
-  if [[ -f $fn ]]; then
-    fn_exports=$(cat "$fn")
-  fi
+  fn_exports=$(envglobal)
 
   # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
   for var in "$@"; do
@@ -410,12 +432,35 @@ function exportglobal(){
 
 }
 
+#? unsetglobal KEY=VAL -> unset global exported variables in current and all new shells
+function unsetglobal(){
+  if [ "$#" -eq 0 ]; then
+    echo "HELP: unsetglobal NAME=val"
+    return 1
+  fi
+
+  fn_exports=$(envglobal)
+
+  # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
+  for var in "$@"; do
+    echo "unset $var"
+    # clear the var from the global export file
+    fn_exports=$(echo "$fn_exports" | grep -v "$var")
+    unset "$var"
+  done
+
+  # re-add non unset vars back to the file
+  echo -e "$fn_exports" > "$fn"
+
+}
+
 #? loadenv -> will load the global exported environment vars
 function loadenv(){
-  fn=$(get_tmp exportglobal.sh)
+  fn=$(envglobal file)
   if [[ -f $fn ]]; then
     . "$fn"
   fi
 }
 # actually do importing of environment variables if the exportglobal file exists on source of this file
 loadenv
+
