@@ -115,3 +115,4 @@ function sticker() {
   IFS=$oldIFS   # restore IFS
   echo $result
 }
+
