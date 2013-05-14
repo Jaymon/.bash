@@ -18,6 +18,7 @@ GREEN="\033[0;32m"
 BLACK='\033[0;30m'
 BLUE='\033[0;34m'
 NONE='\033[0m' # Text Reset
+LIGHTGRAY="\033[37m"
 
 # via: http://apple.stackexchange.com/questions/9821/can-i-make-my-mac-os-x-terminal-color-items-according-to-syntax-like-the-ubuntu
 C_DEFAULT="\[\033[m\]"
