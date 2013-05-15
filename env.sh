@@ -38,51 +38,43 @@ shopt -s histappend
 # http://stackoverflow.com/questions/4133904/ps1-line-with-git-current-branch-and-colors
 # http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_01.html
 # http://ss64.com/bash/syntax-prompt.html
-function git_prompt() {
-  if [[ -d .git ]]; then
-    branch=$(git branch 2> /dev/null | grep -e ^* | cut -d ' ' -f 2)
-    color=""
-    git_changes=$(git status 2> /dev/null | grep -iE "nothing\s+(to\s+commit|added\s+to\s+commit)")
-    if [[ $? -gt 0 ]]; then
-      color=$RED
-    else
-      color=$GREEN
-    fi
-
-    echo -ne " $color($branch)"
-  else
-    echo -ne ""
-  fi
-}
-
-function ret_prompt() {
-  color=$GREEN
-  if [[ $RET -gt 0 ]]; then
-  #if [[ $1 -gt 0 ]]; then
-    color=$RED
-  fi;
-
-  echo -ne "$color\$"
-}
 
 # I can't for the life of me figure out how to get the last command exit code in PS1, so I have to use PROMPT_COMMAND
 PROMPT_COMMAND='RET=$?; history -a'
-
 
 # http://unix.stackexchange.com/questions/8396/bash-display-exit-status-in-prompt
 # http://blog.superuser.com/2011/09/21/customizing-your-bash-command-prompt/
 # https://dougbarton.us/Bash/Bash-prompts.html
 # http://linuxconfig.org/bash-prompt-basics
-PS1='\[$(echo -ne $CYAN)\]\u:\[$(echo -ne $LIGHTGRAY)\]\w$(git_prompt) $(ret_prompt)\[$(echo -ne $NONE)\] '
+#PS1='\[$(echo -ne $CYAN)\]\u:\[$(echo -ne $LIGHTGRAY)\]\w$(git_prompt) $(ret_prompt)\[$(echo -ne $NONE)\] '
+#PS1='\[$(echo -ne $CYAN)\]\u:\[$(echo -ne $LIGHTGRAY)\]\w $(ret_prompt)\[$(echo -ne $NONE)\] '
+
+PS1='\[$(echo -ne $CYAN)\]\u\[$(echo -ne $NONE)\]'
+PS1="$PS1"':'
+PS1="$PS1"'\[$(echo -ne $LIGHTGRAY)\]\w\[$(echo -ne $NONE)\] '
+#PS1="$PS1"''
+#PS1="$PS1"'\[$(color=$GREEN; if [[ $(git status 2> /dev/null | grep -iE "nothing\s+(to\s+commit|added\s+to\s+commit)") -gt 0 ]]; then
+#color=$RED; fi; echo -ne $color)\] $(branch=$(git branch 2> /dev/null | grep -e ^* | cut -d " " -f 2; if [[ $? -gt 0 ]]; then
+# echo -n " ($branch) "\[$(echo -ne $NONE)\]'
+
+PS1="$PS1"'\[$(color=$RED; if [[ -n $(git status 2> /dev/null | grep -i nothing) ]]; then color=$GREEN; fi; echo -ne $color)\]'
+PS1="$PS1"'$(branch=$(git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2); if [[ -n $branch ]]; then echo -n "($branch) "; fi;)' 
+PS1="$PS1"'\[$(echo -ne $NONE)\]'
+
+PS1="$PS1"'\[$(color=$GREEN; if [[ $RET -gt 0 ]]; then color=$RED; fi; echo -ne $color)\]\$\[$(echo -ne $NONE)\] '
+
+# evidently, having colors in function is hard:
+# http://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
+# http://welltemperedstudio.wordpress.com/2009/07/14/colorful-bash-prompts-and-line-wrapping-problem/
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-xterm*|rxvt*)
-    #PS1="\[\e]0;\u@\h: \w\a\]$PS1"
-    PS1="\[\e]0;\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+        PS1="$PS1"'\[\033]0;\u@\h:'"${chroot}"'${PWD}\007\]'
+        ;;
+    screen)
+        PS1="$PS1"'\[\033_\u@\h:'"${chroot}"'${PWD}\033\\\'
+;;
 esac
 
 # this will set the prompt to red if the last command failed, and green if it succeeded
