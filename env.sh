@@ -40,7 +40,12 @@ shopt -s histappend
 # http://ss64.com/bash/syntax-prompt.html
 
 # I can't for the life of me figure out how to get the last command exit code in PS1, so I have to use PROMPT_COMMAND
-PROMPT_COMMAND='RET=$?; history -a'
+ret_prompt='RET=$?; history -a'
+if [[ -n $PROMPT_COMMAND ]]; then
+  export PROMPT_COMMAND="$ret_prompt;$PROMPT_COMMAND"
+else
+  export PROMPT_COMMAND="$ret_prompt"
+fi
 
 # http://unix.stackexchange.com/questions/8396/bash-display-exit-status-in-prompt
 # http://blog.superuser.com/2011/09/21/customizing-your-bash-command-prompt/

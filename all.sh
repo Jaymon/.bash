@@ -151,7 +151,10 @@ function bashHelp(){
   echo -e "${BLUE}= = = = = = Useful Commands${NONE}"
 
   printHelp "cd - -> go to the previous directory (similar to pop)"
+  # https://news.ycombinator.com/item?id=5565689
   printHelp "!N:p -> do not run, place history line N on the prompt"
+  printHelp "!$, !N:$ -> last argument of last command, last argument of N command"
+  printHelp "!vi:$ -> last argument of last vi command"
 
   # http://stackoverflow.com/a/68429/5006
   printHelp "sudo !! -> run the last command with sudo"
