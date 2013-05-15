@@ -1,0 +1,5 @@
+# https://news.ycombinator.com/item?id=5565689
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+set show-all-if-ambiguous on
+set completion-ignore-case on
