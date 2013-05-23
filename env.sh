@@ -62,8 +62,8 @@ PS1="$PS1"'\[$(echo -ne $LIGHTGRAY)\]\w\[$(echo -ne $NONE)\] '
 #color=$RED; fi; echo -ne $color)\] $(branch=$(git branch 2> /dev/null | grep -e ^* | cut -d " " -f 2; if [[ $? -gt 0 ]]; then
 # echo -n " ($branch) "\[$(echo -ne $NONE)\]'
 
-PS1="$PS1"'\[$(color=$RED; if [[ -n $(git status 2> /dev/null | grep -i nothing | grep -i commit) ]]; then color=$GREEN; if [[ -n $(git status 2> /dev/null | grep -i branch | grep -i ahead | grep -i commit) ]]; then color=$LIGHTRED; fi; fi; echo -ne $color)\]'
-PS1="$PS1"'$(branch=$(git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2); if [[ -n $branch ]]; then echo -n "($branch) "; fi;)' 
+PS1="$PS1"'\[$(color=$RED; if [[ -n $([[ -d .git ]] && git status 2> /dev/null | grep -i nothing | grep -i commit) ]]; then color=$GREEN; if [[ -n $(git status 2> /dev/null | grep -i branch | grep -i ahead | grep -i commit) ]]; then color=$LIGHTRED; fi; fi; echo -ne $color)\]'
+PS1="$PS1"'$(branch=$([[ -d .git ]] && git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2); if [[ -n $branch ]]; then echo -n "($branch) "; fi;)' 
 PS1="$PS1"'\[$(echo -ne $NONE)\]'
 
 PS1="$PS1"'\[$(color=$GREEN; if [[ $RET -gt 0 ]]; then color=$RED; fi; echo -ne $color)\]\$\[$(echo -ne $NONE)\] '
