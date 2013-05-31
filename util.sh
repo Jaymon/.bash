@@ -464,3 +464,8 @@ function loadenv(){
 # actually do importing of environment variables if the exportglobal file exists on source of this file
 loadenv
 
+#? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
+# http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
+jsonpp='python -mjson.tool'
+ppj=jsonpp
+ppjson=jsonpp
