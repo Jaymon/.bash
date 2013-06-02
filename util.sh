@@ -469,3 +469,37 @@ loadenv
 jsonpp='python -mjson.tool'
 ppj=jsonpp
 ppjson=jsonpp
+
+#? runfind PROG FILE -> run PROG FILE or prompt for what FILE if more than one FILE found in subdirs
+function runfind() {
+  if [[ -f $2 ]]; then
+    $1 $2
+  else
+    f=$(find $PWD | grep -e "/$2\$")
+    count=$(echo "$f" | wc -l)
+
+    if [[ $count -eq 1 ]]; then
+      $1 $f
+
+    else
+      # split the string into an array
+      IFS=$'\n'
+      fs=( $f )
+      unset IFS
+      # print out all the found files to the user and let them choose which one to open
+      # http://stackoverflow.com/a/10586169
+      for index in "${!fs[@]}"; do
+        i=$(expr $index + 1)
+        echo -e "[$i]\t${fs[index]}"
+      done
+      # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
+      read -p "File? " fn
+      echo $fn
+      file_index=$(expr $fn - 1)
+      $1 ${fs[file_index]}
+    
+    fi
+
+  fi
+}
+
