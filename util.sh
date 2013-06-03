@@ -481,6 +481,7 @@ function far() {
 
   c=""
   if [[ -f $1 ]]; then
+    # http://stackoverflow.com/questions/2701400/remove-first-element-from-in-bash
     c="${@:2} $1"
   else
     f=$(find $PWD | grep -e "/$1\$")
