@@ -470,16 +470,24 @@ jsonpp='python -mjson.tool'
 ppj=jsonpp
 ppjson=jsonpp
 
-#? runfind PROG FILE -> run PROG FILE or prompt for what FILE if more than one FILE found in subdirs
-function runfind() {
-  if [[ -f $2 ]]; then
-    $1 $2
+#? far FILE PROG -> run PROG FILE or prompt for what FILE if more than one FILE found in subdirs
+# find and run, ie, find FILE and run PROG FILE
+function far() {
+  if [[ $# -eq 0 ]]; then
+    echo "far - find FILE and run PROG FILE"
+    echo "usage: far FILE PROG"
+    return 0
+  fi
+
+  c=""
+  if [[ -f $1 ]]; then
+    c="${@:2} $1"
   else
-    f=$(find $PWD | grep -e "/$2\$")
+    f=$(find $PWD | grep -e "/$1\$")
     count=$(echo "$f" | wc -l)
 
     if [[ $count -eq 1 ]]; then
-      $1 $f
+      c="${@:2} $f"
 
     else
       # split the string into an array
@@ -494,11 +502,17 @@ function runfind() {
       done
       # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
       read -p "File? " fn
-      echo $fn
       file_index=$(expr $fn - 1)
-      $1 ${fs[file_index]}
+      c="${@:2} ${fs[file_index]}"
     
     fi
+
+  fi
+
+  # actually run the command if something was found
+  if [[ ! -z $c ]]; then
+    echo $c
+    $c
 
   fi
 }
