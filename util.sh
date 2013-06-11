@@ -118,8 +118,26 @@ function version(){
     sw_vers
     uname -a
     echo "type system_profiler for even more information"
+
   else
-    cat /etc/lsb-release
+    info=$(cat /etc/lsb-release)
+    is_ubuntu=$(echo $info | grep -i ubuntu &>/dev/null; echo $?)
+
+    if [[ $is_ubuntu -eq 0 ]]; then
+      # http://en.wikipedia.org/wiki/List_of_Ubuntu_releases
+      # http://stackoverflow.com/questions/1494178/how-to-define-hash-tables-in-bash
+      declare -A ubuntus=( ["13.10"]="Saucy Salamander", ["13.04"]="Raring Ringtail", ["12.10"]="Quantal Quetzal", ["12.04"]="Precise Pangolin", ["11.10"]="Oneiric Ocelot", ["11.04"]="Natty narwhal", ["10.10"]="Maverick Meerkat", ["10.04"]="Lucid Lynx" )
+      for key in ${!ubuntus[@]}; do
+        if [[ $(echo $info | grep "$key" &>/dev/null; echo $?) -eq 0 ]]; then
+          echo ${ubuntus[$key]}
+          break
+        fi
+
+      done
+
+    fi
+
+    echo "$info"
   fi
 }
 alias v='version'
