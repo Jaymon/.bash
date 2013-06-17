@@ -8,18 +8,35 @@
 
 # http://apple.stackexchange.com/questions/55875/have-git-autocomplete-branches-at-the-terminal-command-line/55886#55886
 # http://code-worrier.com/blog/autocomplete-git/
-#? addGitTabComplete -> run this to add git tab auto complete to your shell
-function addGitTabComplete() {
-  addAddon "git_completion" "Git AutoComplete" "https://raw.github.com/git/git/master/contrib/completion/git-completion.bash"
+#? add_git_tab_complete -> run this to add git tab auto complete to your shell
+function add_git_tab_complete() {
+
+  # git was installed with homebrew
+  git_f="/usr/local/etc/bash_completion.d/git-completion.bash"
+  if [[ -f $git_f ]]; then
+
+    bash_dir=$(getBashDir)
+    bash_f=$bash_dir/addon_git_completion.sh
+
+    echo "Installing Git AutoComplete to $bash_f"
+    echo -e "if [[ -f $git_f ]]; then\n  . $git_f\nfi" > $bash_f
+
+    if [ -f $bash_f ]; then
+      . $bash_f
+      echo "git autocomplete Addon installed!"
+    fi
+  else
+    addAddon "git_completion" "Git AutoComplete" "https://raw.github.com/git/git/master/contrib/completion/git-completion.bash"
+  fi
 }
 
-#? addLc -> run this to add lc command to your shell
-function addLc() {
+#? add_lc -> run this to add lc command to your shell
+function add_lc() {
   addAddon "listcommands" "List Commands" "https://raw.github.com/Jaymon/lc-listcommands-bash/master/listcommands.sh"
 }
 
-#? addVagrantHelper -> adds a vagrant helper file with handy vagrant stuff
-function addVagrantHelper() {
+#? add_vagrant_helper -> adds a vagrant helper file with handy vagrant stuff
+function add_vagrant_helper() {
   echo "Finding vagrant public key (this could take some time)..."
   vagrant_pub_key=$(find / -name vagrant.pub 2>/dev/null | grep "vagrant.pub")
   if [[ -n $vagrant_pub_key ]]; then
