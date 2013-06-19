@@ -158,6 +158,8 @@ function bashHelp(){
 
   # http://stackoverflow.com/a/68429/5006
   printHelp "sudo !! -> run the last command with sudo"
+  # http://www.codecoffee.com/tipsforlinux/articles/22.html
+  printHelp "du -sh -> get the total disk usage of folder"
 
   # http://stackoverflow.com/a/171938/5006
   printHelp "ls -d */ -> list only subdirectories of the current dir"
@@ -174,6 +176,8 @@ function bashHelp(){
   printHelp "dpkg -l <NAME> -> list packages related to NAME"
   printHelp "dpkg -S <FILE> -> what packages owns FILE"
   printHelp "dpkg -s <NAME> -> get info about package NAME"
+  # http://www.howtogeek.com/howto/linux/show-the-list-of-installed-packages-on-ubuntu-or-debian/
+  printHelp "dpkg --get-selections -> list all installed packages"
   printHelp "apt-cache search <NAME> -> search packages related to NAME"
   printHelp "apt-cache depends <NAME> -> list dependencies of package NAME"
   # http://www.debian-administration.org/articles/184
