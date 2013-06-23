@@ -502,7 +502,7 @@ function far() {
     # http://stackoverflow.com/questions/2701400/remove-first-element-from-in-bash
     c="${@:2} $1"
   else
-    f=$(find $PWD | grep -e "/$1\$")
+    f=$(find $PWD -type f | grep -e "/$1[^/]*\$")
     count=$(echo "$f" | wc -l)
 
     if [[ $count -eq 1 ]]; then
