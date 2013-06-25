@@ -393,10 +393,24 @@ function idid(){
   sudo /etc/init.d/$2 $1
 }
 
+#? bd <NUM> -> how many directories to move back (eg, bd 2 = cd ../..)
+function bd() {
+  back_dir=""
+  if [[ $# -eq 0 ]]; then
+    back_dir="../"
+  else
+    for (( i=0; i<$1; i+=1 )); do 
+      back_dir=$back_dir"../"
+    done
+  fi
+
+  echo "cd $back_dir"
+  pushd $back_dir
+}
 #? .. -> cd ..
-alias ..='cd ..' 
+alias ..='bd' 
 #? ... -> cd ../..
-alias ...='cd ../..'
+alias ...='bd 2'
 alias ....=...
 
 #? pycrm <PATH> -> remove all .pyc files at PATH, defaults to .
@@ -491,6 +505,9 @@ ppjson=jsonpp
 #? far FILE PROG -> run PROG FILE or prompt for what FILE if more than one FILE found in subdirs
 # find and run, ie, find FILE and run PROG FILE
 function far() {
+
+  #set -x
+
   if [[ $# -eq 0 ]]; then
     echo "far - find FILE and run PROG FILE"
     echo "usage: far FILE PROG"
@@ -519,10 +536,13 @@ function far() {
         i=$(expr $index + 1)
         echo -e "[$i]\t${fs[index]}"
       done
+      echo -e "[n]\tNone"
       # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
       read -p "File? " fn
-      file_index=$(expr $fn - 1)
-      c="${@:2} ${fs[file_index]}"
+      if [[ ! $fn =~ [nN] ]]; then
+        file_index=$(expr $fn - 1)
+        c="${@:2} ${fs[file_index]}"
+      fi
     
     fi
 
@@ -534,5 +554,6 @@ function far() {
     $c
 
   fi
+  #set +x
 }
 
