@@ -506,7 +506,7 @@ ppjson=jsonpp
 # find and run, ie, find FILE and run PROG FILE
 function far() {
 
-  set -x
+  #set -x
 
   if [[ $# -eq 0 ]]; then
     echo "far - find FILE and run PROG FILE"
@@ -524,56 +524,58 @@ function far() {
     # eg, p/d/file -> p* / d* / file
 
     IFS=$'/'; ds=( $1 ); unset IFS
-    fdir=$PWD
-    dcount=0
+    f=${ds[-1]}
+    ds=( ${ds[@]:0:${#ds[@]}-1} )
+    base_dirs=( $PWD )
+
     for d in ${ds[@]}; do
 
-      dcount+=1
+      new_base_dirs=""
 
-      if [[ $dcount -eq $# ]]; then
+      for base_dir in ${base_dirs[@]}; do
+        new_ds=$(find $base_dir -type d -mindepth 1 -iname "$d*")
+        new_base_dirs="$new_base_dirs""$new_ds"
+      done
 
-        f=$(find $fdir -type f -iname "$1*")
-        fcount=$(echo "$f" | wc -l)
+      IFS=$'\n'; base_dirs=( $new_base_dirs ); unset IFS
 
-        if [[ $fcount -eq 1 ]]; then
-          c="${@:2} $f"
-
-        else
-          # split the string into an array
-          IFS=$'\n'
-          fs=( $f )
-          unset IFS
-          # print out all the found files to the user and let them choose which one to open
-          # http://stackoverflow.com/a/10586169
-          for index in "${!fs[@]}"; do
-            i=$(expr $index + 1)
-            echo -e "[$i]\t${fs[index]}"
-          done
-          echo -e "[n]\tNone"
-          # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
-          read -p "File? " fn
-          if [[ ! $fn =~ [nN] ]]; then
-            file_index=$(expr $fn - 1)
-            c="${@:2} ${fs[file_index]}"
-          fi
-        
-        fi
-
-      else
-        newfdir=$(find $fdir -type d -mindepth 1 -iname "$d*")
-        pd=${newfdir[0]}
-        for pdt in "${newfdir[@]:1}"; do
-          lpd="${pd//[^//]}"
-          lpdt="${pdt//[^//]}"
-          if [[ ${#lpdt} -lt ${#lpd} ]]; then
-            pd=$pdt
-          fi
-        done
-
-        fdir=$pd
-
-      fi
     done
+
+    #printf ${base_dirs[@]}
+
+    # now find all the files that match the final value using all the found base dirs
+    fs=""
+    for base_dir in ${base_dirs[@]}; do
+      new_fs=$(find $base_dir -type f -iname "$f*")
+      fs="$fs""$new_fs"
+    done
+
+    fs_count=$(echo "$fs" | wc -l)
+    #echo $fs_count
+
+    if [[ $fs_count -eq 1 ]]; then
+      c="${@:2} $fs"
+
+    else
+      # split the string into an array
+      IFS=$'\n'; fs=( $fs ); unset IFS
+
+      # print out all the found files to the user and let them choose which one to open
+      # http://stackoverflow.com/a/10586169
+      for index in "${!fs[@]}"; do
+        i=$(expr $index + 1)
+        echo -e "[$i]\t${fs[index]}"
+      done
+      echo -e "[n]\tNone"
+      # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
+      read -p "File? " fn
+      if [[ ! $fn =~ [nN] ]]; then
+        file_index=$(expr $fn - 1)
+        c="${@:2} ${fs[file_index]}"
+      fi
+    
+    fi
+
   fi
 
   # actually run the command if something was found
@@ -582,6 +584,6 @@ function far() {
     $c
 
   fi
-  set +x
+  #set +x
 }
 
