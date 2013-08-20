@@ -506,7 +506,7 @@ ppjson=jsonpp
 # find and run, ie, find FILE and run PROG FILE
 function far() {
 
-  #set -x
+  set -x
 
   if [[ $# -eq 0 ]]; then
     echo "far - find FILE and run PROG FILE"
@@ -515,37 +515,65 @@ function far() {
   fi
 
   c=""
+  # the first thing we check for is the base case: far /path/to/real/file cmd
   if [[ -f $1 ]]; then
     # http://stackoverflow.com/questions/2701400/remove-first-element-from-in-bash
     c="${@:2} $1"
   else
-    f=$(find $PWD -type f | grep -e "/$1[^/]*\$")
-    count=$(echo "$f" | wc -l)
+    # we will want to prefix match the file path
+    # eg, p/d/file -> p* / d* / file
 
-    if [[ $count -eq 1 ]]; then
-      c="${@:2} $f"
+    IFS=$'/'; ds=( $1 ); unset IFS
+    fdir=$PWD
+    dcount=0
+    for d in ${ds[@]}; do
 
-    else
-      # split the string into an array
-      IFS=$'\n'
-      fs=( $f )
-      unset IFS
-      # print out all the found files to the user and let them choose which one to open
-      # http://stackoverflow.com/a/10586169
-      for index in "${!fs[@]}"; do
-        i=$(expr $index + 1)
-        echo -e "[$i]\t${fs[index]}"
-      done
-      echo -e "[n]\tNone"
-      # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
-      read -p "File? " fn
-      if [[ ! $fn =~ [nN] ]]; then
-        file_index=$(expr $fn - 1)
-        c="${@:2} ${fs[file_index]}"
+      dcount+=1
+
+      if [[ $dcount -eq $# ]]; then
+
+        f=$(find $fdir -type f -iname "$1*")
+        fcount=$(echo "$f" | wc -l)
+
+        if [[ $fcount -eq 1 ]]; then
+          c="${@:2} $f"
+
+        else
+          # split the string into an array
+          IFS=$'\n'
+          fs=( $f )
+          unset IFS
+          # print out all the found files to the user and let them choose which one to open
+          # http://stackoverflow.com/a/10586169
+          for index in "${!fs[@]}"; do
+            i=$(expr $index + 1)
+            echo -e "[$i]\t${fs[index]}"
+          done
+          echo -e "[n]\tNone"
+          # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
+          read -p "File? " fn
+          if [[ ! $fn =~ [nN] ]]; then
+            file_index=$(expr $fn - 1)
+            c="${@:2} ${fs[file_index]}"
+          fi
+        
+        fi
+
+      else
+        newfdir=$(find $fdir -type d -mindepth 1 -iname "$d*")
+        pd=${newfdir[0]}
+        for pdt in "${newfdir[@]:1}"; do
+          lpd="${pd//[^//]}"
+          lpdt="${pdt//[^//]}"
+          if [[ ${#lpdt} -lt ${#lpd} ]]; then
+            pd=$pdt
+          fi
+        done
+
+        fdir=$pd
+
       fi
-    
-    fi
-
+    done
   fi
 
   # actually run the command if something was found
@@ -554,6 +582,6 @@ function far() {
     $c
 
   fi
-  #set +x
+  set +x
 }
 
