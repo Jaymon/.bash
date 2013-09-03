@@ -546,7 +546,7 @@ function far() {
     # now find all the files that match the final value using all the found base dirs
     fs=""
     for base_dir in ${base_dirs[@]}; do
-      new_fs=$(find $base_dir -type f -iname "$f*")
+      new_fs=$(find $base_dir -type f -iname "$f*" | grep -ive "pyc$")
       fs="$fs""$new_fs"
     done
 
