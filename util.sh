@@ -587,3 +587,13 @@ function far() {
   #set +x
 }
 
+#? explain <cmd> -> explain cmd, great with explain !!
+function explain() {
+  # https://news.ycombinator.com/item?id=6300735
+  cmd="$(cut -d ' ' -f 1 <<< "$@" )";
+  args="$(cut -d ' ' -f 2- <<< "$@" )";
+  url="http://explainshell.com/explain/$cmd?args=$args"
+  explanation="$(curl -s $url | grep '<pre' | sed -E 's/<\/?[a-z]+(\ [a-z]+=\"[a-z0-9]+\")*>//g' | sed -E 's/^\ +//g')"
+  echo "$explanation"	
+}
+
