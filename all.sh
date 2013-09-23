@@ -184,6 +184,7 @@ function bashHelp(){
   printHelp "lsof -i :<PORT> -> see what is listening on that port"
   # http://ubuntuforums.org/showthread.php?t=261366
   printHelp "dpkg --get-selections -> list all installed packages"
+  printHelp "pgrep <VALUE> -> prcoess grep for VALUE"
 
 }
 # sadly, these don't work
