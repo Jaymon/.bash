@@ -454,10 +454,10 @@ function exportglobal(){
     # clear the var from the global export file
     # http://stackoverflow.com/questions/2680274/string-manipulation-in-bash-removing-leading-section
     # http://stackoverflow.com/questions/10638538/split-string-with-bash-with-symbol
-    fn_exports=$(echo "$fn_exports" | grep -v "${var%=*}")
+    fn_exports=$(echo "$fn_exports" | grep -v "${var%%=*}")
     export "$var"
     # http://stackoverflow.com/questions/9139401/trying-to-embed-newline-in-a-variable-in-bash
-    fn_exports+="\nexport ${var%=*}=\"${var#*=}\""
+    fn_exports+="\nexport ${var%%=*}=\"${var#*=}\""
   done
 
   echo -e "$fn_exports" > "$fn"
