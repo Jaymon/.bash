@@ -114,6 +114,8 @@ function version(){
       echo "Lion"
     elif [[ "$version" < "10.9" ]]; then
       echo "Mountain Lion"
+    elif [[ "$version" < "11" ]]; then
+      echo "Mavericks"
     fi
     sw_vers
     uname -a
