@@ -498,7 +498,8 @@ function loadenv(){
 # actually do importing of environment variables if the exportglobal file exists on source of this file
 loadenv
 
-#? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
+### NOTE -- none of these seam to work, but pout.json does
+# ? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
 # http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
 jsonpp='python -mjson.tool'
 ppj=jsonpp
@@ -597,5 +598,21 @@ function explain() {
   url="http://explainshell.com/explain/$cmd?args=$args"
   explanation="$(curl -s $url | grep '<pre' | sed -E 's/<\/?[a-z]+(\ [a-z]+=\"[a-z0-9]+\")*>//g' | sed -E 's/^\ +//g')"
   echo "$explanation"	
+}
+
+#? cronenv -> convert the shell to an environment similar to what a cron script would run in
+# http://stackoverflow.com/a/2546509/5006
+function cronenv() {
+  cron_env+="HOME=$HOME\n"
+  cron_env+="LOGNAME=$LOGNAME\n"
+  cron_env+="PATH=/usr/bin:/bin\n"
+  cron_env+="SHELL=/bin/sh\n"
+  cron_env+="PWD=$PWD\n"
+
+  if [[ ! -z $LC_ALL ]]; then
+    cron_env+="LC_ALL=$LC_ALL\n"
+  fi
+
+  env - `echo -e $cron_env` /bin/sh
 }
 
