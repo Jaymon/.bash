@@ -1,5 +1,12 @@
+# I actually don't think this works with my symlink, if I want to include it more
+# directly:
+#   bind -f ./inputrc
+# http://stackoverflow.com/questions/15027186/inputrc-file-cannot-be-loaded
 # https://news.ycombinator.com/item?id=5565689
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 set show-all-if-ambiguous on
 set completion-ignore-case on
+# http://viget.com/extend/level-up-your-shell-game
+"\t": menu-complete
+"\C-d": kill-whole-line
