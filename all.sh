@@ -176,6 +176,7 @@ function bashHelp(){
   printHelp "dpkg -l <NAME> -> list packages related to NAME"
   printHelp "dpkg -S <FILE> -> what packages owns FILE"
   printHelp "dpkg -s <NAME> -> get info about installed package NAME"
+  # http://askubuntu.com/questions/47856/how-to-get-to-know-the-information-about-a-package-before-installation-in-termin
   printHelp "apt-cache show <NAME> -> get info about package NAME pre-install"
   # http://www.howtogeek.com/howto/linux/show-the-list-of-installed-packages-on-ubuntu-or-debian/
   printHelp "dpkg --get-selections -> list all installed packages"
