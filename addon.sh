@@ -38,6 +38,7 @@ function add_lc() {
 #? add_vagrant_helper -> adds a vagrant helper file with handy vagrant stuff
 function add_vagrant_helper() {
   echo "Finding vagrant public key (this could take some time)..."
+  # https://groups.google.com/d/msg/vagrant-up/B5WIfDcIRtE/TuHyLIN9nVEJ
   vagrant_pub_key=$(find / -name vagrant.pub 2>/dev/null | grep "vagrant.pub")
   if [[ -n $vagrant_pub_key ]]; then
     vagrant_priv_key=${vagrant_pub_key:0:-4}
