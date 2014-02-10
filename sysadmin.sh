@@ -2,6 +2,7 @@ alias gc="git commit -a -m"
 alias ga="git add"
 alias gr="git checkout --"
 alias gs='git status'
+alias gd='git diff'
 
 alias gp='git push'
 alias gpo='git push origin'
@@ -14,3 +15,7 @@ alias glom="git pull origin master"
 alias glog='git log --pretty=format:"%h%x09%an%x09%s"'
 alias gamend="git commit --amend -m"
 
+
+alias vu='vagrant up'
+alias vp='vagrant provision'
+alias vd='vagrant destroy -f'
