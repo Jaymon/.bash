@@ -19,3 +19,4 @@ alias gamend="git commit --amend -m"
 alias vu='vagrant up'
 alias vp='vagrant provision'
 alias vd='vagrant destroy -f'
+alias vs='vagrant suspend'
