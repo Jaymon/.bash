@@ -20,3 +20,10 @@ alias vu='vagrant up'
 alias vp='vagrant provision'
 alias vd='vagrant destroy -f'
 alias vs='vagrant suspend'
+alias vr='vagrant reload'
+
+#? cs INPUT -> search all the files in current folder
+function cs() {
+  grep --color=auto --exclude=*.pyc -Rin "$1" *
+}
+alias sc=cs
