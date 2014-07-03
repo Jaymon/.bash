@@ -525,18 +525,21 @@ function far() {
   else
     # we will want to prefix match the file path
     # eg, p/d/file -> p* / d* / file
-
+    # ds would become [p*, d*], f would become file
     IFS=$'/'; ds=( $1 ); unset IFS
     f=${ds[-1]}
     ds=( ${ds[@]:0:${#ds[@]}-1} )
     base_dirs=( $PWD )
 
+    # base_dirs would eventually end up with just $PWD/p*/d* folders
+    # it does this by constantly replacing base_dirs with the next level of folders
     for d in ${ds[@]}; do
 
       new_base_dirs=""
 
       for base_dir in ${base_dirs[@]}; do
-        new_ds=$(find $base_dir -type d -mindepth 1 -iname "$d*")
+        # http://askubuntu.com/questions/266179/how-to-exclude-ignore-hidden-files-and-directories-in-a-wildcard-embedded-find
+        new_ds=$(find $base_dir -not -path "*/\.*" -type d -mindepth 1 -iname "$d*")
         new_base_dirs="$new_base_dirs""$new_ds"
       done
 
