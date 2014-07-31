@@ -547,7 +547,7 @@ function far() {
 
     done
 
-    printf ${base_dirs[@]}
+    #printf ${base_dirs[@]}
 
     # now find all the files that match the final value using all the found base dirs
     fs=""
