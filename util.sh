@@ -425,6 +425,16 @@ function pycrm(){
 }
 alias rmpyc=pycrm
 
+#? dsrm <PATH> -> remove all .DS_Store files at PATH, defaults to .
+function dsrm(){
+  if [ "$#" -eq 0 ]; then
+    find . -name '.DS_Store' -delete
+  else
+    find $1 -name '.DS_Store' -delete
+  fi
+}
+alias rmds=dsrm
+
 #? envglobal -> print all exported global environment variables
 function envglobal(){
   fn=$(get_tmp exportglobal.sh)
