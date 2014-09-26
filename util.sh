@@ -96,6 +96,17 @@ function get_tmp(){
   echo "$tmp_dir"
 }
 
+#? myhost -> return the hostname of the computer
+# http://apple.stackexchange.com/a/53042
+# http://superuser.com/a/430209
+function myhost(){
+  if [ $(is_os Darwin) -eq 0 ]; then
+    scutil --get LocalHostName
+  else
+    echo $HOSTNAME
+  fi
+}
+
 #? version -> return version information
 #alias version='cat /etc/lsb-release'
 function version(){
@@ -116,6 +127,8 @@ function version(){
       echo "Mountain Lion"
     elif [[ "$version" < "11" ]]; then
       echo "Mavericks"
+    elif [[ "$version" < "12" ]]; then
+      echo "Yosemite"
     fi
     sw_vers
     uname -a
