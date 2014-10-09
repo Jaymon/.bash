@@ -23,7 +23,8 @@ function glob () {
 
 alias glog='git log --pretty=format:"%h%x09%an%x09%s"'
 alias gamend="git commit --amend -m"
-
+# git log --graph --decorate --all
+alias gg=git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
 
 alias vu='vagrant up'
 alias vp='vagrant provision'
@@ -36,4 +37,5 @@ function cs() {
   grep --color=auto --exclude=*.pyc -Rin "$1" *
 }
 alias sc=cs
+
 
