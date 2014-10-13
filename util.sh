@@ -293,6 +293,13 @@ function myip(){
 }
 alias mip=myip
 
+#? whoip <IPADDR> -> print information about the ip address
+# http://stackoverflow.com/questions/13222564/what-information-can-i-get-from-an-ip-address
+function whoip(){
+  curl ipinfo.io/$1
+}
+alias wip=whoip
+
 # http://stackoverflow.com/questions/941338/shell-script-how-to-pass-command-line-arguments-to-an-unix-alias
 # quickly check what processes are running
 #? running <NAME> -> return what processes matching NAME are currently running
