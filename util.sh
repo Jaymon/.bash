@@ -649,3 +649,25 @@ function cronenv() {
   env - `echo -e $cron_env` /bin/sh
 }
 
+#? touched [DIR] [COUNT] -> print the last COUNT touched files in DIR
+# http://stackoverflow.com/a/9052878/5006
+# NOTE -- might have problem on Linux, if so then you can OS sniff and use the given
+# stackoverflow link to run the Linux version instead
+function touched() {
+  basedir="."
+  count=10
+  if [[ $# -eq 1 ]]; then
+    basedir=$1
+  elif [ $# -eq 2 ]; then
+    basedir=$1
+    count=$2
+  fi
+
+  find $basedir -type f -print0 | xargs -0 stat -f "%m %N" | sort -rn | head -$count | cut -f2- -d" "
+}
+
+#? pml <path> -> convert a binary plist to an xml plist you can read
+# http://initwithfunk.com/blog/2013/05/31/breaking-bad-with-dtrace/
+alias pml='plutil -convert xml1'
+alias plistxml=pml
+
