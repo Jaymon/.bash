@@ -671,3 +671,10 @@ function touched() {
 alias pml='plutil -convert xml1'
 alias plistxml=pml
 
+#? pcat <path> -> cat plist file, this will convert to xml first
+function pcat () {
+  pml "$1"
+  cat "$1"
+}
+
+
