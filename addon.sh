@@ -35,6 +35,12 @@ function add_lc() {
   addAddon "listcommands" "List Commands" "https://raw.github.com/Jaymon/lc-listcommands-bash/master/listcommands.sh"
 }
 
+#? add_urlencode -> run this to add urlencode and urldecode functions to bash
+# https://gist.github.com/cdown/1163649
+function add_urlencode() {
+  addAddon "urlencode" "Url encode/decode" "https://gist.githubusercontent.com/cdown/1163649/raw/63a5c12725f85ef90c8bf0c165f4f04ee228fccb/gistfile1.sh"
+}
+
 #? add_vagrant_helper -> adds a vagrant helper file with handy vagrant stuff
 function add_vagrant_helper() {
   echo "Finding vagrant public key (this could take some time)..."
