@@ -677,4 +677,21 @@ function pcat () {
   cat "$1"
 }
 
+#? flushdns -> flushes the dns cache
+function flushdns() {
+  # todo: make this better
+  # http://coolestguidesontheplanet.com/clear-the-local-dns-cache-in-osx/
+  if [ $(is_os Darwin) -eq 0 ]; then
+    # this is 10.10 only
+    sudo discoveryutil udnsflushcaches
+  else
+    if [[ -f /etc/init.d/named ]]; then
+      sudo /etc/init.d/named restart
+    else
+      sudo /etc/init.d/nscd restart
+    fi
+  fi
+
+}
+
 
