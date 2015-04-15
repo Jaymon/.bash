@@ -42,32 +42,32 @@ function add_urlencode() {
 }
 
 #? add_vagrant_helper -> adds a vagrant helper file with handy vagrant stuff
-function add_vagrant_helper() {
-  echo "Finding vagrant public key (this could take some time)..."
-  # https://groups.google.com/d/msg/vagrant-up/B5WIfDcIRtE/TuHyLIN9nVEJ
-  vagrant_pub_key=$(find / -name vagrant.pub 2>/dev/null | grep "vagrant.pub")
-  if [[ -n $vagrant_pub_key ]]; then
-    vagrant_priv_key=${vagrant_pub_key:0:-4}
-    echo "vagrant private key found at $vagrant_priv_key"
-
-    vagrant_ssh_command='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222'
-
-    bash_dir=$(getBashDir)
-    bash_f=$bash_dir/addon_vagrant.sh
-
-    echo "Installing $bash_f"
-    echo "alias sshv='$vagrant_ssh_command -i $vagrant_priv_key'" > $bash_f
-
-    if [ -f $bash_f ]; then
-      . $bash_f
-      echo "vagrant addon installed!"
-    fi
-
-  else
-    echo "key was not found!!!, is vagrant installed?"
-  fi
-
-}
+#function add_vagrant_helper() {
+#  echo "Finding vagrant public key (this could take some time)..."
+#  # https://groups.google.com/d/msg/vagrant-up/B5WIfDcIRtE/TuHyLIN9nVEJ
+#  vagrant_pub_key=$(find / -name vagrant.pub 2>/dev/null | grep "vagrant.pub")
+#  if [[ -n $vagrant_pub_key ]]; then
+#    vagrant_priv_key=${vagrant_pub_key:0:-4}
+#    echo "vagrant private key found at $vagrant_priv_key"
+#
+#    vagrant_ssh_command='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222'
+#
+#    bash_dir=$(getBashDir)
+#    bash_f=$bash_dir/addon_vagrant.sh
+#
+#    echo "Installing $bash_f"
+#    echo "alias sshv='$vagrant_ssh_command -i $vagrant_priv_key'" > $bash_f
+#
+#    if [ -f $bash_f ]; then
+#      . $bash_f
+#      echo "vagrant addon installed!"
+#    fi
+#
+#  else
+#    echo "key was not found!!!, is vagrant installed?"
+#  fi
+#
+#}
 
 function addAddon() {
   if [[ $# -ne 3 ]]; then
