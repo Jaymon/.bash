@@ -64,7 +64,9 @@ alias sc=cs
 alias sf=cs
 
 
-#? ush -> unsecured ssh, this is handy for AWS and other boxes where the box's host key can change
-alias ush='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-alias ussh=ush
+#? ussh -> unsecured ssh, this is handy for AWS and other boxes where the box's host key can change
+alias ussh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+#? uscp -> unsecured scp, this is handy for AWS and other boxes where the box's host key can change
+alias uscp='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
