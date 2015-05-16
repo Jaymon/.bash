@@ -539,6 +539,13 @@ ppjson=jsonpp
 # find and run, ie, find FILE and run PROG FILE
 function far() {
 
+  # TODO -- make this so paths like mvi common/fab/box/__init__ fail because __init__ isn't a file and
+  # nothing was found, basically I don't want this opening/creating the file any more, it's lame and
+  # annoying.
+
+  # TODO -- the folders don't seem to work very well, so commands like mvi foo/bar/che don't seem
+  # to do the subfolders as well as I would like :(
+
   #set -x
 
   if [[ $# -eq 0 ]]; then

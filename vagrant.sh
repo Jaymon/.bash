@@ -28,3 +28,4 @@ function sshv () {
 }
 
 alias sshav='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222'
+

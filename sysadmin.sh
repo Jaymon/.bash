@@ -57,7 +57,7 @@ alias vr='vagrant reload'
 ###############################################################################
 
 #? cs INPUT -> search all the files in current folder
-function cs() {
+function cs () {
   grep --color=auto --exclude=*.pyc -Rin "$1" *
 }
 alias sc=cs
@@ -69,4 +69,58 @@ alias ussh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
 #? uscp -> unsecured scp, this is handy for AWS and other boxes where the box's host key can change
 alias uscp='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+#? pssh user@host -P PASSWORD -> adds -P to pass in a password, which is handy when you are provisioning
+# lots of boxes that don't yet have keys on them
+function pssh () {
+
+  # http://stackoverflow.com/questions/4780893/use-expect-in-bash-script-to-provide-password-to-ssh-command
+  # https://www.pantz.org/software/expect/expect_examples_and_tips.html
+  # http://stackoverflow.com/questions/16928004/how-to-enter-ssh-password-using-bash?lq=1
+  # http://stackoverflow.com/questions/9075478/is-there-a-way-to-input-automatically-when-running-a-shell
+
+  args=("$@")
+  ssh_password=""
+  ssh_args=""
+  ssh_host=""
+
+  #echo "count $#"
+
+  i=0
+  while [ $i -lt $# ]; do
+    val=${args[$i]}
+    #echo "args[$i]: $val"
+    if [[ $val == "-P" ]]; then
+      ((i++))
+      ssh_password=${args[$i]}
+
+    elif [[ $val =~ ^[A-Za-z0-9_]*@[A-Za-z0-9_.-]*$ ]]; then
+      ssh_host=$val
+
+    else
+      ssh_args+=" $val"
+
+    fi
+    ((i++))
+  done
+
+  echo "ssh_host $ssh_host"
+  echo "ssh_password $ssh_password"
+  echo "ssh_args $ssh_args"
+
+  ssh_script=$TMPDIR/pssh.sh
+  echo -e "#!/usr/bin/expect" > $ssh_script
+  echo -e "" >> $ssh_script
+  echo -e "spawn ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $ssh_args $ssh_host" >> $ssh_script
+  echo -e "expect \"*assword:\"" >> $ssh_script
+  echo -e "send -- \"$ssh_password\\r\"" >> $ssh_script
+  echo -e "interact" >> $ssh_script
+  chmod 700 $ssh_script
+
+  $ssh_script
+
+  # let's not leave the script lying around since it does contain a password
+  rm $ssh_script
+
+}
 
