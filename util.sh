@@ -539,13 +539,6 @@ ppjson=jsonpp
 # find and run, ie, find FILE and run PROG FILE
 function far() {
 
-  # TODO -- make this so paths like mvi common/fab/box/__init__ fail because __init__ isn't a file and
-  # nothing was found, basically I don't want this opening/creating the file any more, it's lame and
-  # annoying.
-
-  # TODO -- the folders don't seem to work very well, so commands like mvi foo/bar/che don't seem
-  # to do the subfolders as well as I would like :(
-
   #set -x
 
   if [[ $# -eq 0 ]]; then
@@ -557,9 +550,12 @@ function far() {
   c=""
   # the first thing we check for is the base case: far /path/to/real/file cmd
   if [[ -f $1 ]]; then
+
     # http://stackoverflow.com/questions/2701400/remove-first-element-from-in-bash
     c="${@:2} $1"
+
   else
+
     # we will want to prefix match the file path
     # eg, p/d/file -> p* / d* / file
     # ds would become [p*, d*], f would become file
@@ -590,41 +586,51 @@ function far() {
     fs=""
     for base_dir in ${base_dirs[@]}; do
       new_fs=$(find $base_dir -not -path "*/\.*" -type f -iname "$f*" | grep -ive "pyc$")
-      fs="$fs""$new_fs"
+      if [[ -n "$new_fs" ]]; then
+        fs="$fs""$new_fs"$'\n'
+      fi
     done
 
-    fs_count=$(echo "$fs" | wc -l)
-    #echo $fs_count
+    if [[ -n "$fs" ]]; then
 
-    if [[ $fs_count -eq 1 ]]; then
-      c="${@:2} $fs"
+      fs_count=$(echo "$fs" | wc -l)
+      #echo $fs_count
 
-    else
-      # split the string into an array
-      IFS=$'\n'; fs=( $fs ); unset IFS
+      if [[ $fs_count -eq 1 ]]; then
+        c="${@:2} $fs"
 
-      # print out all the found files to the user and let them choose which one to open
-      # http://stackoverflow.com/a/10586169
-      for index in "${!fs[@]}"; do
-        i=$(expr $index + 1)
-        echo -e "[$i]\t${fs[index]}"
-      done
-      echo -e "[n]\tNone"
-      # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
-      read -p "File? " fn
-      if [[ ! $fn =~ [nN] ]]; then
-        file_index=$(expr $fn - 1)
-        c="${@:2} ${fs[file_index]}"
+      else
+
+        # split the string into an array
+        IFS=$'\n'; fs=( $fs ); unset IFS
+
+        # print out all the found files to the user and let them choose which one to open
+        # http://stackoverflow.com/a/10586169
+        for index in "${!fs[@]}"; do
+          i=$(expr $index + 1)
+          echo -e "[$i]\t${fs[index]}"
+        done
+        echo -e "[n]\tNone"
+        # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
+        read -p "File? " fn
+        if [[ ! $fn =~ [nN] ]]; then
+          file_index=$(expr $fn - 1)
+          c="${@:2} ${fs[file_index]}"
+        fi
+
       fi
-    
+
     fi
 
   fi
 
   # actually run the command if something was found
-  if [[ ! -z $c ]]; then
+  if [[ -n "$c" ]]; then
     echo $c
     $c
+
+  else
+    echo "No valid file matches for \"$1\" found"
 
   fi
   #set +x
