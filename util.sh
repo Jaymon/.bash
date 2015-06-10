@@ -591,6 +591,12 @@ function far() {
       fi
     done
 
+    # strip whitespace off the end of the string
+    # http://stackoverflow.com/a/23332475/5006
+    if [[ "$fs" =~ ^(.*)[[:space:]]$ ]]; then 
+        fs=${BASH_REMATCH[1]}
+    fi
+
     if [[ -n "$fs" ]]; then
 
       fs_count=$(echo "$fs" | wc -l)
@@ -612,10 +618,16 @@ function far() {
         done
         echo -e "[n]\tNone"
         # http://stackoverflow.com/questions/226703/how-do-i-prompt-for-input-in-a-linux-shell-script
-        read -p "File? " fn
-        if [[ ! $fn =~ [nN] ]]; then
-          file_index=$(expr $fn - 1)
-          c="${@:2} ${fs[file_index]}"
+        read -p "File? " fns
+        if [[ ! $fns =~ [nN] ]]; then
+          for fn in ${fns[@]}; do
+            file_index=$(expr $fn - 1)
+            if [[ -n "$c" ]]; then
+              c="$c;""${@:2} ${fs[file_index]}"
+            else
+              c="${@:2} ${fs[file_index]}"
+            fi
+          done
         fi
 
       fi
@@ -626,11 +638,20 @@ function far() {
 
   # actually run the command if something was found
   if [[ -n "$c" ]]; then
+    #IFS=';'; read -a cs <<<"$c" # http://stackoverflow.com/a/8589672/5006
     echo $c
-    $c
+    eval $c
+
+#    for cmd in ${cs[@]}; do
+#      echo $cmd
+#      $cmd=$(echo -e $cmd)
+#      $cmd
+#    done
 
   else
-    echo "No valid file matches for \"$1\" found"
+    if [[ ! $fns =~ [nN] ]]; then
+      echo "No valid file matches for \"$1\" found"
+    fi
 
   fi
   #set +x
