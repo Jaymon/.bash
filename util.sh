@@ -435,6 +435,12 @@ alias ..='bd'
 alias ...='bd 2'
 alias ....=...
 
+#? up <folder> -> move back in the directory structure to this folder
+# http://www.quora.com/Shell-Scripting/What-are-some-time-saving-tips-that-every-Linux-user-should-know
+function up {
+  cd $(expr "${PWD,,}" : "^\(.*${1,,}[^/]*\)")
+}
+
 #? pycrm <PATH> -> remove all .pyc files at PATH, defaults to .
 function pycrm(){
   if [ "$#" -eq 0 ]; then
