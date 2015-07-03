@@ -1,3 +1,6 @@
+###############################################################################
+# Vagrant specific helpers
+###############################################################################
 
 #alias sshv='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222 -i /Applications/Vagrant/embedded/gems/gems/vagrant-1.2.1/keys/vagrant'
 
@@ -38,4 +41,12 @@ function sshv () {
 }
 
 alias sshav='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222'
+
+# just speeds up common vagrant operations
+alias vu='vagrant up'
+alias vp='vagrant provision'
+alias vd='vagrant destroy -f'
+alias vs='vagrant suspend'
+alias vr='vagrant reload'
+
 
