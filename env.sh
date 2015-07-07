@@ -20,6 +20,7 @@ shopt -s checkwinsize
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
+# http://unix.stackexchange.com/a/10925
 HISTCONTROL=ignoredups:ignorespace
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)

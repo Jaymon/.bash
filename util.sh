@@ -758,3 +758,14 @@ function extract () {
    fi
 }
 
+#? ghost -> turn history off for this shell session
+# http://unix.stackexchange.com/a/10923
+function ghost () {
+  set +o history
+}
+
+#? unghost -> turn history back on for this shell session
+function unghost () {
+  set -o history
+}
+
