@@ -2,97 +2,125 @@
 ###############################################################################
 # env.sh
 #
-# sets the environment like the prompt and certain bash options
+# handy methods for dealing with environment specific things, for the actual
+# bash environment configuration (how I like my shell setup), look at bashenv.sh
 ###############################################################################
 
-# http://old.nabble.com/show-all-if-ambiguous-broken--td1613156.html
-# http://stackoverflow.com/a/68449/5006
-# http://liquidat.wordpress.com/2008/08/20/short-tip-bash-tab-completion-with-one-tab/
-# http://superuser.com/questions/271626/
-bind "set completion-ignore-case on"
-bind "set show-all-if-ambiguous on"
-bind "set mark-symlinked-directories on"
-bind "set show-all-if-unmodified on"
+#? get_tmp -> get the system appropriate temp directory
+function get_tmp(){
+  tmp_dir="/tmp/" 
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# don't put duplicate lines in the history. See bash(1) for more options
-# ... or force ignoredups and ignorespace
-# http://unix.stackexchange.com/a/10925
-HISTCONTROL=ignoredups:ignorespace
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# don't ever obliterate the history file
-# http://briancarper.net/blog/248/ via: http://news.ycombinator.com/item?id=3755276
-shopt -s histappend
-
-#PS1='\u:\w \$ '
-# http://niczsoft.com/2010/05/my-git-prompt/
-# http://stackoverflow.com/questions/4133904/ps1-line-with-git-current-branch-and-colors
-# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
-# http://code-worrier.com/blog/git-branch-in-bash-prompt/
-# http://stackoverflow.com/questions/4133904/ps1-line-with-git-current-branch-and-colors
-# http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_01.html
-# http://ss64.com/bash/syntax-prompt.html
-
-# I can't for the life of me figure out how to get the last command exit code in PS1, so I have to use PROMPT_COMMAND
-ret_prompt='RET=$?; history -a'
-if [[ -n $PROMPT_COMMAND ]]; then
-  if [[ $PROMPT_COMMAND =~ ^[[:space:]]*\; ]]; then
-    export PROMPT_COMMAND="$ret_prompt$PROMPT_COMMAND"
-  else
-    export PROMPT_COMMAND="$ret_prompt;$PROMPT_COMMAND"
+  if [ "$TMPDIR" != "" ]; then
+    tmp_dir="$TMPDIR"
+  elif [ "$TMP" != "" ]; then
+    tmp_dir="$TMP"
+  elif [ "$TEMP" != "" ]; then
+    tmp_dir="$TEMP"
   fi
-else
-  export PROMPT_COMMAND="$ret_prompt"
-fi
 
-# http://unix.stackexchange.com/questions/8396/bash-display-exit-status-in-prompt
-# http://blog.superuser.com/2011/09/21/customizing-your-bash-command-prompt/
-# https://dougbarton.us/Bash/Bash-prompts.html
-# http://linuxconfig.org/bash-prompt-basics
-#PS1='\[$(echo -ne $CYAN)\]\u:\[$(echo -ne $LIGHTGRAY)\]\w$(git_prompt) $(ret_prompt)\[$(echo -ne $NONE)\] '
-#PS1='\[$(echo -ne $CYAN)\]\u:\[$(echo -ne $LIGHTGRAY)\]\w $(ret_prompt)\[$(echo -ne $NONE)\] '
+  # make sure last char is a /
+  # http://www.unix.com/shell-programming-scripting/14462-testing-last-character-string.html
+  if [[ $tmp_dir != */ ]]; then
+    tmp_dir="$tmp_dir"/
+  fi
 
-PS1='\[$(echo -ne $CYAN)\]\u\[$(echo -ne $NONE)\]'
-PS1="$PS1"':'
-PS1="$PS1"'\[$(echo -ne $LIGHTGRAY)\]\w\[$(echo -ne $NONE)\] '
-#PS1="$PS1"''
-#PS1="$PS1"'\[$(color=$GREEN; if [[ $(git status 2> /dev/null | grep -iE "nothing\s+(to\s+commit|added\s+to\s+commit)") -gt 0 ]]; then
-#color=$RED; fi; echo -ne $color)\] $(branch=$(git branch 2> /dev/null | grep -e ^* | cut -d " " -f 2; if [[ $? -gt 0 ]]; then
-# echo -n " ($branch) "\[$(echo -ne $NONE)\]'
+  # http://stackoverflow.com/questions/12283463/in-bash-how-do-i-join-n-parameters-together-as-a-string
+  if [ $# -gt 0 ]; then
+    IFS="/"
+    tmp_dir="$tmp_dir""$*"
+    unset IFS
+  fi
 
-PS1="$PS1"'\[$(color=$RED; if [[ -n $(git status 2> /dev/null | grep -i nothing | grep -i commit) ]]; then color=$GREEN; if [[ -n $(git status 2> /dev/null | grep -i branch | grep -i ahead | grep -i commit) ]]; then color=$LIGHTRED; fi; fi; echo -ne $color)\]'
-PS1="$PS1"'$(branch=$([[ -d .git ]] && git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2); if [[ -n $branch ]]; then echo -n "($branch) "; fi;)' 
-PS1="$PS1"'\[$(echo -ne $NONE)\]'
+  echo "$tmp_dir"
+}
 
-PS1="$PS1"'\[$(color=$GREEN; if [[ $RET -gt 0 ]]; then color=$RED; fi; echo -ne $color)\]\$\[$(echo -ne $NONE)\] '
 
-# evidently, having colors in function is hard:
-# http://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
-# http://welltemperedstudio.wordpress.com/2009/07/14/colorful-bash-prompts-and-line-wrapping-problem/
+#? cronenv -> convert the shell to an environment similar to what a cron script would run in
+# http://stackoverflow.com/a/2546509/5006
+function cronenv() {
+  cron_env+="HOME=$HOME\n"
+  cron_env+="LOGNAME=$LOGNAME\n"
+  cron_env+="PATH=/usr/bin:/bin\n"
+  cron_env+="SHELL=/bin/sh\n"
+  cron_env+="PWD=$PWD\n"
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-    xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-        #PS1="$PS1"'\[\033]0;\u@\h:'"${chroot}"'${PWD}\007\]'
-        PS1="$PS1"'\[\033]0;\u@'"${chroot}"'${PWD##*/}\007\]'
-        ;;
-    screen)
-        #PS1="$PS1"'\[\033_\u@\h:'"${chroot}"'${PWD}\033\\\'
-        PS1="$PS1"'\[\033_\u@'"${chroot}"'${PWD##*/}\033\\\'
-;;
-esac
+  if [[ ! -z $LC_ALL ]]; then
+    cron_env+="LC_ALL=$LC_ALL\n"
+  fi
 
-# this will set the prompt to red if the last command failed, and green if it succeeded
-# https://wiki.archlinux.org/index.php/Color_Bash_Prompt
-#ORIG_PS1=$PS1
-#PROMPT_COMMAND='RET=$?; history -a'
-#RET_COLOR='$(if [[ $RET = 0 ]]; then echo -ne "${GREEN}"; else echo -ne "${RED}"; fi;)'
-#PS1="\[${RET_COLOR}\]$ORIG_PS1\[${NONE}\]"
+  env - `echo -e $cron_env` /bin/sh
+}
+
+#? envglobal -> print all exported global environment variables
+function envglobal(){
+  fn=$(get_tmp exportglobal.sh)
+  if [ "$#" -eq 0 ]; then
+    fn_exports=""
+    if [[ -f $fn ]]; then
+      fn_exports=$(cat "$fn")
+    fi
+    if [[ -n $fn_exports ]]; then
+      echo -e "$fn_exports"
+    fi
+  else
+    echo "$fn"
+  fi
+}
+
+#? exportglobal KEY=VAL -> exports the env variable to current and all new shells
+function exportglobal(){
+  if [ "$#" -eq 0 ]; then
+    echo "HELP: exportglobal NAME=val"
+    return 1
+  fi
+
+  fn_exports=$(envglobal)
+
+  # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
+  for var in "$@"; do
+    echo "export $var"
+    # clear the var from the global export file
+    # http://stackoverflow.com/questions/2680274/string-manipulation-in-bash-removing-leading-section
+    # http://stackoverflow.com/questions/10638538/split-string-with-bash-with-symbol
+    fn_exports=$(echo "$fn_exports" | grep -v "${var%%=*}")
+    export "$var"
+    # http://stackoverflow.com/questions/9139401/trying-to-embed-newline-in-a-variable-in-bash
+    fn_exports+="\nexport ${var%%=*}=\"${var#*=}\""
+  done
+
+  echo -e "$fn_exports" > "$fn"
+
+}
+
+#? unsetglobal KEY=VAL -> unset global exported variables in current and all new shells
+function unsetglobal(){
+  if [ "$#" -eq 0 ]; then
+    echo "HELP: unsetglobal NAME=val"
+    return 1
+  fi
+
+  fn_exports=$(envglobal)
+
+  # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
+  for var in "$@"; do
+    echo "unset $var"
+    # clear the var from the global export file
+    fn_exports=$(echo "$fn_exports" | grep -v "$var")
+    unset "$var"
+  done
+
+  # re-add non unset vars back to the file
+  echo -e "$fn_exports" > "$fn"
+
+}
+
+#? loadenv -> will load the global exported environment vars
+function loadenv(){
+  fn=$(envglobal file)
+  if [[ -f $fn ]]; then
+    . "$fn"
+  fi
+}
+# actually do importing of environment variables if the exportglobal file exists on source of this file
+loadenv
 

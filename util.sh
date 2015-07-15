@@ -68,34 +68,6 @@ function is_os(){
 
 }
 
-#? get_tmp -> get the system appropriate temp directory
-function get_tmp(){
-  tmp_dir="/tmp/" 
-
-  if [ "$TMPDIR" != "" ]; then
-    tmp_dir="$TMPDIR"
-  elif [ "$TMP" != "" ]; then
-    tmp_dir="$TMP"
-  elif [ "$TEMP" != "" ]; then
-    tmp_dir="$TEMP"
-  fi
-
-  # make sure last char is a /
-  # http://www.unix.com/shell-programming-scripting/14462-testing-last-character-string.html
-  if [[ $tmp_dir != */ ]]; then
-    tmp_dir="$tmp_dir"/
-  fi
-
-  # http://stackoverflow.com/questions/12283463/in-bash-how-do-i-join-n-parameters-together-as-a-string
-  if [ $# -gt 0 ]; then
-    IFS="/"
-    tmp_dir="$tmp_dir""$*"
-    unset IFS
-  fi
-
-  echo "$tmp_dir"
-}
-
 #? myhost -> return the hostname of the computer
 # http://apple.stackexchange.com/a/53042
 # http://superuser.com/a/430209
@@ -164,6 +136,8 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias lt='ll -tr'
+#? lr -> Full Recursive Directory Listing
+alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
 
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -197,14 +171,6 @@ function ncpu(){
     echo "number of cores per cpu: $(($num_cores / $num_cpus))"
   fi
 
-}
-
-# this is here because I can never remember how to untar and unzip a freaking .tar.gz file
-#? untar FILE -> untar and unzip FILE (a .tar.gz file)
-# 2-20-12
-function untar(){
-  echo tar -xzf $1
-  tar -xzf $1
 }
 
 #? mkcd DIR -> create DIR then change into it
@@ -397,23 +363,6 @@ function hist(){
 }
 alias h=hist
 
-# make init.d scripts more supervisor like
-#? irestart <NAME> -> init.d restart <NAME>
-function irestart(){
-  idid restart $1
-}
-#? istart <NAME> -> init.d start <NAME>
-function istart(){
-  idid start $1
-}
-#? istop <NAME> -> init.d stop <NAME>
-function istop(){
-  idid stop $1
-}
-function idid(){
-  echo "/etc/init.d/$2 $1"
-  sudo /etc/init.d/$2 $1
-}
 
 #? bd <NUM> -> how many directories to move back (eg, bd 2 = cd ../..)
 function bd() {
@@ -441,105 +390,6 @@ function up {
   cd $(expr "${PWD,,}" : "^\(.*${1,,}[^/]*\)")
 }
 
-#? pycrm <PATH> -> remove all .pyc files at PATH, defaults to .
-function pycrm(){
-  if [ "$#" -eq 0 ]; then
-    find . -name '*.pyc' -delete
-  else
-    find $1 -name '*.pyc' -delete
-  fi
-}
-alias rmpyc=pycrm
-
-#? dsrm <PATH> -> remove all .DS_Store files at PATH, defaults to .
-function dsrm(){
-  if [ "$#" -eq 0 ]; then
-    find . -name '.DS_Store' -delete
-  else
-    find $1 -name '.DS_Store' -delete
-  fi
-}
-alias rmds=dsrm
-
-#? envglobal -> print all exported global environment variables
-function envglobal(){
-  fn=$(get_tmp exportglobal.sh)
-  if [ "$#" -eq 0 ]; then
-    fn_exports=""
-    if [[ -f $fn ]]; then
-      fn_exports=$(cat "$fn")
-    fi
-    if [[ -n $fn_exports ]]; then
-      echo -e "$fn_exports"
-    fi
-  else
-    echo "$fn"
-  fi
-}
-
-#? exportglobal KEY=VAL -> exports the env variable to current and all new shells
-function exportglobal(){
-  if [ "$#" -eq 0 ]; then
-    echo "HELP: exportglobal NAME=val"
-    return 1
-  fi
-
-  fn_exports=$(envglobal)
-
-  # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
-  for var in "$@"; do
-    echo "export $var"
-    # clear the var from the global export file
-    # http://stackoverflow.com/questions/2680274/string-manipulation-in-bash-removing-leading-section
-    # http://stackoverflow.com/questions/10638538/split-string-with-bash-with-symbol
-    fn_exports=$(echo "$fn_exports" | grep -v "${var%%=*}")
-    export "$var"
-    # http://stackoverflow.com/questions/9139401/trying-to-embed-newline-in-a-variable-in-bash
-    fn_exports+="\nexport ${var%%=*}=\"${var#*=}\""
-  done
-
-  echo -e "$fn_exports" > "$fn"
-
-}
-
-#? unsetglobal KEY=VAL -> unset global exported variables in current and all new shells
-function unsetglobal(){
-  if [ "$#" -eq 0 ]; then
-    echo "HELP: unsetglobal NAME=val"
-    return 1
-  fi
-
-  fn_exports=$(envglobal)
-
-  # http://stackoverflow.com/questions/255898/how-to-iterate-over-arguments-in-bash-script
-  for var in "$@"; do
-    echo "unset $var"
-    # clear the var from the global export file
-    fn_exports=$(echo "$fn_exports" | grep -v "$var")
-    unset "$var"
-  done
-
-  # re-add non unset vars back to the file
-  echo -e "$fn_exports" > "$fn"
-
-}
-
-#? loadenv -> will load the global exported environment vars
-function loadenv(){
-  fn=$(envglobal file)
-  if [[ -f $fn ]]; then
-    . "$fn"
-  fi
-}
-# actually do importing of environment variables if the exportglobal file exists on source of this file
-loadenv
-
-### NOTE -- none of these seam to work, but pout.json does
-# ? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
-# http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
-jsonpp='python -mjson.tool'
-ppj=jsonpp
-ppjson=jsonpp
 
 #? far FILE PROG -> run PROG FILE or prompt for what FILE if more than one FILE found in subdirs
 # find and run, ie, find FILE and run PROG FILE
@@ -673,22 +523,6 @@ function explain() {
   echo "$explanation"	
 }
 
-#? cronenv -> convert the shell to an environment similar to what a cron script would run in
-# http://stackoverflow.com/a/2546509/5006
-function cronenv() {
-  cron_env+="HOME=$HOME\n"
-  cron_env+="LOGNAME=$LOGNAME\n"
-  cron_env+="PATH=/usr/bin:/bin\n"
-  cron_env+="SHELL=/bin/sh\n"
-  cron_env+="PWD=$PWD\n"
-
-  if [[ ! -z $LC_ALL ]]; then
-    cron_env+="LC_ALL=$LC_ALL\n"
-  fi
-
-  env - `echo -e $cron_env` /bin/sh
-}
-
 #? touched [DIR] [COUNT] -> print the last COUNT touched files in DIR
 # http://stackoverflow.com/a/9052878/5006
 # NOTE -- might have problem on Linux, if so then you can OS sniff and use the given
@@ -734,6 +568,10 @@ function flushdns() {
 
 }
 
+
+###############################################################################
+# Zip/unzip specific commands
+###############################################################################
 #? extract FILEPATH -> figure out how to extract a file and extract it
 # http://natelandau.com/my-mac-osx-bash_profile/
 # Jarid showed me this, magical
@@ -758,6 +596,20 @@ function extract () {
    fi
 }
 
+#? zipf -> To create a ZIP archive of a folder
+function zipf () { zip -r "$1".zip "$1" ; }
+
+# this is here because I can never remember how to untar and unzip a freaking .tar.gz file
+#? untar FILE -> untar and unzip FILE (a .tar.gz file)
+# 2-20-12
+function untar(){
+  echo tar -xzf $1
+  tar -xzf $1
+}
+
+###############################################################################
+
+
 #? ghost -> turn history off for this shell session
 # http://unix.stackexchange.com/a/10923
 function ghost () {
@@ -767,5 +619,17 @@ function ghost () {
 #? unghost -> turn history back on for this shell session
 function unghost () {
   set -o history
+}
+
+#? mans [MANPAGE] [Q] -> Search manpage given in agument '1' for term given in argument '2' (case insensitive)
+# displays paginated result with colored search terms and two lines surrounding each hit.
+# Example: mans mplayer codec
+function mans () {
+  man $1 | grep -iC2 --color=always $2 | less
+}
+
+#? mkdat [SIZE] -> Creates a file of SIZE mb in current directory (all zeros)
+function mkdat () {
+  mkfile "$1"m ./"$1"MB.dat
 }
 
