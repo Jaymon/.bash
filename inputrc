@@ -3,10 +3,31 @@
 #   bind -f ./inputrc
 # http://stackoverflow.com/questions/15027186/inputrc-file-cannot-be-loaded
 # https://news.ycombinator.com/item?id=5565689
+# https://coderwall.com/p/oqtj8w/the-single-most-useful-thing-in-bash
+# type cd <UP-arrow> and you will go through all history that starts with cd
 "\e[A": history-search-backward
 "\e[B": history-search-forward
+# mappings for Ctrl-left-arrow and Ctrl-right-arrow for word moving
+# "\e[5C": forward-word
+# "\e[5D": backward-word
+# "\e\e[C": forward-word
+# "\e\e[D": backward-word
+
 set show-all-if-ambiguous on
 set completion-ignore-case on
+set page-completions off
+
 # http://viget.com/extend/level-up-your-shell-game
 "\t": menu-complete
 "\C-d": kill-whole-line
+
+# http://old.nabble.com/show-all-if-ambiguous-broken--td1613156.html
+# http://stackoverflow.com/a/68449/5006
+# http://liquidat.wordpress.com/2008/08/20/short-tip-bash-tab-completion-with-one-tab/
+# http://superuser.com/questions/271626/
+set mark-symlinked-directories on
+set show-all-if-unmodified on
+
+# none, visible or audible
+set bell-style none
+

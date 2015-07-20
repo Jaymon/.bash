@@ -5,15 +5,6 @@
 # sets the environment like the prompt and certain bash options
 ###############################################################################
 
-# http://old.nabble.com/show-all-if-ambiguous-broken--td1613156.html
-# http://stackoverflow.com/a/68449/5006
-# http://liquidat.wordpress.com/2008/08/20/short-tip-bash-tab-completion-with-one-tab/
-# http://superuser.com/questions/271626/
-bind "set completion-ignore-case on"
-bind "set show-all-if-ambiguous on"
-bind "set mark-symlinked-directories on"
-bind "set show-all-if-unmodified on"
-
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize

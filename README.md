@@ -1,10 +1,11 @@
 # .bash
 
-Handy bash shell aliases and functions that I've written/collected over the years
+Handy bash shell aliases and functions that I've written/collected over the years.
 
-These require bash version 4 or later
+These require bash version 4 or later.
 
-## How can update my Mac OS bash to the newest version?
+
+## How can I update my Mac OS bash to the newest version?
 
 First thing, you need to install [Homebrew](http://brew.sh/):
 
