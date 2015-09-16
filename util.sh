@@ -633,3 +633,7 @@ function mkdat () {
   mkfile "$1"m ./"$1"MB.dat
 }
 
+
+#? exif IMAGE_PATH -> Return all the information about an image
+alias exif='identify -verbose'
+
