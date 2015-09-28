@@ -22,6 +22,18 @@ HISTFILESIZE=2000
 # http://briancarper.net/blog/248/ via: http://news.ycombinator.com/item?id=3755276
 shopt -s histappend
 
+
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Chen-Bin-3
+# The trick is I seldom re-use the old command without editing. So insert below line into ~/.bashrc:
+# then !9899 will insert the command into shell instead of execute it.
+# shopt -s histverify
+
+
+# This command auto-corrects when you use cd 
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Vikneshwar-Vicky
+shopt -s cdspell
+
+
 #PS1='\u:\w \$ '
 # http://niczsoft.com/2010/05/my-git-prompt/
 # http://stackoverflow.com/questions/4133904/ps1-line-with-git-current-branch-and-colors

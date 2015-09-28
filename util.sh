@@ -386,6 +386,7 @@ alias ....=...
 
 #? up <folder> -> move back in the directory structure to this folder
 # http://www.quora.com/Shell-Scripting/What-are-some-time-saving-tips-that-every-Linux-user-should-know
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Himanshu-Neema
 function up {
   cd $(expr "${PWD,,}" : "^\(.*${1,,}[^/]*\)")
 }

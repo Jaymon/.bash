@@ -76,7 +76,7 @@ function cd_func ()
 # http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_04_03.html
 # man 7 regex to figure out how regex works in bash
 #? regex <REGEX> <STR1> [...] -> compare strings against bash regexp
-function regex(){
+function regex() {
   if [[ $# -lt 2 ]]; then
       echo "Usage: $0 PATTERN STRINGS..."
       exit 1
@@ -115,4 +115,30 @@ function sticker() {
   IFS=$oldIFS   # restore IFS
   echo $result
 }
+
+
+#? cleanhist -> cleans up the .bash_history file
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Chen-Bin-3
+function cleanhist() {
+  if [ -z "$1" ]; then
+    echo "Usage: remove duplicated lines without sortdt"
+    echo "  cleanfile ~/.bash_history"
+  else
+      local bkfile="$1.backup"
+      # \+ does not work in OSX sed
+      # delte short commands, delete git related commands
+      sed 's/ *$//g;' $1 | sed '/^.\{1,4\}$/d' | sed '/^g[nlabcdusfp]\{1,5\} .*/d' | sed '/^git [nr] /d' | sed '/^rm /d' | sed '/^cgnb /d' | sed '/^touch /d' > $bkfile
+      # @see Page on stack Overflow/questions/11532157/unix-removing-duplicate-lines-without-sorting
+      cat $bkfile | awk ' !x[$0]++' > $1
+      rm $bkfile
+  fi
+}
+
+#? biggest -> Finding the biggest files in dir 
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Raghav-Yadav-2
+alias biggest='ls -lSrh'
+
+#? mostused -> lists the most used commands on the shell
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Abhiroop-Sarkar
+alias mostused="history | awk '{a[$2]++}END{for(i in a){print a[i] \" \" i}}' | sort -rn | head"
 

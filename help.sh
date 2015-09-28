@@ -103,10 +103,18 @@ function bashHelp(){
   echo $'ctrl-l\t\tClear the terminal screen.'
   echo $'ctrl-y\t\tPaste, at the cursor, the last thing to be cut'
   echo $'ctrl-_\t\tUndo the last thing typed on this command line'
+  # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Andrey-Tykhonov
+  echo $'ctrl-/\t\tUndo the last change on this command line'
   echo ""
   echo $'ctrl-t\t\tSwaps last 2 typed characters'
   echo $'ctrl-r <text>\tsearch history for <text>'
   echo $'ctrl-L\t\tClears the Screen, similar to the clear command'
+  echo ""
+  # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Anand-Babu-Periasamy
+  echo $'Alt+.\tLast word of previous command. You can hit multiple times.'
+  echo $'Alt+u|d|c\tUp case / Down case / Capitalize.'
+  echo $'Ctrl+r\tReverse history search.'
+  echo $'Alt+{\tAuto complete wild-card expr of current dir contents'
   echo ""
   echo $'set -o emacs\tSet emacs mode in Bash (default)'
   echo $'set -o vi\tSet vi mode in Bash (initially in insert mode)'
@@ -157,7 +165,8 @@ function bashHelp(){
   printHelp "pgrep <VALUE> -> process grep for VALUE"
   printHelp "shopt -> displays bash options settings"
   printHelp "stty sane -> Restore terminal settings when screwed up"
-
+  # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Sundeep-Agarwal-2
+  printHelp "whatis <COMMAND> -> prints a single line description of command"
 
 }
 # sadly, these don't work
