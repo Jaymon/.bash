@@ -611,16 +611,25 @@ function untar(){
 ###############################################################################
 
 
-#? ghost -> turn history off for this shell session
+#? incognito -> turn history off for this shell session
 # http://unix.stackexchange.com/a/10923
-function ghost () {
-  set +o history
+function incognito () {
+  #set +o history
+  # I don't use "set +o" anymore because it makes it so I can't even hit arrow up
+  # to get the last command run, I want to still have a working command history
+  # I just don't want it to be persisted when the shell exits
+  export HISTFILE="/dev/null"
+  echo "You are now in incognito mode for the remainder of this shell session"
 }
 
-#? unghost -> turn history back on for this shell session
-function unghost () {
-  set -o history
-}
+# ? unincognito -> turn history back on for this shell session
+# TODO -- to make this work again, we would need to save the original HISTFILE
+# value and then restore it, but I normally just close the shell, so I've decided
+# to just remove this for now
+#function unincognito () {
+#  set -o history
+#  echo "You are no longer in incognito mode"
+#}
 
 #? mans [MANPAGE] [Q] -> Search manpage given in agument '1' for term given in argument '2' (case insensitive)
 # displays paginated result with colored search terms and two lines surrounding each hit.
