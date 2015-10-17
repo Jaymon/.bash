@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#? pyload -> upload the python project to pypi
 function pyload() {
   pandoc --from=markdown --to=rst --output=README.rst README.md
   python setup.py sdist upload
@@ -8,6 +9,7 @@ function pyload() {
 alias pyup=pyload
 
 
+#? pyreg -> register the python project in the current directory (must have setup.py)
 alias pyreg='python setup.py register'
 
 
@@ -25,7 +27,7 @@ alias rmpyc=pycrm
 ### NOTE -- none of these seam to work, but pout.json does
 # ? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
 # http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
-jsonpp='python -mjson.tool'
-ppj=jsonpp
-ppjson=jsonpp
+#jsonpp='python -mjson.tool'
+#ppj=jsonpp
+#ppjson=jsonpp
 

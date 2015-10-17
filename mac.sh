@@ -2,7 +2,7 @@
 ###############################################################################
 # mac.sh
 #
-#`mac/apple specific commands
+# mac/apple specific commands
 #
 ###############################################################################
 # TODO -- steal a lot of commands from this file...
@@ -14,8 +14,10 @@ if ! uname | grep -q "Darwin"; then
   return 0
 fi
 
+
 #? which -> better which implementation that shows aliases also
 alias which='type -all'
+
 
 #? fopen <PATH> -> Opens PATH in MacOS Finder
 #alias fopen='open -a Finder ./'
@@ -28,6 +30,7 @@ function fopen () {
   fi
 }
 
+
 if ! which trash > /dev/null 2>&1; then
   # this is blocked because there is a brew script that can be installed that adds
   # a trash command, which should take precedence
@@ -35,13 +38,16 @@ if ! which trash > /dev/null 2>&1; then
   trash () { command mv "$@" ~/.Trash ; }
 fi
 
+
 #? preview -> Opens any file in MacOS Quicklook Preview
 preview () {
   qlmanage -p "$*" >& /dev/null;
 }
 
+
 #? DT -> Pipe content to file on MacOS Desktop
 alias DT='tee ~/Desktop/terminalOut.txt'
+
 
 #? cdf -> 'Cd's to frontmost window of MacOS Finder
 cdf () {
@@ -60,6 +66,7 @@ EOT
   cd "$currFolderPath"
 }
 
+
 #? dsrm <PATH> -> remove all .DS_Store files at PATH, defaults to .
 function dsrm(){
   if [ "$#" -eq 0 ]; then
@@ -69,4 +76,17 @@ function dsrm(){
   fi
 }
 alias rmds=dsrm
+
+
+#? pml <path> -> convert a binary plist to an xml plist you can read
+# http://initwithfunk.com/blog/2013/05/31/breaking-bad-with-dtrace/
+alias pml='plutil -convert xml1'
+alias plistxml=pml
+
+
+#? pcat <path> -> cat plist file, this will convert to xml first
+function pcat () {
+  pml "$1"
+  cat "$1"
+}
 

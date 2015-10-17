@@ -34,9 +34,11 @@ function getBashDir(){
 src_file="${BASH_SOURCE[0]}"
 src_files=($(ls $(getBashDir)/*.sh | grep -v "$src_file"))
 for src_f in "${src_files[@]}"; do
-  if [ -f $src_f ]; then
-    #echo $src_f
-    . $src_f
+  if [[ -f $src_f ]]; then
+    # filter out "private" shell files in the directory
+    if [[ $src_f != _* ]]; then
+      . $src_f
+    fi
   fi
 done
 #set +x

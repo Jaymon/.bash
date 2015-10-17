@@ -99,3 +99,19 @@ esac
 #RET_COLOR='$(if [[ $RET = 0 ]]; then echo -ne "${GREEN}"; else echo -ne "${RED}"; fi;)'
 #PS1="\[${RET_COLOR}\]$ORIG_PS1\[${NONE}\]"
 
+
+# NOTE: I moved these from my .bash_profile, I'm not sure how good of an idea that was
+# do vim specific things if vim exists
+if which vim > /dev/null 2>&1; then
+  # these will open any editor in gvim
+  #export EDITOR="${vim} -g --remote-tab-silent"
+  #export GIT_EDITOR="${vim} -g -f"
+  # these will open the editor in console vim
+  export EDITOR="vim --remote-tab-silent"
+  export GIT_EDITOR="vim"
+
+  # bash starts in insert mode, but when you hit escape you can then move around the command line using vi bindings
+  set -o vi
+
+fi
+
