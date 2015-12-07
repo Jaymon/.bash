@@ -40,6 +40,12 @@ function gf () {
 
 }
 
+#? ggrep SEARCH-STRING -> Grep the git logs for the SEARCH-STRING
+# http://stackoverflow.com/questions/7124914/how-to-search-a-git-repository-by-commit-message
+function ggrep () {
+  git log --all --grep="$1"
+}
+
 
 ###############################################################################
 # Misc helpers
