@@ -421,13 +421,17 @@ function dar() {
   fi
 
   # let's build a prefix search string that find can use
+  echo "getting directories..."
   directories=$(convert_to_prefix_search_path $2)
+  echo "searching $1..."
   ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories")
 
+  echo "prompting..."
   IFS=$'\n'; ds=( $ds ); unset IFS
   userprompt "${ds[@]}"
   #echo -e $userprompt_chosen
   #IFS=$'\n'; ds=( $(echo -e $prompt_choices) ); unset IFS
+  echo "preparing chosen..."
   c=""
   IFS=$'\n'; ds=( $userprompt_chosen ); unset IFS
   for d in ${ds[@]}; do
@@ -439,6 +443,7 @@ function dar() {
   done
   #echo $ds
 
+  echo "cding to chosen..."
   if [[ -n "$c" ]]; then
     echo $c
     eval $c
@@ -555,6 +560,7 @@ function extract () {
       *.tar.gz)    tar xzf "$1"     ;;
       *.bz2)       bunzip2 "$1"     ;;
       *.rar)       unrar e "$1"     ;;
+      *.r00)       unrar e "$1"     ;;
       *.gz)        gunzip "$1"      ;;
       *.tar)       tar xf "$1"      ;;
       *.tbz2)      tar xjf "$1"     ;;
@@ -562,6 +568,7 @@ function extract () {
       *.zip)       unzip "$1"       ;;
       *.Z)         uncompress "$1"  ;;
       *.7z)        7z x "$1"        ;;
+      *.001)       7z x "$1"        ;;
       *)     echo "'$1' cannot be extracted via extract()" ;;
        esac
    else

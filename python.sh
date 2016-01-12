@@ -31,3 +31,6 @@ alias rmpyc=pycrm
 #ppj=jsonpp
 #ppjson=jsonpp
 
+function pygrep() {
+  grep -Rin --exclude=*.pyc --include=*.py "$1" .
+}
