@@ -18,7 +18,11 @@ set completion-ignore-case on
 set page-completions off
 
 # http://viget.com/extend/level-up-your-shell-game
+# By adding this line you can instead use tab to cycle through all the possible
+# completions stopping on which ever one is the correct one.
 "\t": menu-complete
+# type control-d from anywhere on the line and the whole line is gone and you’re
+# ready to start fresh.
 "\C-d": kill-whole-line
 
 # http://old.nabble.com/show-all-if-ambiguous-broken--td1613156.html
