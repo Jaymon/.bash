@@ -24,7 +24,7 @@ function pycrm(){
 alias rmpyc=pycrm
 
 
-### NOTE -- none of these seam to work, but pout.json does
+### NOTE -- none of these seem to work, but pout.json does
 # ? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
 # http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
 #jsonpp='python -mjson.tool'
@@ -32,5 +32,11 @@ alias rmpyc=pycrm
 #ppjson=jsonpp
 
 function pygrep() {
-  grep -Rin --exclude=*.pyc --include=*.py "$1" .
+  flags="-Rin"
+  if [[ $1 =~ [A-Z] ]]; then
+    flags="-Rn"
+  fi
+
+  grep $flags --color --exclude=*.pyc --include=*.py "$1" .
+
 }
