@@ -119,3 +119,24 @@ function pssh () {
 
 }
 
+
+###############################################################################
+# So you use vim for everything?
+###############################################################################
+
+# NOTE: I moved these from my .bash_profile, I'm not sure how good of an idea that was
+# do vim specific things if vim exists
+if which vim > /dev/null 2>&1; then
+  # these will open any editor in gvim
+  #export EDITOR="${vim} -g --remote-tab-silent"
+  #export GIT_EDITOR="${vim} -g -f"
+  # these will open the editor in console vim
+  export EDITOR="vim --remote-tab-silent"
+  export GIT_EDITOR="vim"
+
+  # bash starts in insert mode, but when you hit escape you can then move around the command line using vi bindings
+  # moved this to inputrc
+  #set -o vi
+
+fi
+

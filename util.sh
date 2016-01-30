@@ -137,6 +137,7 @@ alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+alias igrep='grep -i'
 # have grep ignore symlinks
 # http://www.linuxquestions.org/questions/linux-newbie-8/can-grep-exclude-symlinks-838343/
 function ggrep(){
@@ -599,6 +600,9 @@ function incognito () {
   # I just don't want it to be persisted when the shell exits
   export HISTFILE="/dev/null"
   echo "You are now in incognito mode for the remainder of this shell session"
+
+  # this is set to allow other scripts and things to respect incognito mode
+  export INCOGNITO=1
 }
 
 # ? unincognito -> turn history back on for this shell session

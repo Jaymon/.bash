@@ -101,3 +101,61 @@ function ebook-convert () {
   fi
 }
 
+
+#? bgcolor R G B -> set the bg color of the terminal, each color value from 1-255
+# from https://gist.github.com/thomd/956095
+# howto for linux: http://askubuntu.com/questions/558280/changing-colour-of-text-and-background-of-terminal
+bgcolor () {
+  local R=$1
+  local G=$2
+  local B=$3
+  /usr/bin/osascript <<EOF
+tell application "iTerm"
+  tell the current terminal
+    tell the current session
+      set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+    end tell
+  end tell
+end tell
+EOF
+}
+
+# if we haven't specified a default bgcolor then go ahead and use my default
+# TODO -- probably make this pull the default from iterm, but this will work for
+# right now and I don't care enough to make it more portable
+if [[ -z $BGCOLOR_DEFAULT ]]; then
+  export BGCOLOR_DEFAULT="255 255 255"
+fi
+
+# this is run everytime a command is run, it will look for a .bgcolor file in the
+# directory (and every parent directory) and when it finds it it will set the current
+# shell's background color to the R G B color specified in the file
+function bgcolor_auto () {
+  # if I ever want to try and only run this when moving directories
+  # http://stackoverflow.com/questions/6109225/bash-echoing-the-last-command-run
+  found=0
+  path=$(pwd)
+  while [[ $path != "/" ]]; do
+    color_file="$path/.bgcolor"
+    if [[ -e $color_file ]]; then
+      bgcolor $(cat $color_file)
+      found=1
+      break
+    fi
+    path=$(dirname $path)
+  done
+
+  if [[ found -eq 0 ]]; then
+    bgcolor $BGCOLOR_DEFAULT
+  fi
+
+#  curdir=$(pwd)
+#  color_file="$curdir/.bgcolor"
+#  if [[ -e $color_file ]]; then
+#    echo "here"
+#    bgcolor $(cat $color_file)
+#  fi
+}
+
+export PROMPT_COMMAND="$PROMPT_COMMAND;bgcolor_auto"
+

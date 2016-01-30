@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# 1-29-2016 -- I never used this and forgot it even existed, so I'm disabling it
+
 # this function will be called everytime a bash terminal exits
 # http://stackoverflow.com/questions/2129923/bash-run-command-before-a-script-exits
 # http://stackoverflow.com/questions/5033354/run-script-before-bash-exits
+# keep track of the directory the shell was in when it the terminal window was closed
 function epwd_append {
   # move the current pwd to the bottom of the file and limit file to N lines
   f=~/.epwd_history
@@ -18,6 +21,8 @@ function epwd_append {
 trap epwd_append EXIT
 
 #? epwd <NUM_LINES> -> print the last NUM_LINES exit working directories
+# print the last N directories the terminal was in when it was closed. You can then
+# choose one and go to it
 function epwd() {
   f=~/.epwd_history
   if [[ $# -eq 0 ]]; then

@@ -13,6 +13,11 @@
 # "\e\e[C": forward-word
 # "\e\e[D": backward-word
 
+# starts in insert mode, hit escape to move around the command line using vi bindings
+# for some reason, this needs to be before menu-complete, otherwise it turns off
+# menu-complete
+set editing-mode vi
+
 set show-all-if-ambiguous on
 set completion-ignore-case on
 set page-completions off
