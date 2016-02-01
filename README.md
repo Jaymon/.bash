@@ -21,6 +21,19 @@ You must add `/usr/local/bin/bash` to the end of the `/etc/shells` file:
 
     $ sudo vi /etc/shells
 
+so it should look something like this:
+
+    # List of acceptable shells for chpass(1).
+    # Ftpd will not allow users to connect who are not using
+    # one of these shells.
+
+    /bin/bash
+    /bin/csh
+    /bin/ksh
+    /bin/sh
+    /bin/tcsh
+    /bin/zsh
+    /usr/local/bin/bash
 
 Then you need to change your preferred shell to the new bash:
 
@@ -68,4 +81,8 @@ If you have sourced `mac.sh` and you drop a `.bgcolor` file in a directory with 
     R G B
 
 Where R, G, and B are integers between 1-255, then whenever you go into that directory, or a sub directory, the shell's background color will switch to the defined color. When you move out of that shell it will reset to whatever is defined in the environment variable `BGCOLOR_DEFAULT`.
+
+### TERM_TITLE
+
+If you use `bashenv.sh` then you can override the default title of the term window using `TERM_TITLE` environment variable.
 

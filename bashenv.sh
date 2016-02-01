@@ -37,6 +37,9 @@ shopt -s cdspell
 # internal function meant to be used in the PROMPT_COMMAND
 function set_bashenv() {
   if [[ -z $TERM_TITLE ]]; then
+    # http://superuser.com/questions/419775/with-bash-iterm2-how-to-name-tabs
+    # https://gist.github.com/phette23/5270658
+    # http://hints.macworld.com/article.php?story=20031015173932306
     echo -ne "\033]0;"$USER@${PWD##*/}"\007"
     #echo -ne "\033]0;"$*"\007"
   else
@@ -72,6 +75,10 @@ fi
 # https://dougbarton.us/Bash/Bash-prompts.html
 # http://linuxconfig.org/bash-prompt-basics
 
+# evidently, having colors in function is hard:
+# http://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
+# http://welltemperedstudio.wordpress.com/2009/07/14/colorful-bash-prompts-and-line-wrapping-problem/
+
 # print user
 PS1='\[$(echo -ne $CYAN)\]\u\[$(echo -ne $NONE)\]'
 
@@ -81,10 +88,6 @@ PS1="$PS1"':'
 PS1="$PS1"'\[$(echo -ne $LIGHTGRAY)\]\w\[$(echo -ne $NONE)\] '
 
 # The next block handles displaying a git status if we are in a directory with a GIT repo
-
-#PS1="$PS1"'\[$(color=$RED; if [[ -n $(git status 2> /dev/null | grep -i nothing | grep -i commit) ]]; then color=$GREEN; if [[ -n $(git status 2> /dev/null | grep -i branch | grep -i ahead | grep -i commit) ]]; then color=$LIGHTRED; fi; fi; echo -ne $color)\]'
-#PS1="$PS1"'$(branch=$([[ -d .git ]] && git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2); if [[ -n $branch ]]; then echo -n "($branch) "; fi;)' 
-#PS1="$PS1"'\[$(echo -ne $NONE)\]'
 
 # display green if there aren't any changes in the current repo
 PS1="$PS1"'\[$(if [[ -n $(git status 2> /dev/null | grep -i nothing | grep -i commit) ]]; then color=$GREEN;'
@@ -101,8 +104,4 @@ PS1="$PS1"'\[$(echo -ne $NONE)\]'
 
 # print green if last command was successful (return code was 0), red if it failed (return code > 0)
 PS1="$PS1"'\[$(color=$GREEN; if [[ $RET -gt 0 ]]; then color=$RED; fi; echo -ne $color)\]\$\[$(echo -ne $NONE)\] '
-
-# evidently, having colors in function is hard:
-# http://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
-# http://welltemperedstudio.wordpress.com/2009/07/14/colorful-bash-prompts-and-line-wrapping-problem/
 

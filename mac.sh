@@ -133,20 +133,26 @@ fi
 function bgcolor_auto () {
   # if I ever want to try and only run this when moving directories
   # http://stackoverflow.com/questions/6109225/bash-echoing-the-last-command-run
-  found=0
-  path=$(pwd)
-  while [[ $path != "/" ]]; do
-    color_file="$path/.bgcolor"
-    if [[ -e $color_file ]]; then
-      bgcolor $(cat $color_file)
-      found=1
-      break
-    fi
-    path=$(dirname $path)
-  done
+  if [[ $PWD != $PWD_PREV ]]; then
+    found=0
+    #path=$(pwd)
+    path=$PWD
+    while [[ $path != "/" ]]; do
+      color_file="$path/.bgcolor"
+      if [[ -e $color_file ]]; then
+        bgcolor $(cat $color_file)
+        found=1
+        break
+      fi
+      path=$(dirname $path)
+    done
 
-  if [[ found -eq 0 ]]; then
-    bgcolor $BGCOLOR_DEFAULT
+    if [[ found -eq 0 ]]; then
+      bgcolor $BGCOLOR_DEFAULT
+    fi
+
+    export PWD_PREV=$PWD
+
   fi
 
 #  curdir=$(pwd)
