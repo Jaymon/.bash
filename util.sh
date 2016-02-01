@@ -603,6 +603,7 @@ function incognito () {
 
   # this is set to allow other scripts and things to respect incognito mode
   export INCOGNITO=1
+  export TERM_TITLE="Incognito Mode"
 }
 
 # ? unincognito -> turn history back on for this shell session
