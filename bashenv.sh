@@ -43,8 +43,20 @@ shopt -s cdspell
 # http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_01.html
 # http://ss64.com/bash/syntax-prompt.html
 
+function set_bashenv() {
+  if [[ -z $TERM_TITLE ]]; then
+    echo -ne "\033]0;"$USER@${PWD##*/}"\007"
+    #echo -ne "\033]0;"$*"\007"
+  else
+    echo -ne "\033]0;"$TERM_TITLE"\007"
+  fi
+  if [[ -z $TERM ]]; then
+    export TERM=xterm-256color
+  fi
+}
+
 # I can't for the life of me figure out how to get the last command exit code in PS1, so I have to use PROMPT_COMMAND
-ret_prompt='RET=$?; history -a'
+ret_prompt='RET=$?; history -a;set_bashenv'
 if [[ -n $PROMPT_COMMAND ]]; then
   if [[ $PROMPT_COMMAND =~ ^[[:space:]]*\; ]]; then
     export PROMPT_COMMAND="$ret_prompt$PROMPT_COMMAND"
@@ -81,16 +93,19 @@ PS1="$PS1"'\[$(color=$GREEN; if [[ $RET -gt 0 ]]; then color=$RED; fi; echo -ne 
 # http://welltemperedstudio.wordpress.com/2009/07/14/colorful-bash-prompts-and-line-wrapping-problem/
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
-  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-    #PS1="$PS1"'\[\033]0;\u@\h:'"${chroot}"'${PWD}\007\]'
-    PS1="$PS1"'\[\033]0;\u@'"${chroot}"'${PWD##*/}\007\]'
-    ;;
-  screen)
-    #PS1="$PS1"'\[\033_\u@\h:'"${chroot}"'${PWD}\033\\\'
-    PS1="$PS1"'\[\033_\u@'"${chroot}"'${PWD##*/}\033\\\'
-;;
-esac
+#case "$TERM" in
+#  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+#    #PS1="$PS1"'\[\033]0;\u@\h:'"${chroot}"'${PWD}\007\]'
+#    PS1="$PS1"'\[\033]0;\u@'"${chroot}"'${PWD##*/}\007\]'
+#    #PS1="$PS1"'\[$(if [[ -z $TITLE ]]; then echo -ne "\033]0;\u@'"${chroot}"'${PWD##*/}\007" else echo -ne "\033]0;$TITLE\007" fi)\]'
+#    #PS1="$PS1"'\['"$(if [[ -z $TITLE ]]; then echo -ne "'"\033]0;\u@'"${chroot}""${PWD##*/}"'\007" fi)\]'
+#    #PS1="$PS1"'\['"$(if [[ -z $TITLE ]]; then echo -ne "'"\033]0;\u@'"${chroot}${PWD##*/}"'\007" fi)\]'
+#    ;;
+#  screen)
+#    #PS1="$PS1"'\[\033_\u@\h:'"${chroot}"'${PWD}\033\\\'
+#    PS1="$PS1"'\[\033_\u@'"${chroot}"'${PWD##*/}\033\\\'
+#;;
+#esac
 
 # this will set the prompt to red if the last command failed, and green if it succeeded
 # https://wiki.archlinux.org/index.php/Color_Bash_Prompt
