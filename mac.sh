@@ -144,7 +144,7 @@ function bgcolor_auto () {
         found=1
         break
       fi
-      path=$(dirname $path)
+      path=$(dirname "$path")
     done
 
     if [[ found -eq 0 ]]; then
