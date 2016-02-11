@@ -424,8 +424,9 @@ function dar() {
   # let's build a prefix search string that find can use
   echo "getting directories..."
   directories=$(convert_to_prefix_search_path $2)
-  echo "searching $1..."
-  ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories")
+  echo "searching $1 for $directories"
+  # http://unix.stackexchange.com/questions/24557/how-do-i-stop-a-find-from-descending-into-found-directories
+  ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories" -prune)
 
   echo "prompting..."
   IFS=$'\n'; ds=( $ds ); unset IFS
@@ -444,15 +445,15 @@ function dar() {
   done
   #echo $ds
 
-  echo "cding to chosen..."
   if [[ -n "$c" ]]; then
+    echo "running $3 with chosen directories..."
     echo $c
     eval $c
   fi
 
 }
 
-#? far FILE DIR CMD [PARAMS] -> run CMD [PARAMS] FILE or prompt for what FILE if more than one FILE found in subdirs
+#? far DIR SEARCH CMD [PARAMS] -> run CMD [PARAMS] in DIR by prompting for what FILE if more than one FILE found in DIR/SEARCH
 # find and run, ie, find FILE and run PROG [PARAMS] FILE
 function far() {
 
@@ -467,13 +468,15 @@ function far() {
   c=""
   if [[ -f $1/$2 ]]; then
 
+    # so DIR/SEARCH is actually just a file path, so use that, no searching needed
+
     # http://stackoverflow.com/questions/2701400/remove-first-element-from-in-bash
     c="${@:3} \"$1/$2\""
 
   else
 
     files=$(convert_to_prefix_search_path $2)
-    fs=$(find "$1" -not -path "*/\.*" -type f -iregex "$files" | grep -ive "pyc$")
+    fs=$(find "$1" -not -path "*/\.*" -type f -iregex "$files" -prune | grep -ive "pyc$")
     if [[ -z $fs ]]; then
       echo "No valid file matches for \"$2\" found"
       return 1
