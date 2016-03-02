@@ -40,3 +40,12 @@ function pygrep() {
   grep $flags --color --exclude=*.pyc --include=*.py "$1" .
 
 }
+
+#? pycd MODULE -> go to the source of the python module (eg, pycd foo.bar)
+# https://chris-lamb.co.uk/posts/locating-source-any-python-module
+# http://stackoverflow.com/a/2723437/5006
+pycd () {
+  cd "$(python -c "import os.path as _, ${1}; \
+    print _.dirname(_.realpath(${1}.__file__[:-1]))"
+  )"
+}
