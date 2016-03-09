@@ -120,6 +120,11 @@ function pssh () {
 }
 
 
+#? flussh IP-ADDRESS -> flush the ip address from the hosts file
+flushssh='ssh-keygen -R'
+flussh=flushssh
+
+
 ###############################################################################
 # So you use vim for everything?
 ###############################################################################

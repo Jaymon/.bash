@@ -168,6 +168,7 @@ function bashHelp(){
   # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Sundeep-Agarwal-2
   printHelp "whatis <COMMAND> -> prints a single line description of command"
 
+  # http://askubuntu.com/questions/178521/how-can-i-decode-a-base64-string-from-the-command-line
   printHelp "base64 --decode <<< BASE64-STR -> decode the base64 encoded string"
 }
 # sadly, these don't work
