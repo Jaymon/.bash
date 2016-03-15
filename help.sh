@@ -170,6 +170,9 @@ function bashHelp(){
 
   # http://askubuntu.com/questions/178521/how-can-i-decode-a-base64-string-from-the-command-line
   printHelp "base64 --decode <<< BASE64-STR -> decode the base64 encoded string"
+
+  # https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
+  printHelp "ssh-keygen -R IP-ADDRESS -> remove ip from ssh host"
 }
 # sadly, these don't work
 #alias -h=help

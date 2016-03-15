@@ -120,9 +120,11 @@ function pssh () {
 }
 
 
+# https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
 #? flussh IP-ADDRESS -> flush the ip address from the hosts file
 flushssh='ssh-keygen -R'
 flussh=flushssh
+ssh-forget=flushssh
 
 
 ###############################################################################
