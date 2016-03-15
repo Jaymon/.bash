@@ -124,7 +124,7 @@ function pssh () {
 #? flussh IP-ADDRESS -> flush the ip address from the hosts file
 flushssh='ssh-keygen -R'
 flussh=flushssh
-ssh-forget=flushssh
+sshforget=flushssh
 
 
 ###############################################################################
