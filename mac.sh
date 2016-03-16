@@ -15,6 +15,10 @@ if ! uname | grep -q "Darwin"; then
 fi
 
 
+#? clipboard -> alias for pbcopy, use like: cmd | clipboard
+alias clipboard=pbcopy
+
+
 #? which -> better which implementation that shows aliases also
 alias which='type -all'
 
