@@ -8,8 +8,19 @@ function sshv () {
 
   if [[ -d "./.vagrant" ]]; then
 
-    # $(find .vagrant -type f -name "private_key")
-    vagrant ssh
+    if [[ -d "./.vagrant/machines/default/virtualbox" ]]; then
+
+      # all of this is still faster than running vagrant ssh :(
+      box_id=$(cat ./.vagrant/machines/default/virtualbox/id)
+      port=$(VboxManage showvminfo $box_id | grep "name = ssh" | grep "host port = \d\+" --only-matching | cut -d" " -f4)
+      private_key=./.vagrant/machines/default/virtualbox/private_key
+      ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p $port -i "$private_key"
+
+    else
+      # $(find .vagrant -type f -name "private_key")
+      vagrant ssh
+
+    fi
 
   else
 
