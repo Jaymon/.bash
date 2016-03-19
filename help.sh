@@ -173,6 +173,9 @@ function bashHelp(){
 
   # https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
   printHelp "ssh-keygen -R IP-ADDRESS -> remove ip from ssh host"
+
+  # from Topher, blows my mind
+  printHelp "zless, zgrep -> same as regular versions but for gzipped files"
 }
 # sadly, these don't work
 #alias -h=help
