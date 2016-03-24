@@ -44,8 +44,38 @@ function pygrep() {
 #? pycd MODULE -> go to the source of the python module (eg, pycd foo.bar)
 # https://chris-lamb.co.uk/posts/locating-source-any-python-module
 # http://stackoverflow.com/a/2723437/5006
-pycd () {
+function pycd() {
   cd "$(python -c "import os.path as _, ${1}; \
     print _.dirname(_.realpath(${1}.__file__[:-1]))"
   )"
 }
+
+
+# http://docs.python-guide.org/en/latest/dev/virtualenvs/
+#? pyenv [VIRTUAL-ENV-NAME] -> create a virtual environamnet in current directory
+function pyenv() {
+  env="venv"
+  if [ "$#" -gt 0 ]; then
+    env=$1
+  fi
+
+  if [[ ! -d env ]]; then
+    virtualenv --no-site-packages $env
+  fi
+  pyact
+}
+alias vigo=pyenv
+
+#? pyact -> activate a virtual environment
+function pyact() {
+  fp=$(find . -type f -ipath "*/bin/activate")
+  source "$fp"
+}
+alias vido=pyact
+
+#? pydone -> de-activate a virtual environment
+function pydone() {
+  deactivate
+}
+alias vino=pydone
+
