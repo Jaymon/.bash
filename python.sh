@@ -59,8 +59,8 @@ function pyenv() {
     env=$1
   fi
 
-  if [[ ! -d env ]]; then
-    virtualenv --no-site-packages $env
+  if [[ ! -d "$env" ]]; then
+    virtualenv --no-site-packages "$env"
   fi
   pyact
 }
