@@ -105,6 +105,17 @@ function ebook-convert () {
   fi
 }
 
+function kindler () {
+  epubs=$(find . -depth 1 -type f -iname "*.epub")
+  while read -r f; do
+    echo $f
+    mobi=$(basename "$f" .epub)".mobi"
+    if [[ ! -f "$mobi" ]]; then
+      ebook-convert "$f" "$mobi"
+    fi
+  done <<< "$epubs"
+}
+
 
 #? bgcolor R G B -> set the bg color of the terminal, each color value from 1-255
 # from https://gist.github.com/thomd/956095
