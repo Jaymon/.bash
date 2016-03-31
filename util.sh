@@ -635,3 +635,5 @@ function mkdat () {
 #? exif IMAGE_PATH -> Return all the information about an image
 alias exif='identify -verbose'
 
+
+
