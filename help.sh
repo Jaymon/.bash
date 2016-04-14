@@ -176,6 +176,10 @@ function bashHelp(){
 
   # from Topher, blows my mind
   printHelp "zless, zgrep -> same as regular versions but for gzipped files"
+
+  # from https://github.com/yyuu/pyenv#basic-github-checkout
+  printHelp "exec \$SHELL -> Restart your shell so the path changes take effect."
+
 }
 # sadly, these don't work
 #alias -h=help
