@@ -179,6 +179,7 @@ function bashHelp(){
 
   # from https://github.com/yyuu/pyenv#basic-github-checkout
   printHelp "exec \$SHELL -> Restart your shell so the path changes take effect."
+  printHelp "ps auxf -> Show process tree/hierarchy"
 
 }
 # sadly, these don't work
