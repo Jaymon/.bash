@@ -122,4 +122,6 @@ function qcd() {
   fi
 }
 alias qd=qcd
+alias q=qcd
+alias d=qcd
   
