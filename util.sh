@@ -250,13 +250,15 @@ alias fcount='ls -l | wc -l'
 function myip(){
 
   if [ $(which curl &> /dev/null; echo $?) -eq 0 ]; then
-    
-    curl http://ifconfig.me/ip
-  
+
+    curl http://icanhazip.com
+    #curl http://ifconfig.me/ip
+
   else
-  
-    wget -qO- http://ifconfig.me/ip
-  
+
+    wget -qO- http://icanhazip.com
+    #wget -qO- http://ifconfig.me/ip
+
   fi
 
 }
@@ -299,31 +301,6 @@ function murder(){
   # cut - gets the first column (in this case, the pid)
   # xargs - runs each found pid through the kill command
   ps -eo pid,args | grep -v "grep" | grep "$1" | sed "s/^ *//" | cut -d' ' -f1 | xargs -i sudo kill -9 "{}"
-}
-
-
-# find all the folders of passed in value
-#? where <NAME> -> find all folders with NAME (supports * wildcard)
-function where(){
-  whered $@
-  wheref $@
-  #sudo find / -type d | grep $1
-}
-
-
-#? whered <NAME> -> find all directories matching <NAME>
-function whered(){
-  echo " = = = = Directories"
-	echo "sudo find / -type d -iname $1"
-	sudo find / -type d -iname $1
-}
-
-
-#? wheref <NAME> -> find all files matching <NAME>
-function wheref(){
-	echo " = = = = Files"
-	echo "sudo find / -type f -iname $1"
-  sudo find / -type f -iname $1
 }
 
 
@@ -376,40 +353,6 @@ function hist(){
 }
 alias h=hist
 
-
-#? bd <NUM> -> how many directories to move back (eg, bd 2 = cd ../..)
-function bd() {
-  back_dir=""
-  if [[ $# -eq 0 ]]; then
-    back_dir="../"
-  else
-    for (( i=0; i<$1; i+=1 )); do 
-      back_dir=$back_dir"../"
-    done
-  fi
-
-  echo "cd $back_dir"
-  pushd $back_dir
-}
-#? .. -> cd ..
-alias ..='bd' 
-#? ... -> cd ../..
-alias ...='bd 2'
-alias ....=...
-
-
-#? up <folder> -> move back in the directory structure to this folder
-# http://www.quora.com/Shell-Scripting/What-are-some-time-saving-tips-that-every-Linux-user-should-know
-# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Himanshu-Neema
-function up() {
-  cd $(expr "${PWD,,}" : "^\(.*${1,,}[^/]*\)")
-}
-
-
-#? fd PREFIX_PATH -> find directory specified by PREFIX_PATH
-function fd() {
-  dar . $1 cd
-}
 
 
 #? dar DIR SEARCH CMD [CMD-PARAMS] -> find sub path n DIR and run CMD [CMD-PARAMS] found-path

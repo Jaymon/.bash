@@ -31,15 +31,6 @@ alias rmpyc=pycrm
 #ppj=jsonpp
 #ppjson=jsonpp
 
-function pygrep() {
-  flags="-Rin"
-  if [[ $1 =~ [A-Z] ]]; then
-    flags="-Rn"
-  fi
-
-  grep $flags --color --exclude=*.pyc --include=*.py "$1" .
-
-}
 
 #? pycd MODULE -> go to the source of the python module (eg, pycd foo.bar)
 # https://chris-lamb.co.uk/posts/locating-source-any-python-module
