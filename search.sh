@@ -2,7 +2,7 @@
 #? typegrep TYPE PATTERN -> search only files with extension TYPE for PATTERN
 function typegrep() {
   flags="-Rin"
-  if [[ $1 =~ [A-Z] ]]; then
+  if [[ $2 =~ [A-Z] ]]; then
     flags="-Rn"
   fi
 
