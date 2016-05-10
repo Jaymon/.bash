@@ -189,6 +189,7 @@ function zombies(){
 
 
 #? disk [PATH] [COUNT] -> return biggest [COUNT=25] file sizes in [PATH=/] 
+# http://stackoverflow.com/questions/12522269/bash-how-to-find-the-largest-file-in-a-directory-and-its-subdirectories
 function disk(){
 
   # defaults
@@ -227,11 +228,13 @@ function disk(){
     fi
   
   fi
-  
+
   echo -e "${BLUE}= = = = = = Largest $cnt things in $pth${NONE}"
   # sudo du -h $pth | sort -n -r | head -n $cnt
-  sudo du $pth | sort -n -r | head -n $cnt
-  
+  # TODO -- if path doesn't prefixes $USER or something don't sudo
+  sudo du -a $pth | sort -n -r | head -n $cnt
+
+  echo ""
   echo -e "${RED}= = = = = = Total disk usage${NONE}"
   df -h
 
