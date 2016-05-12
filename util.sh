@@ -412,7 +412,13 @@ function far() {
   fi
 
   c=""
-  if [[ -f $1/$2 ]]; then
+  if [[ -f $2 ]]; then
+
+    # turns out there was a full path so don't even bother searching DIR
+
+    c="${@:3} \"$2\""
+
+  elif [[ -f $1/$2 ]]; then
 
     # so DIR/SEARCH is actually just a file path, so use that, no searching needed
 
