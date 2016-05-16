@@ -242,3 +242,26 @@ EOT
 
 export PROMPT_COMMAND="$PROMPT_COMMAND;bgcolor_auto"
 
+
+###############################################################################
+# Bash completions
+###############################################################################
+
+if which brew >/dev/null; then
+
+  # Move (or Add) /usr/local/bin to the front of the PATH, this is for brew
+  # via: http://vim.1045645.n5.nabble.com/instructions-for-installing-macvim-td5580175.html
+  [ -d /usr/local/bin ] && export PATH=$(echo /usr/local/bin:$PATH | sed -e 's;:/usr/local/bin;;')
+
+
+  # add all the completions installed by homebrew
+  completion_d=$(brew --prefix)/etc/bash_completion.d
+  for f in $completion_d/*; do
+    . "$f"
+  done
+
+  # https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md#opting-out
+  export HOMEBREW_NO_ANALYTICS=1
+
+fi
+

@@ -181,6 +181,9 @@ function bashHelp(){
   printHelp "exec \$SHELL -> Restart your shell so the path changes take effect."
   printHelp "ps auxf -> Show process tree/hierarchy"
 
+  # http://www.cyberciti.biz/faq/unix-creating-symbolic-link-ln-command/
+  printHelp "ln -s EXISTING_FILEPATH SYMBOLIC_FILEPATH -> I can never remember the order"
+
 }
 # sadly, these don't work
 #alias -h=help
