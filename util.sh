@@ -471,6 +471,9 @@ function explain() {
 # http://stackoverflow.com/a/9052878/5006
 # NOTE -- might have problem on Linux, if so then you can OS sniff and use the given
 # stackoverflow link to run the Linux version instead
+
+# TODO -- I don't think this works, try doing one of these:
+# http://stackoverflow.com/questions/1404938/list-files-by-last-edited-date
 function touched() {
   basedir="."
   count=10
