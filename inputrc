@@ -25,7 +25,10 @@ set page-completions off
 # http://viget.com/extend/level-up-your-shell-game
 # By adding this line you can instead use tab to cycle through all the possible
 # completions stopping on which ever one is the correct one.
-"\t": menu-complete
+#"\t": menu-complete
+# on 5-26-2016 I disabled the above line because I found it way more annoying than
+# I thought I would and way less helpful
+
 # type control-d from anywhere on the line and the whole line is gone and you’re
 # ready to start fresh.
 "\C-d": kill-whole-line
