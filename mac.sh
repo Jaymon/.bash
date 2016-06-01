@@ -118,13 +118,33 @@ function kindler () {
 
 
 #? bgcolor R G B -> set the bg color of the terminal, each color value from 1-255
+# currently works only with iTerm2
 # from https://gist.github.com/thomd/956095
 # howto for linux: http://askubuntu.com/questions/558280/changing-colour-of-text-and-background-of-terminal
 bgcolor () {
   local R=$1
   local G=$2
   local B=$3
-  /usr/bin/osascript <<EOF
+
+  # http://apple.stackexchange.com/questions/118464
+  if [[ $TERM_PROGRAM == "iTerm.app" ]]; then
+
+    if [[ $TERM_PROGRAM_VERSION == 3* ]]; then
+
+      # iTerm >= 3
+      # found new syntax here: http://stackoverflow.com/a/28512260/5006
+      /usr/bin/osascript <<EOF
+tell application "iTerm"
+  tell current session of current window
+    set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+  end tell
+end tell
+EOF
+
+    else
+
+      # iTerm2 < 3
+      /usr/bin/osascript <<EOF
 tell application "iTerm"
   tell the current terminal
     tell the current session
@@ -133,6 +153,10 @@ tell application "iTerm"
   end tell
 end tell
 EOF
+
+    fi
+
+  fi
 }
 
 # if we haven't specified a default bgcolor then go ahead and use my default
@@ -247,7 +271,7 @@ export PROMPT_COMMAND="$PROMPT_COMMAND;bgcolor_auto"
 # Bash completions
 ###############################################################################
 
-if which brew >/dev/null; then
+if which brew > /dev/null; then
 
   # Move (or Add) /usr/local/bin to the front of the PATH, this is for brew
   # via: http://vim.1045645.n5.nabble.com/instructions-for-installing-macvim-td5580175.html

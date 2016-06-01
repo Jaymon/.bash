@@ -36,7 +36,7 @@ src_files=($(ls $(getBashDir)/*.sh | grep -v "$src_file"))
 for src_f in "${src_files[@]}"; do
   if [[ -f $src_f ]]; then
     # filter out "private" shell files in the directory
-    if [[ $src_f != _* ]]; then
+    if [[ $(basename $src_f) != _* ]]; then
       . $src_f
     fi
   fi
