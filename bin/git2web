@@ -21,15 +21,25 @@
 #fi
 
 if [[ $# -gt 0 ]]; then 
-  if [[ -d $1 ]]; then
 
-    basegit_d=$(dirname $1)/.git
-    git_config=$basegit_d/config
+  if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [DIRECTORY or URL]"
+    echo "Print out the homepage for the passed in git repo directory"
+    exit 0
 
   else
 
-    git_url=$1
+    if [[ -d $1 ]]; then
 
+      basegit_d=$(dirname $1)/.git
+      git_config=$basegit_d/config
+
+    else
+
+      git_url=$1
+
+    fi
   fi
 
 else
@@ -57,6 +67,8 @@ if [[ $git_url == git@* ]]; then
   git_url=$(echo $git_url | sed -e 's/git@/https:\/\//')
 
   # get rid of the colon on the path
+  # sed doesn't like \S or + without using -r or -E
+  # http://stackoverflow.com/questions/12101440/one-or-more-occurences-not-working-with-sed-command
   git_url=$(echo $git_url | sed -e 's/\(\..*\):/\1\//')
 
 fi
