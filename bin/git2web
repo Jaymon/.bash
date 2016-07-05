@@ -1,0 +1,68 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# This will convert a git url to a web url that can be opened in a browser
+#
+# This is handy when you have a shell open in a git repo and you want to open up
+# the repo's homepage on like Github in order to check something, which is something
+# I seem to do frequently
+#
+# possible urls that are converted
+# https://github.com/Jaymon/.bash.git
+# git@github.com:Jaymon/.bash.git
+# git@bitbucket.org:Username/repo.git
+# https://Username@bitbucket.org/Username/repo.git
+###############################################################################
+
+#if [[ $# -eq 0 ]]; then 
+#  (>&2 echo "You need to pass in a directory that contains a .git directory")
+#  exit 1
+#fi
+
+if [[ $# -gt 0 ]]; then 
+  if [[ -d $1 ]]; then
+
+    basegit_d=$(dirname $1)/.git
+    git_config=$basegit_d/config
+
+  else
+
+    git_url=$1
+
+  fi
+
+else
+
+  basegit_d=$(pwd)/.git
+  git_config=$basegit_d/config
+
+fi
+
+if [[ -z $git_url ]]; then
+  if [[ ! -f $git_config ]]; then
+    (>&2 echo "You need to pass in a directory that contains a .git directory")
+    exit 1
+  fi
+
+  url_line=$(grep "url\s\+=" $git_config)
+  git_url=$(echo $url_line | cut -d= -f2 | tr -d '[[:space:]]')
+fi
+
+
+# now that we have the git url, we need to convert it into an http url
+
+if [[ $git_url == git@* ]]; then
+  # convert the user to the http protocol
+  git_url=$(echo $git_url | sed -e 's/git@/https:\/\//')
+
+  # get rid of the colon on the path
+  git_url=$(echo $git_url | sed -e 's/\(\..*\):/\1\//')
+
+fi
+
+# get rid of trailing .git
+git_url=$(echo $git_url | sed -e 's/\.git$//')
+
+echo $git_url
+

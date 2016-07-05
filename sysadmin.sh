@@ -10,7 +10,7 @@ alias gd='git diff'
 alias gp='git push'
 alias gpo='git push origin'
 alias gpom='git push origin master'
-alias gb='git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2'
+alias gbr='git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2'
 
 function gpob () {
   git push origin $(gb)
@@ -44,6 +44,12 @@ function gf () {
 # http://stackoverflow.com/questions/7124914/how-to-search-a-git-repository-by-commit-message
 function ggrep () {
   git log --all --grep="$1"
+}
+
+#? gb -> open up the homepage for this repo in your default browser
+function gb () {
+  git_http=$(git2web .)
+  open "$git_http"
 }
 
 

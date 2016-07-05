@@ -173,6 +173,7 @@ function bgcolor_auto () {
   # if I ever want to try and only run this when moving directories
   # http://stackoverflow.com/questions/6109225/bash-echoing-the-last-command-run
   if [[ $PWD != $PWD_PREV ]]; then
+    # NOTE: We can't use $OLDPWD for this because that is always different than $PWD
     found=0
     #path=$(pwd)
     path=$PWD

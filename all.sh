@@ -31,9 +31,10 @@ function getBashDir(){
 
 #set -x
 # source all the shell files in the directory that aren't this one
-src_file="${BASH_SOURCE[0]}"
-src_files=($(ls $(getBashDir)/*.sh | grep -v "$src_file"))
-for src_f in "${src_files[@]}"; do
+src_d=$(getBashDir)
+src_f="${BASH_SOURCE[0]}"
+src_fs=($(ls $(getBashDir)/*.sh | grep -v "$src_f"))
+for src_f in "${src_fs[@]}"; do
   if [[ -f $src_f ]]; then
     # filter out "private" shell files in the directory
     if [[ $(basename $src_f) != _* ]]; then
@@ -43,4 +44,7 @@ for src_f in "${src_files[@]}"; do
 done
 #set +x
 
+
+# add our bin file to the end of path
+export PATH=$PATH:$src_d/bin
 
