@@ -10,10 +10,12 @@ alias gd='git diff'
 alias gp='git push'
 alias gpo='git push origin'
 alias gpom='git push origin master'
+
+#? gbr -> return the name of the current branch
 alias gbr='git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2'
 
 function gpob () {
-  git push origin $(gb)
+  git push origin $(gbr)
 }
 
 alias gl='git pull'
@@ -21,7 +23,7 @@ alias glo='git pull origin'
 alias glom="git pull origin master"
 
 function glob () {
-  git pull origin $(gb)
+  git pull origin $(gbr)
 }
 
 alias glog='git log --pretty=format:"%h%x09%an%x09%s"'
@@ -33,9 +35,9 @@ alias gg="git log --graph --abbrev-commit --decorate --format=format:'%C(bold bl
 # http://stackoverflow.com/questions/15606955/how-can-i-make-git-show-a-list-of-the-files-that-are-being-tracked
 function gf () {
   if [[ $# -eq 0 ]]; then
-    git ls-tree -r $(gb) --name-only
+    git ls-tree -r $(gbr) --name-only
   else
-    git ls-tree -r $(gb) --name-only | grep "$1"
+    git ls-tree -r $(gbr) --name-only | grep "$1"
   fi
 
 }
