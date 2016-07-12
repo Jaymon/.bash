@@ -56,6 +56,7 @@ function pyenv() {
   pyact
 }
 alias vigo=pyenv
+alias venv=pyenv
 
 #? pyact -> activate a virtual environment
 function pyact() {
@@ -69,4 +70,5 @@ function pydone() {
   deactivate
 }
 alias vino=pydone
+alias pykill=pydone
 
