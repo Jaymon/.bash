@@ -54,6 +54,22 @@ function gb () {
   open "$git_http"
 }
 
+#? gdel BRANCH_NAME -> delete a branch from both local and remote
+function gdel () {
+  if [[ $# -gt 0 ]]; then
+    echo "Deleting local branch: $1"
+    git branch -d $1
+
+    # check if a remote branch exists
+    echo "Checking for remote branch: $1"
+    if git ls-remote 2>&1 | grep -q "/$1"; then
+      echo "Deleting remote branch: $1"
+      git push origin --delete $1
+    fi
+
+  fi
+}
+
 
 ###############################################################################
 # Misc helpers
