@@ -24,6 +24,21 @@ function pycrm(){
 alias rmpyc=pycrm
 
 
+#? pycount [PACKAGE_NAME] -> print out how many downloads the given module has received
+function pycount() {
+  package_name=$1
+  if [[ -z $package_name ]]; then
+    package_name=$(python setup.py --name)
+  fi
+
+  if [[ -n $package_name ]]; then
+    curl "https://pypi.python.org/pypi/$package_name/json" -s | python -c 'import sys, json; print json.load(sys.stdin)["urls"][0]["downloads"]'
+  else
+    echo "No package name passed in and no setup.py found in current directory"
+  fi
+}
+
+
 ### NOTE -- none of these seem to work, but pout.json does
 # ? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
 # http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
