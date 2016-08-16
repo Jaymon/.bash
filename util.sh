@@ -75,27 +75,9 @@ function myhost(){
 function version(){
   if [ $(is_os Darwin) -eq 0 ]; then
     # http://apple.wikia.com/wiki/List_of_Mac_OS_versions
-    version=$(sw_vers -productVersion)
-    if [[ "$version" < "10.4" ]]; then
-      echo "Panther"
-    elif [[ "$version" < "10.5" ]]; then
-      echo "Tiger"
-    elif [[ "$version" < "10.6" ]]; then
-      echo "Leopard"
-    elif [[ "$version" < "10.7" ]]; then
-      echo "Snow Leopard"
-    elif [[ "$version" < "10.8" ]]; then
-      echo "Lion"
-    elif [[ "$version" < "10.9" ]]; then
-      echo "Mountain Lion"
-    elif [[ "$version" < "11" ]]; then
-      echo "Mavericks"
-    elif [[ "$version" < "12" ]]; then
-      echo "Yosemite"
-    elif [[ "$version" < "13" ]]; then
-      echo "El Capitan"
-    fi
-    sw_vers
+    # http://unix.stackexchange.com/questions/234104/get-osx-codename-from-command-line
+    license='/System/Library/CoreServices/Setup Assistant.app/Contents/Resources/en.lproj/OSXSoftwareLicense.rtf'
+    echo $(grep -oE 'SOFTWARE LICENSE AGREEMENT FOR OS X.*[A-Z]' "$license" | sed "s/SOFT.*OS X //")
     uname -a
     echo "type system_profiler for even more information"
 
@@ -121,17 +103,6 @@ function version(){
   fi
 }
 alias v='version'
-
-
-# some more ls aliases
-# http://apple.stackexchange.com/questions/33677/
-alias ls='ls -Gp'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias lt='ll -tr'
-#? lr -> Full Recursive Directory Listing
-alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
 
 
 alias grep='grep --color=auto'
@@ -163,7 +134,7 @@ function ncpu(){
     if [ $num_cpus -eq 0 ]; then num_cpus=1; fi
 
     num_cores=$(grep -c ^processor /proc/cpuinfo)
-    
+
     echo "number of cpus: $num_cpus"
     echo "number of cores: $num_cores"
     echo "number of cores per cpu: $(($num_cores / $num_cpus))"
@@ -239,11 +210,6 @@ function disk(){
   df -h
 
 }
-
-
-# count all the files in a directory
-#? fcount -> count how many files in the current directory
-alias fcount='ls -l | wc -l'
 
 
 # print out the computer's current ip address

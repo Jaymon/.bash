@@ -32,6 +32,7 @@ function pycount() {
   fi
 
   if [[ -n $package_name ]]; then
+    # http://www.cambus.net/parsing-json-from-command-line-using-python/
     curl "https://pypi.python.org/pypi/$package_name/json" -s | python -c 'import sys, json; print json.load(sys.stdin)["urls"][0]["downloads"]'
   else
     echo "No package name passed in and no setup.py found in current directory"

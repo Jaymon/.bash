@@ -124,4 +124,20 @@ function qcd() {
 alias qd=qcd
 alias q=qcd
 alias d=qcd
-  
+
+
+# some more ls aliases
+# http://apple.stackexchange.com/questions/33677/
+alias ls='ls -Gp'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias lt='ll -tr'
+#? lr -> Full Recursive Directory Listing
+alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'''
+
+
+# count all the files in a directory
+#? fcount -> count how many files in the current directory
+alias fcount='ls -l | wc -l'
+
