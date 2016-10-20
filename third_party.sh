@@ -134,11 +134,3 @@ function cleanhist() {
   fi
 }
 
-#? biggest -> Finding the biggest files in dir 
-# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Raghav-Yadav-2
-alias biggest='ls -lSrh'
-
-#? mostused -> lists the most used commands on the shell
-# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Abhiroop-Sarkar
-alias mostused="history | awk '{a[$2]++}END{for(i in a){print a[i] \" \" i}}' | sort -rn | head"
-
