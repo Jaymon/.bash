@@ -1,0 +1,15 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# simple utility to wrap the rev command and make it easier to pass values on the
+# command line to rev.
+#
+# example:
+#   $ reverse some text to reverse
+#
+# http://stackoverflow.com/questions/11461625/bashreverse-the-order-of-characters-in-a-string
+###############################################################################
+
+echo "$@" | rev
+
