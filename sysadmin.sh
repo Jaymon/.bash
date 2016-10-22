@@ -75,6 +75,11 @@ function gdel () {
 # Misc helpers
 ###############################################################################
 
+#? freespace -> how much free space is left on the hard drive
+function freespace () {
+  df -h | head -2 | tail -1 | tr -s ' ' | cut -d' ' -f4
+}
+
 #? cs INPUT -> search all the files in current folder
 function cs () {
   grep --color=auto --exclude=*.pyc -Rin "$1" *
