@@ -4,8 +4,14 @@
 
 #alias sshv='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222 -i /Applications/Vagrant/embedded/gems/gems/vagrant-1.2.1/keys/vagrant'
 
-function sshv () {
+# echo out the box id in the given directory
+function get_vagrant_box_id () {
+  cat ./.vagrant/machines/default/virtualbox/id
+}
 
+# echo out the box ssh port
+function get_vagrant_ssh_port () {
+  port=2222
   if [[ -d "./.vagrant" ]]; then
 
     if [[ -d "./.vagrant/machines/default/virtualbox" ]]; then
@@ -13,6 +19,22 @@ function sshv () {
       # all of this is still faster than running vagrant ssh :(
       box_id=$(cat ./.vagrant/machines/default/virtualbox/id)
       port=$(VboxManage showvminfo $box_id | grep "name = ssh" | grep "host port = \d\+" --only-matching | cut -d" " -f4)
+    fi
+  fi
+  echo $port
+}
+
+
+function sshv () {
+
+  if [[ -d "./.vagrant" ]]; then
+
+    if [[ -d "./.vagrant/machines/default/virtualbox" ]]; then
+
+      # all of this is still faster than running vagrant ssh :(
+      box_id=$(get_vagrant_box_id)
+      port=get_vagrant_ssh_port
+      # TODO -- new vagrant 1.9.1 doesn't seem to put a private key in the directory
       private_key=./.vagrant/machines/default/virtualbox/private_key
       ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p $port -i "$private_key"
 
@@ -51,7 +73,8 @@ function sshv () {
   fi
 }
 
-alias sshav='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p 2222'
+#? sshav -> connect to the vagrant box using shell user's default ssh key
+alias sshav='ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p $(get_vagrant_ssh_port)'
 
 # just speeds up common vagrant operations
 alias vu='vagrant up'
