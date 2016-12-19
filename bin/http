@@ -1,0 +1,41 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# run a small http server that serves the current directory
+#
+#
+# http://www.garyrobinson.net/2004/03/one_line_python.html
+# http://stackoverflow.com/questions/8058793/single-line-python-webserver
+###############################################################################
+
+port=8000
+if [[ $# -gt 0 ]]; then 
+
+  if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [PORT]"
+    echo "Run a small http server that serves files from the current directory"
+    exit 0
+
+  else
+
+    port=$1
+
+  fi
+fi
+
+
+open "http://localhost:$port"
+
+pyversion=$(python --version 2>&1)
+if echo "$pyversion" | grep -iq "python 2" ; then
+
+  python -m SimpleHTTPServer $port
+
+else
+
+  python -m http.server $port
+
+fi
+

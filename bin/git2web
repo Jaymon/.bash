@@ -62,6 +62,9 @@ fi
 
 # now that we have the git url, we need to convert it into an http url
 
+# get rid of the ssh: in ssh://git@example.org/user/project
+git_url=$(echo $git_url | sed -e 's/ssh:\/\///')
+
 if [[ $git_url == git@* ]]; then
   # convert the user to the http protocol
   git_url=$(echo $git_url | sed -e 's/git@/https:\/\//')
