@@ -19,6 +19,8 @@ function get_vagrant_ssh_port () {
       # all of this is still faster than running vagrant ssh :(
       box_id=$(cat ./.vagrant/machines/default/virtualbox/id)
       port=$(VboxManage showvminfo $box_id | grep "name = ssh" | grep "host port = \d\+" --only-matching | cut -d" " -f4)
+      # https://www.vagrantup.com/docs/cli/port.html
+      # could also do: vagrant port --guest 22, but it would be slow
     fi
   fi
   echo $port
@@ -33,9 +35,15 @@ function sshv () {
 
       # all of this is still faster than running vagrant ssh :(
       box_id=$(get_vagrant_box_id)
-      port=get_vagrant_ssh_port
-      # TODO -- new vagrant 1.9.1 doesn't seem to put a private key in the directory
+      port=$(get_vagrant_ssh_port)
+
+      # TODO -- new vagrant 1.9.1 doesn't seem to put a private key in the directory anymore
+      # https://github.com/mitchellh/vagrant/issues/8058
       private_key=./.vagrant/machines/default/virtualbox/private_key
+      if [[ ! -f $private_key ]]; then
+        private_key=~/.vagrant.d/insecure_private_key
+      fi
+
       ssh -A -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost -p $port -i "$private_key"
 
     else
@@ -63,6 +71,7 @@ function sshv () {
         #echo $box_status
         if [[ $box_status == "running" ]]; then
           pushd "$box_dir" > /dev/null
+          # can get ssh info of current directory: vagrant ssh-config
           vagrant ssh
           break
         fi
