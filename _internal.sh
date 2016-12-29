@@ -37,7 +37,7 @@ function userprompt() {
 
     userprompt_chosen=$@
 
-  else
+  elif [[ $# -gt 1 ]]; then
 
     # split the string into an array
     IFS=$'\n'; ds=( $@ ); unset IFS
