@@ -15,6 +15,13 @@ if ! uname | grep -q "Darwin"; then
 fi
 
 
+# check for ssh-key
+added_keys=$(ssh-add -L)
+if [[ -z $added_keys ]]; then
+  >&2 echo "AGENT FORWARDING DISABLED - to add key: ssh-add ~/.ssh/id_rsa"
+fi
+
+
 #? clipboard -> alias for pbcopy, use like: cmd | clipboard
 alias clipboard=pbcopy
 
