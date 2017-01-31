@@ -7,29 +7,28 @@ function typegrep() {
   fi
 
   # http://stackoverflow.com/a/8906229/5006
-  grep $flags --color --include=*.$1 "$2" ${@:3} .
+  grep $flags --color --include=*.$1 "$2" "${@:3}" .
 
 }
 
 
 function txtgrep() {
-  typegrep txt $@
+  typegrep txt "$@"
 }
 
 
 function shgrep() {
-  typegrep sh $@
+  typegrep sh "$@"
 }
 
 
 function rbgrep() {
-  typegrep rb $@
+  typegrep rb "$@"
 }
-alias rubygrep=rbgrep
-
+alias rubygrep=rbgrep 
 
 function pygrep() {
-  typegrep py $@ --exclude=*.pyc
+  typegrep py "$@" --exclude=*.pyc
 
 
 #  flags="-Rin"
@@ -45,8 +44,8 @@ function pygrep() {
 # find all the folders of passed in value
 #? where <NAME> -> find all folders with NAME (supports * wildcard)
 function where(){
-  whered $@
-  wheref $@
+  whered "$@"
+  wheref "$@"
   #sudo find / -type d | grep $1
 }
 
