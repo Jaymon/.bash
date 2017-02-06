@@ -68,8 +68,28 @@ function pyenv() {
 
   if [[ ! -d "$env" ]]; then
     virtualenv --no-site-packages "$env"
+
+    # create an evironment file that custom config can be added to
+    if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
+      cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
+    else
+      touch "$env/environ.sh"
+    fi
+
+    if [[ -n "$PYENV_CUSTOMIZE_FILE" ]]; then
+      py_d=$(find "$env/lib" -type d -name "python*")
+      cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
+    fi
+
   fi
   pyact
+
+  if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
+    # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
+    pip install --upgrade pip
+    pip install -r "$PYENV_REQUIREMENTS_FILE"
+  fi
+
 }
 alias vigo=pyenv
 alias venv=pyenv
@@ -77,7 +97,15 @@ alias venv=pyenv
 #? pyact -> activate a virtual environment
 function pyact() {
   fp=$(find . -type f -ipath "*/bin/activate")
-  source "$fp"
+  #source "$fp"
+  . "$fp"
+
+  # source a custom environment variable if it is there
+  env_d=$(dirname $(dirname $fp))
+  environ_f="$env_d/environ.sh"
+  if [[ -f "$environ_f" ]]; then
+    . "$environ_f"
+  fi
 }
 alias vido=pyact
 
@@ -87,4 +115,5 @@ function pydone() {
 }
 alias vino=pydone
 alias pykill=pydone
+alias pyclear=pydone
 
