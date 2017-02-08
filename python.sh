@@ -81,13 +81,17 @@ function pyenv() {
       cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
     fi
 
+    created_env=1
+
   fi
   pyact
 
-  if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
-    # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
-    pip install --upgrade pip
-    pip install -r "$PYENV_REQUIREMENTS_FILE"
+  if [[ -n "$created_env" ]]; then
+    if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
+      # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
+      pip install --upgrade pip
+      pip install -r "$PYENV_REQUIREMENTS_FILE"
+    fi
   fi
 
 }
