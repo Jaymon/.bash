@@ -77,9 +77,17 @@ function pyenv() {
     fi
 
     if [[ -n "$PYENV_CUSTOMIZE_FILE" ]]; then
-      py_d=$(find "$env/lib" -type d -name "python*")
-      cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
+      cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
+    else
+      touch "$env/environ.py"
     fi
+
+    # we map our custom environ.py file to the sitecustomize so it gets run when
+    # our virtualenv python gets run
+    py_d=$(find "$env/lib" -type d -name "python*")
+    #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
+    cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
+    $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd)
 
     created_env=1
 
