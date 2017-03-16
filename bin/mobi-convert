@@ -1,0 +1,10 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# quick convert ebook file to mobi
+#
+###############################################################################
+#? mobi-convert <SRC> -> convert <SRC> to a mobi file in same directory
+ebook-convert "$1" mobi
+

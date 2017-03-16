@@ -1,0 +1,18 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# small wrapper to make it easier to view ebooks from the command line
+#
+###############################################################################
+#? ebook-viewer <SRC> -> wrapper around calibre's built-in ebook viewer
+if [[ -d /Applications/calibre.app/Contents/MacOS ]]; then
+
+  /Applications/calibre.app/Contents/MacOS/ebook-viewer "$@"
+
+else
+
+  echo "You need Calibre installed to use this"
+
+fi
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# quick convert ebook file to epub
+#
+###############################################################################
+#? epub-convert <SRC> -> convert <SRC> to an epub file in same directory
+ebook-convert "$1" epub
+

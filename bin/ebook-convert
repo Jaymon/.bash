@@ -1,0 +1,29 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# quick code for batch converting 
+#
+# http://ubuntuforums.org/showthread.php?t=2085148
+# http://manual.calibre-ebook.com/cli/ebook-convert.html
+###############################################################################
+#? ebook-convert <SRC> <DEST> -> wrapper around calibre's built-in ebook converting CLI tool
+if [[ -d /Applications/calibre.app/Contents/MacOS ]]; then
+
+  exe=/Applications/calibre.app/Contents/MacOS/ebook-convert
+  ebook="$1"
+  basename="${ebook%.*}"
+
+  shopt -s nocasematch
+  if [[ "$2" =~ ^mobi$|^epub$ ]]; then
+    $exe "$ebook" "$basename.$2"
+  else
+    $exe "$@"
+  fi
+
+else
+
+  echo "You need Calibre installed to convert ebooks"
+
+fi
+

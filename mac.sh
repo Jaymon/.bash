@@ -101,16 +101,6 @@ function pcat () {
   cat "$1"
 }
 
-#? ebook-convert <SRC> <DEST> -> wrapper around calibre's built-in ebook converting CLI tool
-# http://manual.calibre-ebook.com/cli/ebook-convert.html
-# quick code for batch converting http://ubuntuforums.org/showthread.php?t=2085148
-function ebook-convert () {
-  if [[ -d /Applications/calibre.app/Contents/MacOS ]]; then
-    /Applications/calibre.app/Contents/MacOS/ebook-convert "$@"
-  else
-    echo "You need Calibre installed to convert ebooks"
-  fi
-}
 
 function kindler () {
   epubs=$(find . -depth 1 -type f -iname "*.epub")
