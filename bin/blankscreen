@@ -1,0 +1,21 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# blank the screen, but don't put the computer to sleep
+#
+# example:
+#   $ blankscreen
+#
+###############################################################################
+
+
+# macos
+if uname | grep -q "Darwin"; then
+  # http://apple.stackexchange.com/a/266103
+  echo "pmset displaysleepnow"
+  pmset displaysleepnow
+fi
+
+
+

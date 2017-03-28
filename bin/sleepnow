@@ -1,0 +1,23 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# put the computer to sleep
+#
+# example:
+#   $ sleepnow
+#
+###############################################################################
+
+
+# macos
+if uname | grep -q "Darwin"; then
+  # http://apple.stackexchange.com/a/266103
+  echo "pmset sleepnow"
+  pmset sleepnow
+
+  # you could also do "pmset lock" to lock the computer
+fi
+
+
+
