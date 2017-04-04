@@ -1,0 +1,73 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# put the computer to sleep
+#
+# example:
+#   $ touched
+#   $ touched /some/path
+#   $ touched /some/path 10
+#
+###############################################################################
+#? touched [DIR] [COUNT] -> print the last COUNT touched files in DIR
+
+scan_dir="."
+if [[ -d "$1" ]]; then
+  scan_dir="$1"
+fi
+
+scan_count=20
+if [[ $2 -gt 0 ]]; then
+  scan_count=$2
+fi
+
+
+if uname | grep -q "Darwin"; then
+  # macos
+  find $scan_dir -type f -print0 | xargs -0 stat -f "%m %Sp %l %-8Su %-8Sg %8z %Sm %N" | sort | tail -n $scan_count | cut -f 2- -d' '
+
+else
+  # Linux
+  # http://stackoverflow.com/a/1405664/5006
+
+  find $scan_dir -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | tail -n $scan_count | cut -f 2- -d ' '
+
+  # from man find and searching for printf's fmt syntax
+  # %-.22T+ date/time 2004-04-28+22:22:05.0
+  # %M - month
+  # %n - number of hard links
+  # %-8u - file's user name
+  # %-8g - file's group name
+  # %8s - file's size
+  # %Tx - file's last modification time in format x (local date?)
+  # %.8TX - last modification in format X (local time?)
+  # %p - name of file
+  #
+  # This format results in a line that looks like:
+  # -rw-r----- 1 ubuntu   ubuntu     730938 09/23/2016 06:46:29 ./consultation-ready.log.303
+
+fi
+
+# below this was from util.sh
+
+# http://stackoverflow.com/a/9052878/5006
+# NOTE -- might have problem on Linux, if so then you can OS sniff and use the given
+# stackoverflow link to run the Linux version instead
+
+# TODO -- I don't think this works, try doing one of these:
+# http://stackoverflow.com/questions/1404938/list-files-by-last-edited-date
+#function touched() {
+#  basedir="."
+#  count=10
+#  if [[ $# -eq 1 ]]; then
+#    basedir=$1
+#  elif [ $# -eq 2 ]; then
+#    basedir=$1
+#    count=$2
+#  fi
+#
+#  find $basedir -type f -print0 | xargs -0 stat -f "%m %N" | sort -rn | head -$count | cut -f2- -d" "
+#}
+
+
