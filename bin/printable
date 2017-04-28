@@ -1,0 +1,23 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# http://stackoverflow.com/questions/22045175/remove-non-printing-chars-from-bash-variable
+# example:
+#   $ printable "SOME_STRING_WITH_STRANGE_CHARACTERS"
+#
+###############################################################################
+#? printable VALUE -> strip all non printable characters from VALUE
+
+# This arose because Amazon wishlist notes have crazy non-printable characters in
+# them, no idea why, but if you put a url in the note part you can't just copy/paste
+# it to visit the url, you have to strip the crazy characters from it first
+
+if [[ $# -eq 0 ]]; then
+  echo "printable - Strip all non printable characters from a value"
+  echo "usage: printable VALUE"
+  return 1
+fi
+
+tr -dc '[[:print:]]' <<< "$@"
+

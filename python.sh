@@ -58,16 +58,32 @@ function pycd() {
 }
 
 
+#? pyenv3 [VIRTUAL-ENV-NAME] -> create a python3 virtual environment in current directory
+function pyenv3() {
+
+  env="venv3"
+  if [ "$#" -gt 0 ]; then
+    env=$1
+  fi
+
+  pyenv $env --python=python3 ${@:2}
+
+}
+
+
 # http://docs.python-guide.org/en/latest/dev/virtualenvs/
-#? pyenv [VIRTUAL-ENV-NAME] -> create a virtual environamnet in current directory
+#? pyenv [VIRTUAL-ENV-NAME] -> create a virtual environment in current directory
 function pyenv() {
+
+  #set -x
+
   env="venv"
   if [ "$#" -gt 0 ]; then
     env=$1
   fi
 
   if [[ ! -d "$env" ]]; then
-    virtualenv --no-site-packages "$env"
+    virtualenv --no-site-packages ${@:2} "$env"
 
     # create an evironment file that custom config can be added to
     if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
@@ -92,7 +108,7 @@ function pyenv() {
     created_env=1
 
   fi
-  pyact
+  pyact $env
 
   if [[ -n "$created_env" ]]; then
     if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
@@ -102,13 +118,16 @@ function pyenv() {
     fi
   fi
 
+  #set +x
+
 }
 alias vigo=pyenv
 alias venv=pyenv
 
-#? pyact -> activate a virtual environment
+#? pyact [VIRTUAL-ENV-NAME] -> activate a virtual environment
 function pyact() {
-  fp=$(find . -type f -ipath "*/bin/activate")
+
+  fp=$(find . -type f -ipath "*$1/bin/activate")
   #source "$fp"
   . "$fp"
 

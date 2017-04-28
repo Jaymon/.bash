@@ -158,6 +158,8 @@ function bashHelp(){
   printHelp "dpkg --get-selections -> list all installed packages"
   printHelp "apt-cache search <NAME> -> search packages related to NAME"
   printHelp "apt-cache depends <NAME> -> list dependencies of package NAME"
+  # http://askubuntu.com/a/428778
+  printHelp "apt-cache policy <NAME> -> list version of package NAME"
   # http://www.debian-administration.org/articles/184
   printHelp "lsof -i :<PORT> -> see what is listening on that port"
   # http://ubuntuforums.org/showthread.php?t=261366

@@ -323,7 +323,6 @@ function hist(){
 alias h=hist
 
 
-
 #? dar DIR SEARCH CMD [CMD-PARAMS] -> find sub path n DIR and run CMD [CMD-PARAMS] found-path
 function dar() {
 
