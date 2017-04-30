@@ -336,8 +336,18 @@ function dar() {
   echo "getting directories..."
   directories=$(convert_to_prefix_search_path $2)
   echo "searching $1 for $directories"
+
+  #set -x
+
   # http://unix.stackexchange.com/questions/24557/how-do-i-stop-a-find-from-descending-into-found-directories
-  ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories" -prune)
+  if git -C . rev-parse  > /dev/null 2>&1; then
+    # since we are in a git directory, run the found paths through gitignore
+    ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories" -prune | git check-ignore -vn --stdin | grep "^::" | cut -d$'\t' -f2)
+  else
+    ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories" -prune)
+  fi
+
+  # set +x
 
   echo "prompting..."
   IFS=$'\n'; ds=( $ds ); unset IFS
@@ -393,7 +403,14 @@ function far() {
   else
 
     files=$(convert_to_prefix_search_path $2)
-    fs=$(find "$1" -not -path "*/\.*" -type f -iregex "$files" -prune | grep -ive "pyc$")
+    #fs=$(find "$1" -not -path "*/\.*" -type f -iregex "$files" -prune | grep -ive "pyc$")
+    if git -C . rev-parse  > /dev/null 2>&1; then
+      # since we are in a git directory, run the found paths through gitignore
+      fs=$(find "$1" -not -path "*/\.*" -type f -iregex "$files" -prune | git check-ignore -vn --stdin | grep "^::" | cut -d$'\t' -f2)
+    else
+      fs=$(find "$1" -not -path "*/\.*" -type f -iregex "$files" -prune | grep -ive "pyc$")
+    fi
+
     if [[ -z $fs ]]; then
       echo "No valid file matches for \"$2\" found"
       return 1
