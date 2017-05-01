@@ -14,8 +14,8 @@
 # it to visit the url, you have to strip the crazy characters from it first
 
 if [[ $# -eq 0 ]]; then
-  echo "printable - Strip all non printable characters from a value"
-  echo "usage: printable VALUE"
+  >&2 echo "printable - Strip all non printable characters from a value"
+  >&2 echo "usage: printable VALUE"
   return 1
 fi
 

@@ -327,8 +327,8 @@ alias h=hist
 function dar() {
 
   if [[ $# -eq 0 ]]; then
-    echo "dar - find subdirectories using SEARCH in DIR and run CMD"
-    echo "usage: dar DIR SEARCH CMD [CMD-PARAMS]"
+    >&2 echo "dar - find subdirectories using SEARCH in DIR and run CMD"
+    >&2 echo "usage: dar DIR SEARCH CMD [CMD-PARAMS]"
     return 1
   fi
 
@@ -381,8 +381,8 @@ function far() {
   #set -x
 
   if [[ $# -eq 0 ]]; then
-    echo "far - find subfiles using SEARCH in DIR and run CMD"
-    echo "usage: far DIR SEARCH CMD [CMD-PARAMS]"
+    >&2 echo "far - find subfiles using SEARCH in DIR and run CMD"
+    >&2 echo "usage: far DIR SEARCH CMD [CMD-PARAMS]"
     return 1
   fi
 

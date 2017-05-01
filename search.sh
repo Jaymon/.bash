@@ -45,7 +45,9 @@ function pygrep() {
 # find all the folders of passed in value
 #? where <NAME> -> find all folders with NAME (supports * wildcard)
 function where(){
+  >&2 echo " = = = = Directories"
   whered "$@"
+  >&2 echo " = = = = Files"
   wheref "$@"
   #sudo find / -type d | grep $1
 }
@@ -53,17 +55,15 @@ function where(){
 
 #? whered <NAME> -> find all directories matching <NAME>
 function whered() {
-  echo " = = = = Directories"
-	echo "sudo find / -type d -iname $1"
-	sudo find / -type d -iname $1
+  >&2 echo "sudo find / -type d -iname $1"
+  sudo find / -type d -iname "$1"
 }
 
 
 #? wheref <NAME> -> find all files matching <NAME>
 function wheref() {
-	echo " = = = = Files"
-	echo "sudo find / -type f -iname $1"
-  sudo find / -type f -iname $1
+  >&2 echo "sudo find / -type f -iname $1"
+  sudo find / -type f -iname "$1"
 }
 
 
