@@ -148,3 +148,36 @@ alias vino=pydone
 alias pykill=pydone
 alias pyclear=pydone
 
+
+#? pymk PATH -> take a path and make a python module (eg, foo/bar would create foo/__init__.py etc)
+function pymk() {
+
+  #set -x
+
+  if [ "$#" -eq 0 ]; then
+    >&2 echo "pymk DIRECTORY"
+  fi
+
+  mkdir -p "$1"
+
+  if [[ ${1:0:1} == "/" ]]; then
+    base="/"
+  else
+    base=""
+  fi
+
+  IFS=$'/'; ds=( $1 ); unset IFS
+  for d in ${ds[@]}; do
+    base="${base}${d}/"
+    init_f="${base}__init__.py"
+
+    if [[ ! -f "$init_f" ]]; then
+      touch "$init_f"
+    fi
+  done
+
+  #set +x
+}
+alias mkpy=pymk
+alias pymake=pymk
+
