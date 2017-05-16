@@ -1,0 +1,27 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# similar to uniq but will remove a duplicated line from anywhere in the file not just
+# following lines, so you don't need to do sort | uniq and change the order of the
+# lines
+#
+# example:
+#   $ aniq INPUT
+#
+# http://stackoverflow.com/questions/11532157/unix-removing-duplicate-lines-without-sorting
+# http://www.unixcl.com/2008/03/remove-duplicates-without-sorting-file.html
+###############################################################################
+
+if [[ $# -gt 0 ]]; then
+
+  input="$1"
+
+else
+
+  read input
+
+fi
+
+awk '!x[$0]++' "$input"
+
