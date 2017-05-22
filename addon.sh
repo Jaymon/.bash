@@ -69,6 +69,9 @@ function add_urlencode() {
 #
 #}
 
+# TODO -- add cuts https://raw.githubusercontent.com/arielf/cuts/master/cuts
+# via: https://stackoverflow.com/questions/17644000/how-to-get-second-last-field-from-a-cut-command
+
 function addAddon() {
   if [[ $# -ne 3 ]]; then
     echo "addAddon FILENAME NAME URL"
@@ -87,3 +90,9 @@ function addAddon() {
   fi
 
 }
+
+
+# TODO -- add an external source and bin directory, and modify addAddon to either put files to be
+# sourced in external/source or external/bin and have external/bin be added to path and have external/source
+# be sourced on startup.
+

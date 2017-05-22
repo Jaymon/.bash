@@ -1,0 +1,131 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# I really limited reverse cut that you can pass negative integers into and it will
+# return columns from the end of the string
+#
+# example:
+#   $ rcut -d DELIM -f -INTEGER
+#
+# https://stackoverflow.com/questions/22727107/how-to-find-the-last-field-using-cut
+###############################################################################
+
+#cols=()
+#cols+=("new_element")
+
+
+cols=0
+
+# https://stackoverflow.com/a/41734355/5006
+# this will find out how many columns there are using the current passed in delim,
+# this is way not optimized, it basically just keeps slicing until there is nothing
+# left to slice
+function r_cut(){
+
+  nu="$(echo $1 | cut -d"$2" -f 2-)"
+  if [[ $nu != $1 ]]; then
+    ((cols++))
+    r_cut "$nu" "$2"
+  else
+    ((cols++))
+  fi
+}
+
+
+# https://linuxconfig.org/how-do-i-print-all-arguments-submitted-on-a-command-line-from-a-bash-script
+# store arguments in a special array 
+args=("$@") 
+# get number of elements 
+element_count=${#args[@]} 
+ 
+# echo each element in array  
+# for loop 
+for (( i=0;i<$element_count;i++)); do 
+  v=${args[${i}]}
+  if [[ $v == -d* ]]; then
+    if [[ $v == -d ]]; then
+      ((i++))
+      cut_delim=${args[$i]}
+    else
+      # https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion
+      cut_delim=${v:2}
+    fi
+    #echo "delim: $cut_delim"
+
+  elif [[ $v == -f* ]]; then
+    if [[ $v == -f ]]; then
+      #echo "args[$i]: ${args[$i]}"
+      ((i++))
+      #echo "args[$i]: ${args[$i]}"
+      cut_column=${args[$i]}
+    else
+      cut_column=${v:2}
+    fi
+    #echo "column: $cut_column"
+
+  else
+    if [[ -f $v ]]; then
+      cut_file=$v
+    fi
+    #echo "other: $v"
+  fi
+done
+
+if [[ -z $cut_file ]]; then
+  read line
+  if [[ $cut_column -lt 0 ]]; then
+    r_cut $line $cut_delim
+    #echo $cols
+
+    # https://stackoverflow.com/a/6348941/5006
+    cols=$((cols + 1 + $cut_column))
+    #echo "cols: $cols"
+    echo $line | cut -d "$cut_delim" -f $cols
+
+  else
+    echo $line | cut -d "$cut_delim" -f $cut_column
+
+  fi
+#  if [[ $cut_column -eq -1 ]]; then
+#    echo $line | cut -d "$cut_delim" -f $cols
+#  else
+
+
+
+
+else
+  >&2 echo "this is currently unsupported functionality"
+fi
+
+
+#r_cut $input
+#echo 
+
+
+
+#for i in $*; do 
+#  #echo $i 
+#  if [[ $i == -d* ]]; then
+#    if [[ $i == -d ]]; then
+#      echo ${i+1}
+#    else
+#      echo $i
+#    fi
+#  fi
+#done
+
+
+#if [[ $# -gt 0 ]]; then
+#
+#  if [[ $1 == "-d" ]]; then
+#
+#
+#  fi
+#
+#else
+#
+#  read input
+#
+#fi
+
