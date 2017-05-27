@@ -1,0 +1,21 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# just makes base64 slightly easier to use
+#
+# example:
+#   $ b64dec "foo"
+#
+# https://askubuntu.com/questions/178521/how-can-i-decode-a-base64-string-from-the-command-line
+###############################################################################
+
+if [[ $# -gt 0 ]]; then
+  echo "$@" | base64 --decode -
+
+else
+
+  >&2 echo "b64dec STRING"
+
+fi
+
