@@ -10,9 +10,9 @@ function typegrep() {
   if git -C . rev-parse  > /dev/null 2>&1; then
     # in order to filter the gitignored files we first just return the files that
     # have matches, then whittle those down and then print the matches to the screen
-    grep $flags --include=*.$1 --files-with-matches "$2" "${@:3}" . | git check-ignore -vn --stdin | grep "^::" | cut -d$'\t' -f2 | xargs grep -H --color "$2"
+    grep $flags --include=*.$1 --files-with-matches "$2" "${@:3}" . | git check-ignore -vn --stdin | grep "^::" | cut -d$'\t' -f2 | xargs grep -H --line-number --color "$2"
   else
-    grep $flags --color --include=*.$1 "$2" "${@:3}" .
+    grep $flags --color --line-number --include=*.$1 "$2" "${@:3}" .
   fi
 
 }
