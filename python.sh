@@ -24,6 +24,22 @@ function pycrm(){
 alias rmpyc=pycrm
 
 
+#? pyname [PACKAGE_NAME] -> return whether there is a package with this name
+function pyname() {
+  package_name=$1
+  if [[ -z $package_name ]]; then
+    echo "No package name passed in and no setup.py found in current directory"
+    return 1
+  fi
+
+  if curl "https://pypi.python.org/pypi/$package_name/json" -s | grep -i "200 OK"; then
+    echo ":( Package ${package_name} alread exists!"
+  else
+    echo ":) Package ${package_name} is Available!"
+  fi
+}
+
+
 #? pycount [PACKAGE_NAME] -> print out how many downloads the given module has received
 function pycount() {
   package_name=$1
@@ -53,7 +69,7 @@ function pycount() {
 # http://stackoverflow.com/a/2723437/5006
 function pycd() {
   cd "$(python -c "import os.path as _, ${1}; \
-    print _.dirname(_.realpath(${1}.__file__[:-1]))"
+    print _.dirname(_.realpath(${1}.__file__[:-1]))" \
   )"
 }
 

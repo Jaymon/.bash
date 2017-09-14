@@ -37,7 +37,7 @@ alias rubygrep=rbgrep
 function pygrep() {
   # http://stackoverflow.com/a/3816747/5006 "$@" is handled as a special case by the shell. 
   # That is, "$@" is equivalent to "$1" "$2" ...
-  typegrep py "$@" --exclude=*.pyc
+  typegrep py "$@" --exclude=*.pyc --exclude-dir="python2*" --exclude-dir="python3*"
 
 }
 

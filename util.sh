@@ -146,8 +146,8 @@ function ncpu(){
 #? mkcd DIR -> create DIR then change into it
 # since 3-10-12
 function mkcd(){
-  mkdir -p $1
-  cd $1
+  mkdir -p "$@"
+  cd "$@"
 }
 
 
@@ -524,6 +524,7 @@ function incognito () {
   export INCOGNITO=1
   export TERM_TITLE="Incognito Mode"
 }
+alias incog=incognito
 
 # ? unincognito -> turn history back on for this shell session
 # TODO -- to make this work again, we would need to save the original HISTFILE
