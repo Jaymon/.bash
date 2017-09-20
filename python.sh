@@ -3,6 +3,7 @@
 #? pyload -> upload the python project to pypi
 function pyload() {
   pandoc --from=markdown --to=rst --output=README.rst README.md
+  # http://inre.dundeemt.com/2014-05-04/pypi-vs-readme-rst-a-tale-of-frustration-and-unnecessary-binding/
   if python setup.py check --restructuredtext --strict; then
     python setup.py sdist upload
 
