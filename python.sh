@@ -3,8 +3,15 @@
 #? pyload -> upload the python project to pypi
 function pyload() {
   pandoc --from=markdown --to=rst --output=README.rst README.md
-  python setup.py sdist upload
-  # todo -- get rid of all the left over folders?
+  if python setup.py check --restructuredtext --strict; then
+    python setup.py sdist upload
+
+    # !!! get rid of all the left over folders and files
+    rm README.rst
+    rm -rf dist
+    rm -rf *.egg-info
+
+  fi
 }
 alias pyup=pyload
 
