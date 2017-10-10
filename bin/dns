@@ -1,0 +1,56 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# dns things
+#
+# example:
+#   $ # print all the mx records of example.com
+#   $ dns mx example.com
+#   $
+#   $ # flush all dns of the machine
+#   $ dns --flush
+#
+###############################################################################
+
+#? flushdns -> flushes the dns cache
+function flushdns() {
+  # todo: make this better
+  # http://coolestguidesontheplanet.com/clear-the-local-dns-cache-in-osx/
+  if [ $(is_os Darwin) -eq 0 ]; then
+    # this is 10.10 only
+    sudo discoveryutil udnsflushcaches
+  else
+    if [[ -f /etc/init.d/named ]]; then
+      sudo /etc/init.d/named restart
+    else
+      sudo /etc/init.d/nscd restart
+    fi
+  fi
+
+}
+
+
+if [[ $# -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+  echo "usage: $(basename $0) RECORD DOMAIN"
+  echo "Print all the DNS records of type RECORD for DOMAIN"
+  echo ""
+  echo "usage: $(basename $0) --flush"
+  echo "Flush DNS cache of local machine"
+  exit 0
+
+else
+
+  if [[ $1 == "--flush" ]] || [[ $1 == "-f" ]]; then
+    flushdns
+
+  else
+    if [[ -n $1 ]] && [[ -n $2 ]]; then
+      echo "host -t $1 $2"
+      host -t "$1" "$2"
+    fi
+  fi
+fi
+
+

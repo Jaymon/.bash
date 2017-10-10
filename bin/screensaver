@@ -1,0 +1,25 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# Starts the current screensaver
+#
+# example:
+#   $ screensaver
+#
+###############################################################################
+
+# set a black screen saver:
+# https://randosity.wordpress.com/2017/02/18/how-to-setup-a-black-blank-screensaver-on-a-mac-or-windows-computer/
+# https://superuser.com/questions/328668/where-can-i-get-a-black-screen-screensaver-for-os-x-lion
+
+
+# macos
+if uname | grep -q "Darwin"; then
+  # https://stackoverflow.com/questions/4505198/
+  echo "open -a ScreenSaverEngine"
+  open -a ScreenSaverEngine
+fi
+
+
+

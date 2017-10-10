@@ -1,0 +1,19 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# mute the speakers
+#
+# example:
+#   $ mute
+#
+###############################################################################
+
+
+# macos
+if uname | grep -q "Darwin"; then
+  # https://github.com/roubles/maclock
+  echo "osascript -e \"set Volume 0\""
+  osascript -e "set Volume 0"
+fi
+
