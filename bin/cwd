@@ -1,0 +1,27 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# Copy the current working directory to the clipboard
+#
+# I spend more time than I care to admit running pwd, and then selecting it and
+# hitting cmd-c
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+  echo "usage: $(basename $0)"
+  echo "Copy the current working directory to the clipboard"
+  exit 0
+
+fi
+
+
+# macos
+if uname | grep -q "Darwin"; then
+  pwd | pbcopy
+else
+  echo "Not currently supported on this OS"
+  exit 1
+fi
+
