@@ -2,8 +2,7 @@
 ###############################################################################
 # help.sh
 #
-#`this has all the help commands that print help, it creates the ? command that
-# prints out all the helps stuff
+#`this has all the help commands that print help, it creates the ? command that # prints out all the helps stuff
 #
 ###############################################################################
 
@@ -160,10 +159,14 @@ function bashHelp(){
   printHelp "apt-cache depends <NAME> -> list dependencies of package NAME"
   # http://askubuntu.com/a/428778
   printHelp "apt-cache policy <NAME> -> list version of package NAME"
-  # http://www.debian-administration.org/articles/184
-  printHelp "lsof -i :<PORT> -> see what is listening on that port"
   # http://ubuntuforums.org/showthread.php?t=261366
   printHelp "dpkg --get-selections -> list all installed packages"
+  # https://askubuntu.com/questions/44122/how-to-upgrade-a-single-package-using-apt-get
+  printHelp "apt-get install --only-upgrade <NAME> -> upgrade just NAME package"
+  printHelp "apt-get install --no-install-recommends <NAME> -> install the minimum for NAME"
+
+  # http://www.debian-administration.org/articles/184
+  printHelp "lsof -i :<PORT> -> see what is listening on that port"
   printHelp "pgrep <VALUE> -> process grep for VALUE"
   printHelp "shopt -> displays bash options settings"
   printHelp "stty sane -> Restore terminal settings when screwed up"
