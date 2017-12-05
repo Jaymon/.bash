@@ -176,3 +176,19 @@ if which vim > /dev/null 2>&1; then
 
 fi
 
+
+# retry CMD -> run CMD until you get 0 exit code
+# this has to be a function because if it is own script you couldn't use aliases
+# (eg, I couldn't do `retry ussh name@host` and have it work
+function retry () {
+  cmd="$@"
+  echo $cmd
+  # we use eval so aliases and functions work as expected
+  eval $cmd
+  while [ $? -ne 0 ]; do
+    sleep 5
+    eval $cmd
+  done
+  # https://stackoverflow.com/a/24770962/5006
+}
+
