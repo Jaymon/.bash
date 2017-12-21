@@ -70,6 +70,22 @@ function gdel () {
   fi
 }
 
+#? gcd -> move backwards until you find the root repo directory
+function g.. () {
+  path=$PWD
+  while [[ $path != "/" ]]; do
+    git_d="$path/.git"
+    if [[ -d $git_d ]]; then
+      pushd "$path"
+      break
+    else
+      path=$(dirname "$path")
+    fi
+  done
+}
+alias gcd=g..
+alias g.=g..
+
 
 ###############################################################################
 # Misc helpers

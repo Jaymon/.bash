@@ -114,93 +114,6 @@ function kindler () {
 }
 
 
-#? bgcolor R G B -> set the bg color of the terminal, each color value from 1-255
-# currently works only with iTerm2
-# from https://gist.github.com/thomd/956095
-# howto for linux: http://askubuntu.com/questions/558280/changing-colour-of-text-and-background-of-terminal
-bgcolor () {
-  local R=$1
-  local G=$2
-  local B=$3
-
-  # http://apple.stackexchange.com/questions/118464
-  if [[ $TERM_PROGRAM == "iTerm.app" ]]; then
-
-    if [[ $TERM_PROGRAM_VERSION == 3* ]]; then
-
-      # iTerm >= 3
-      # found new syntax here: http://stackoverflow.com/a/28512260/5006
-      /usr/bin/osascript <<EOF
-tell application "iTerm"
-  tell current session of current window
-    set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
-  end tell
-end tell
-EOF
-
-    else
-
-      # iTerm2 < 3
-      /usr/bin/osascript <<EOF
-tell application "iTerm"
-  tell the current terminal
-    tell the current session
-      set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
-    end tell
-  end tell
-end tell
-EOF
-
-    fi
-
-  fi
-}
-
-# if we haven't specified a default bgcolor then go ahead and use my default
-# TODO -- probably make this pull the default from iterm, but this will work for
-# right now and I don't care enough to make it more portable
-if [[ -z $BGCOLOR_DEFAULT ]]; then
-  export BGCOLOR_DEFAULT="255 255 255"
-fi
-
-# this is run everytime a command is run, it will look for a .bgcolor file in the
-# directory (and every parent directory) and when it finds it it will set the current
-# shell's background color to the R G B color specified in the file
-function bgcolor_auto () {
-  # if I ever want to try and only run this when moving directories
-  # http://stackoverflow.com/questions/6109225/bash-echoing-the-last-command-run
-  if [[ $PWD != $PWD_PREV ]]; then
-    # NOTE: We can't use $OLDPWD for this because that is always different than $PWD
-    found=0
-    #path=$(pwd)
-    path=$PWD
-    while [[ $path != "/" ]]; do
-      color_file="$path/.bgcolor"
-      if [[ -e $color_file ]]; then
-        bgcolor $(cat $color_file)
-        found=1
-        break
-      fi
-      path=$(dirname "$path")
-    done
-
-    if [[ found -eq 0 ]]; then
-      bgcolor $BGCOLOR_DEFAULT
-    fi
-
-    export PWD_PREV=$PWD
-
-  fi
-
-#  curdir=$(pwd)
-#  color_file="$curdir/.bgcolor"
-#  if [[ -e $color_file ]]; then
-#    echo "here"
-#    bgcolor $(cat $color_file)
-#  fi
-}
-
-
 #? pwds -> print all terminal workding directories and let you choose one
 function pwds() {
   pwd_path="${TMPDIR}pwds.txt"
@@ -222,24 +135,48 @@ function pwds() {
   #end tell
   #EOT
 
+#  # iterm < 3
+#  /usr/bin/osascript <<EOT
+#  tell application "iTerm"
+#    set w2 to (current terminal)
+#    set id2 to the name of the first session of w2
+#    repeat with w in terminals
+#      if w is not w2 then
+#        tell w
+#          repeat with s in sessions
+#            set id1 to the name of s
+#            if id1 is not id2 then
+#              tell s
+#                write text "pwd >> \"${pwd_path}\""
+#              end tell
+#            end if
+#          end repeat
+#        end tell
+#      end if
+#    end repeat
+#  end tell
+#EOT
 
+  # iterm >= 3
+  # https://www.iterm2.com/documentation-scripting.html
   /usr/bin/osascript <<EOT
   tell application "iTerm"
-    set w2 to (current terminal)
-    set id2 to the name of the first session of w2
-    repeat with w in terminals
-      if w is not w2 then
-        tell w
-          repeat with s in sessions
-            set id1 to the name of s
-            if id1 is not id2 then
-              tell s
-                write text "pwd >> \"${pwd_path}\""
-              end tell
-            end if
-          end repeat
-        end tell
-      end if
+    set id1 to unique id of current session of current tab of current window
+    repeat with w in windows
+      tell w
+        repeat with t in tabs
+          tell t
+            repeat with s in sessions
+              set id2 to unique id of s
+              if id1 is not id2
+                tell s
+                  write text "pwd >> \"${pwd_path}\""
+                end tell
+              end if
+            end repeat
+          end tell
+        end repeat
+      end tell
     end repeat
   end tell
 EOT
@@ -248,21 +185,13 @@ EOT
 
   #userprompt "$(cat $pwd_path)"
 
-  IFS=$'\n'; ds=( $(cat $pwd_path) ); unset IFS
+  IFS=$'\n'; ds=( $(uniq $pwd_path) ); unset IFS
   userprompt "${ds[@]}"
-
-  IFS=$'\n'; ds=( $userprompt_chosen ); unset IFS
-  for d in ${ds[@]}; do
-    #echo $d
-    #eval "pushd $d"
-    pushd $d
-    break
-  done
+  if [[ -d ${userprompt_chosen[0]} ]]; then
+    pushd ${userprompt_chosen[0]} > /dev/null
+  fi
 
 }
-
-
-export PROMPT_COMMAND="$PROMPT_COMMAND;bgcolor_auto"
 
 
 ###############################################################################
