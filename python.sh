@@ -86,7 +86,7 @@ function pycd() {
 
 
 #? pyenv3 [VIRTUAL-ENV-NAME] -> create a python3 virtual environment in current directory
-function pyenv3() {
+function pyvir3() {
 
   env="venv3"
   if [ "$#" -gt 0 ]; then
@@ -96,7 +96,52 @@ function pyenv3() {
   pyenv $env --python=python3 ${@:2}
 
 }
+alias pyenv3=pyvir3
 
+
+function pyvir2() {
+
+  env="venv"
+  if [ "$#" -gt 0 ]; then
+    env=$1
+  fi
+
+  pyenv $env ${@:2}
+
+}
+alias pyenv2=pyvir2
+
+
+function pycreate() {
+  if [ "$#" -eq 0 ]; then
+    echo "no VIRTUAL-ENV-NAME specified"
+    return 1
+  fi
+
+  env=$1
+  virtualenv --no-site-packages ${@:2} "$env"
+
+  # create an evironment shell file that custom config can be added to
+  if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
+    cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
+  else
+    touch "$env/environ.sh"
+  fi
+
+  # create a usercustomize python file to customize the python installation
+  if [[ -n "$PYENV_CUSTOMIZE_FILE" ]]; then
+    cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
+  else
+    touch "$env/environ.py"
+  fi
+
+  # we map our custom environ.py file to the sitecustomize so it gets run when
+  # our virtualenv python gets run
+  py_d=$(find "$env/lib" -type d -name "python*")
+  #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
+  $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd)
+
+}
 
 # http://docs.python-guide.org/en/latest/dev/virtualenvs/
 #? pyenv [VIRTUAL-ENV-NAME] -> create a virtual environment in current directory
@@ -104,34 +149,15 @@ function pyenv() {
 
   #set -x
 
-  env="venv"
   if [ "$#" -gt 0 ]; then
     env=$1
+  else
+    env=$(find . -type d -iname "venv*" | head -n 1 | xargs basename)
   fi
 
   if [[ ! -d "$env" ]]; then
-    virtualenv --no-site-packages ${@:2} "$env"
-
-    # create an evironment file that custom config can be added to
-    if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
-      cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
-    else
-      touch "$env/environ.sh"
-    fi
-
-    if [[ -n "$PYENV_CUSTOMIZE_FILE" ]]; then
-      cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
-    else
-      touch "$env/environ.py"
-    fi
-
-    # we map our custom environ.py file to the sitecustomize so it gets run when
-    # our virtualenv python gets run
-    py_d=$(find "$env/lib" -type d -name "python*")
-    #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
-    cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
-    $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd)
-
+    env="venv"
+    pycreate $env ${@:2}
     created_env=1
 
   fi
@@ -163,6 +189,10 @@ function pyact() {
   environ_f="$env_d/environ.sh"
   if [[ -f "$environ_f" ]]; then
     . "$environ_f"
+  fi
+
+  if [[ -f ./requirements.txt ]]; then
+    pip install ./requirements.txt
   fi
 }
 alias vido=pyact
