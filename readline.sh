@@ -22,3 +22,8 @@ if [[ -f "$HOME/.inputrc" ]]; then
   bind -f "$HOME/.inputrc"
 fi
 
+
+# only show directories when you tab after `cd`
+# https://unix.stackexchange.com/questions/186422/
+complete -d cd
+
