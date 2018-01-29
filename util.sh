@@ -24,40 +24,6 @@ if [[ ! -d "$SH_INCLUDE_DIR" ]]; then SH_INCLUDE_DIR="$PWD"; fi
 . "$SH_INCLUDE_DIR/_internal.sh"
 
 
-#? tolower <VAR> ... -> change all passed in vars to lowercase
-function tolower(){
-  echo $@ | tr '[:upper:]' '[:lower:]'
-}
-
-
-# http://stackoverflow.com/questions/2264428/converting-string-to-lower-case-in-bash-shell-scripting
-#? toupper <VAR> ... -> change all passed in vars to uppercase
-function toupper(){
-  echo $@ | tr '[:lower:]' '[:upper:]'
-}
-
-
-# http://stackoverflow.com/questions/394230/detect-the-os-from-a-bash-script
-# is_os <name> -> true if name and os match
-function is_os(){
-
-  # canary, only one value is allowed
-  if [ $# -gt 1 ]; then 
-    echo "1"
-    return 1;
-  fi
-
-  if [ "$(tolower $(uname))" == "$(tolower $1)" ]; then 
-    echo "0"
-    return 0;
-  else
-    echo "1"
-    return 1;
-  fi
-
-}
-
-
 #? myhost -> return the hostname of the computer
 # http://apple.stackexchange.com/a/53042
 # http://superuser.com/a/430209
@@ -158,58 +124,6 @@ function zombies(){
   ps -A -ostat,ppid,pid,args | grep -e '^[Zz]'
 }
 
-
-#? disk [PATH] [COUNT] -> return biggest [COUNT=25] file sizes in [PATH=/] 
-# http://stackoverflow.com/questions/12522269/bash-how-to-find-the-largest-file-in-a-directory-and-its-subdirectories
-function disk(){
-
-  # defaults
-  pth=/
-  cnt=25
-  
-  # if there is only one argument it could be a path or a count
-  # count or path can be interchangeable
-  if [ $# -ge 1 ]; then
-  
-    if [ -d $1 ]; then
-    
-      pth=$1
-      
-      if [ $(is_int $2) -eq 0 ]; then
-      
-        cnt=$2
-      
-      fi
-
-    
-    else
-    
-      if [ $(is_int) -eq 0 ]; then
-    
-        cnt=$1
-        
-      fi
-      
-      if [ -d $2 ]; then
-      
-        pth=$2
-      
-      fi
-    
-    fi
-  
-  fi
-
-  echo -e "${BLUE}= = = = = = Largest $cnt things in $pth${NONE}"
-  # sudo du -h $pth | sort -n -r | head -n $cnt
-  # TODO -- if path doesn't prefixes $USER or something don't sudo
-  sudo du -a $pth | sort -n -r | head -n $cnt
-
-  echo ""
-  echo -e "${RED}= = = = = = Total disk usage${NONE}"
-  df -h
-
-}
 
 
 # print out the computer's current ip address

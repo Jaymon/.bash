@@ -1,0 +1,81 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# find how much space passed in patterns use
+#
+# the disk() function was in util.py until 1-29-2018
+#
+# example:
+#   $ space "*foo*"
+#   $ space /some/dir
+#   $ space /some/file
+#   $ space *foo*
+#
+###############################################################################
+
+#? disk [PATH] [COUNT] -> return biggest [COUNT=25] file sizes in [PATH=/] 
+# http://stackoverflow.com/questions/12522269/bash-how-to-find-the-largest-file-in-a-directory-and-its-subdirectories
+function disk(){
+
+  # defaults
+  pth=/
+  cnt=25
+
+  # if there is only one argument it could be a path or a count
+  # count or path can be interchangeable
+  if [ $# -ge 1 ]; then
+    if [ -d $1 ]; then
+      pth=$1
+      if [ $(is_int $2) -eq 0 ]; then
+        cnt=$2
+      fi
+
+    else
+      if [ $(is_int) -eq 0 ]; then
+        cnt=$1
+      fi
+      if [ -d $2 ]; then
+        pth=$2
+      fi
+    fi
+  fi
+
+  echo -e "${BLUE}= = = = = = Largest $cnt things in $pth${NONE}"
+  # sudo du -h $pth | sort -n -r | head -n $cnt
+  # TODO -- if path doesn't prefixes $USER or something don't sudo
+  if [[ -r $pth ]]; then
+      du -a $pth | sort -n -r | head -n $cnt
+  else
+      sudo du -a $pth | sort -n -r | head -n $cnt
+  fi
+
+  echo ""
+  echo -e "${RED}= = = = = = Total disk usage${NONE}"
+  df -h
+
+}
+
+
+#set -x
+
+if [ $# -ge 1 ]; then
+    for var in "$@"; do
+
+        if [ -f "$var" ]; then
+            du -sh "$var"
+
+        elif [[ $var =~ \* ]]; then
+            du -sh $var
+
+        else
+            disk "$var"
+
+        fi
+
+    done
+
+fi
+
+#set +x
+

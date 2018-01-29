@@ -1,0 +1,26 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# http://stackoverflow.com/questions/394230/detect-the-os-from-a-bash-script
+# is_os <name> -> true if name and os match, returns 0 if match, 1 otherwise, 2 error
+#
+# example:
+#   $ is_os Darwin
+#
+###############################################################################
+
+  # canary, only one value is allowed
+if [ $# -gt 1 ]; then 
+    echo "1"
+    return 2;
+fi
+
+if [ "$(tolower $(uname))" == "$(tolower $1)" ]; then 
+    echo "0"
+    return 0;
+else
+    echo "1"
+    return 1;
+fi
+

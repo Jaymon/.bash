@@ -1,26 +1,4 @@
 
-# this is a helper function to allow easy testing of an int
-# if you want to use this in an if: [ $(is_int <VALUE>; echo $?) -eq 0 ]
-# or the simpler: [ $(is_int <value>) -eq 0 ]
-# return 0 if input is an int, not zero otherwise
-function is_int(){
-
-  #set -x
-  # canary, only one value is allowed
-  if [ $# -gt 1 ]; then
-    echo "1"
-    return 1;
-  fi
-
-  # this will set the $? as either 0 or 1
-  echo "$1" | grep -E "^[[:digit:]]+$" > /dev/null 2>&1
-  retcode=$?
-  echo $retcode
-  #set +x
-  return $retcode
-
-}
-
 
 # prompt [ONE[, TWO, ...]] -> prompt to choose one of those results, this will set
 # userprompt_chosen after finishing executing

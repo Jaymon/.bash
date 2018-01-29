@@ -1,0 +1,16 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# http://stackoverflow.com/questions/2264428/converting-string-to-lower-case-in-bash-shell-scripting
+#? toupper <VAR> ... -> change all passed in vars to uppercase
+#
+# example:
+#   $ toupper "foo"
+#
+###############################################################################
+
+echo $@ | tr '[:lower:]' '[:upper:]'
+
+
+
