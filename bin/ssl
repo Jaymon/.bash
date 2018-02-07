@@ -1,0 +1,42 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# https://serverfault.com/questions/661978/displaying-a-remote-ssl-certificate-details-using-cli-tools
+#? ssl DOMAIN ... -> print ssl certificate information for DOMAIN
+#
+# example:
+#   $ ssl example.com
+#
+###############################################################################
+
+
+if [[ $# -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+  echo "usage: $(basename $0) DOMAIN"
+  echo ""
+  echo "Print ssl certificate information for DOMAIN"
+  echo "Example: ssl example.com"
+  echo ""
+  exit 0
+
+else
+
+    path=openssl
+    if ! $path s_client --help 2>&1 | grep -q "\-tls1_2"; then
+        # https://superuser.com/a/1176346/164279
+        # this path is for the breat install of openssl which is usually more recent
+        # than the default macOS default install
+        path=/usr/local/opt/openssl/bin/openssl
+        if [[ ! -f $path ]]; then
+            echo "Cannot find a valid openssl client that supports TLS 1.2"
+            exit 1
+        fi
+    fi
+
+    # https://serverfault.com/a/661982/190381
+    # (Note that "redundant" -servername parameter is necessary to make openssl do a request with SNI support.)
+    echo | $path s_client -showcerts -servername $1 -connect $1:443 2>/dev/null | openssl x509 -inform pem -noout -text
+
+fi
+
