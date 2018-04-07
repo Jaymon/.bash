@@ -95,6 +95,7 @@ alias g.=g..
 function freespace () {
   df -h | head -2 | tail -1 | tr -s ' ' | cut -d' ' -f4
 }
+alias fs=freespace
 
 #? cs INPUT -> search all the files in current folder
 function cs () {
