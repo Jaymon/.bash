@@ -1,0 +1,35 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# md5 strings
+#
+# example:
+#   $ md5hash "foo bar" "foobar"
+#   327b6f07435811239bc47e1544353273	foo bar
+#   3858f62230ac3c915f300c664312c63f	foobar
+#
+###############################################################################
+
+if [[ $# -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) STRING [[STRING2] ...]"
+    echo "md5 hash a string, the builtin md5 needs a file, this can just take a string"
+    exit 0
+
+else
+
+    if which md5 >/dev/null; then
+        cmd=md5
+    else
+        cmd=md5sum
+    fi
+
+    for var in "$@"; do
+        # https://askubuntu.com/a/53852/792627
+        h=$(echo -n "$var" | $cmd)
+        echo -e "$h\t$var"
+    done
+
+fi
+
