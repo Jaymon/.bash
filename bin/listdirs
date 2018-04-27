@@ -1,0 +1,27 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# list only directories inside the current directory
+#
+# example:
+#   $ listdirs
+#   $ listdirs 2
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [MAXDEPTH]"
+    echo "List only directories inside the current directory"
+    exit 0
+
+else
+    if [[ $# -eq 0 ]]; then
+        find . -type d -not -path '*/\.*'
+    else
+        find . -type d -maxdepth $1 -not -path '*/\.*'
+    fi
+
+fi
+
