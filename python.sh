@@ -139,7 +139,7 @@ function pycreate() {
   # our virtualenv python gets run
   py_d=$(find "$env/lib" -type d -name "python*")
   #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
-  $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd)
+  $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd &>/dev/null)
 
 }
 
