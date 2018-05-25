@@ -1,0 +1,26 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# https://superuser.com/questions/258151/how-do-i-check-what-dns-server-im-using-on-mac-os-x
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+  echo "usage: $(basename $0)"
+  echo "List all unique nameservers the computer is using"
+  exit 0
+
+fi
+
+
+# macos
+#if uname | grep -q "Darwin"; then
+#else
+#  echo "Not currently supported on this OS"
+#  exit 1
+#fi
+
+#? ns -> list all unique nameservers the computer is using
+scutil --dns | grep nameserver | sort -u | cut -d: -f2 | sed -e 's/^[[:space:]]*//'
+
