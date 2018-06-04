@@ -36,41 +36,6 @@ function myhost(){
 }
 
 
-#? version -> return version information
-#alias version='cat /etc/lsb-release'
-function version(){
-  if [ $(is_os Darwin) -eq 0 ]; then
-    # http://apple.wikia.com/wiki/List_of_Mac_OS_versions
-    # http://unix.stackexchange.com/questions/234104/get-osx-codename-from-command-line
-    license='/System/Library/CoreServices/Setup Assistant.app/Contents/Resources/en.lproj/OSXSoftwareLicense.rtf'
-    echo $(grep -oE 'SOFTWARE LICENSE AGREEMENT FOR OS X.*[A-Z]' "$license" | sed "s/SOFT.*OS X //")
-    uname -a
-    echo "type system_profiler for even more information"
-
-  else
-    info=$(cat /etc/lsb-release)
-    is_ubuntu=$(echo $info | grep -i ubuntu &>/dev/null; echo $?)
-
-    if [[ $is_ubuntu -eq 0 ]]; then
-      # http://en.wikipedia.org/wiki/List_of_Ubuntu_releases
-      # http://stackoverflow.com/questions/1494178/how-to-define-hash-tables-in-bash
-      declare -A ubuntus=( ["14.10"]="Utopic Unicorn", ["14.04"]="Trusty Tahr", "13.10"]="Saucy Salamander", ["13.04"]="Raring Ringtail", ["12.10"]="Quantal Quetzal", ["12.04"]="Precise Pangolin", ["11.10"]="Oneiric Ocelot", ["11.04"]="Natty narwhal", ["10.10"]="Maverick Meerkat", ["10.04"]="Lucid Lynx" )
-      for key in ${!ubuntus[@]}; do
-        if [[ $(echo $info | grep "$key" &>/dev/null; echo $?) -eq 0 ]]; then
-          echo ${ubuntus[$key]}
-          break
-        fi
-
-      done
-
-    fi
-
-    echo "$info"
-  fi
-}
-alias v='version'
-
-
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'

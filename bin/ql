@@ -1,0 +1,36 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# ql
+#
+# activate quicklook from the command line
+#
+# http://hints.macworld.com/article.php?story=20071104012738617
+# https://coderwall.com/p/vzfhzg/mac-os-x-launch-quicklook-from-terminal
+###############################################################################
+
+if [[ $# -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) PATTERN"
+    echo ""
+    echo "Quicklook the matching path(s)"
+    echo "Example: $(basename $0) *.gif"
+    echo ""
+    exit 0
+
+else
+
+    if [ $(is_os Darwin) -eq 0 ]; then
+
+        qlmanage -p "$@" >& /dev/null &
+
+    else
+
+        echo "Unsupported OS"
+        exit 1
+
+    fi
+
+
+fi
