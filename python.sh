@@ -29,7 +29,7 @@ function pycrm(){
   fi
 
   find $d -name '*.pyc' -delete
-  find $d -name '__pycache__' -type d -exec rm -r "{}" \;
+  find $d -name '__pycache__' -type d -exec rm -rf "{}" \;
 
 }
 alias rmpyc=pycrm
@@ -147,7 +147,12 @@ function pycreate() {
 #? pyenv [VIRTUAL-ENV-NAME] -> create a virtual environment in current directory
 function pyenv() {
 
-  #set -x
+  # we want to fail on any command failing in the script
+  # http://stackoverflow.com/questions/821396/aborting-a-shell-script-if-any-command-returns-a-non-zero-value
+  set -e
+  set -o pipefail
+
+  set -x
 
   if [ "$#" -gt 0 ]; then
     search=$1
@@ -185,7 +190,10 @@ function pyenv() {
     fi
   fi
 
-  #set +x
+  set +x
+
+  set +e
+  set +o pipefail
 
 }
 alias vigo=pyenv
