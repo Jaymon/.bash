@@ -149,7 +149,7 @@ function pyenv() {
 
   # we want to fail on any command failing in the script
   # http://stackoverflow.com/questions/821396/aborting-a-shell-script-if-any-command-returns-a-non-zero-value
-  set -e
+  #set -e
   set -o pipefail
 
   set -x
