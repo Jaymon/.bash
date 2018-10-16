@@ -28,8 +28,8 @@ function pycrm(){
     d=$1
   fi
 
-  find $d -name '*.pyc' -delete
-  find $d -name '__pycache__' -type d -exec rm -rf "{}" \;
+  find $d -name '*.pyc' -delete > /dev/null 2>&1
+  find $d -name '__pycache__' -type d -exec rm -rf "{}" \; > /dev/null 2>&1
 
 }
 alias rmpyc=pycrm
