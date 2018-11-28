@@ -10,8 +10,8 @@
 
 if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
 
-    echo "usage: $(basename $0)"
-    echo "Copy the current working directory to the clipboard"
+    echo "usage: $(basename $0) PATH"
+    echo "Copy the current working directory to the clipboard and append PATH if present"
     exit 0
 
 fi
@@ -20,7 +20,11 @@ fi
 # macos
 if uname | grep -q "Darwin"; then
     # https://stackoverflow.com/questions/12524308/bash-strip-trailing-linebreak-from-output
-    echo -n $(pwd) | pbcopy
+    wd=$(echo -n $(pwd))
+    if [[ $# -gt 0 ]]; then 
+        wd=$wd/"$@"
+    fi
+    echo -n $wd | pbcopy
 else
     echo "Not currently supported on this OS"
     exit 1
