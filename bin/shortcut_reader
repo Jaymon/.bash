@@ -1,0 +1,54 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# read .URL files and the like in a directory and print the link name and url to stdout
+# so you can redirect it to a file or whatnot
+#
+# since 12-18-2018
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [DIRECTORY] [TEMPLATE]"
+    echo "read .URL files in the directory and print them out"
+    echo "TEMPLATE values that contain characters like parens or brackets need"
+    echo "  to be escaped, so to do markdown links, you would need:"
+    echo "  \* \[\${FILENAME}\]\(\${URL}\)"
+    exit 0
+
+fi
+
+
+curdir=.
+template="\${FILENAME} = \${URL}"
+if [ "$#" -eq 1 ]; then
+    curdir=$1
+
+elif [[ "$#" -eq 2 ]]; then 
+    curdir=$1
+    template=$2
+    #template=$(printf %q "$2")
+    #echo $template
+    #template=${2@Q}
+fi
+
+#echo $curdir
+
+# https://unix.stackexchange.com/a/146044/118750
+shopt -s nocaseglob
+for f in "$curdir"/*.url; do
+    [[ -f "$f" ]] || continue
+    # ... rest of the loop body
+    #echo "$f
+    [[ $(cat "$f") =~ URL=([^[:space:]]+) ]] && url=${BASH_REMATCH[1]}
+    URL=$url
+    FILENAME=${f#./}
+    #echo "'$url'"
+    #cat "$f"
+    #echo $url
+    eval echo "$template"
+    #eval printf "$template" "$FILENAME" "$URL"
+    #echo "${f#./} = $url"
+done
+shopt -u nocaseglob

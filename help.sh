@@ -138,6 +138,7 @@ function bashHelp(){
 
   # http://stackoverflow.com/a/171938/5006
   printHelp "ls -d */ -> list only subdirectories of the current dir"
+  printHelp "ll -t -> list entries sorted by modified date"
 
   # http://www.cyberciti.biz/faq/redirecting-stderr-to-stdout/
   # http://www.cyberciti.biz/faq/how-to-redirect-output-and-errors-to-devnull/
