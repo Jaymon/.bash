@@ -1,0 +1,27 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# open or create a README file in the current directory
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Open or create a README file in the current directory"
+    exit 0
+
+fi
+
+directory=.
+basename="README.md"
+filepath=$(find "$directory" -type f -iname "README.*")
+
+if [[ ! -f "$filepath" ]]; then
+    touch "$basename"
+    filepath=$basename
+fi
+
+open "$filepath"
+
