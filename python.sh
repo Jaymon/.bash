@@ -260,3 +260,19 @@ function pymk() {
 alias mkpy=pymk
 alias pymake=pymk
 
+
+#? pytouch NAME -> create NAME (eg foo.py) using a template if PYENV_TEMPLATE is set
+function pytouch() {
+    name="$1"
+    if [[ ! $name =~ \.py$ ]]; then
+        name="${name}.py"
+    fi
+
+    if [[ -n $PYENV_TEMPLATE ]]; then
+        cp "$PYENV_TEMPLATE" "$name"
+    else
+        touch "$name"
+    fi
+}
+
+
