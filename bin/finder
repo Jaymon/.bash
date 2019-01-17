@@ -1,0 +1,15 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Opens MacOS Finder window in current working directory"
+    exit 0
+
+fi
+
+
+open .
+
