@@ -1,0 +1,31 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+
+if [[ "$#" -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) username/repo"
+    echo "install a git repo from github using pip"
+    exit 0
+
+fi
+
+
+host="https://github.com"
+if [[ -n $GIP_HOST ]]; then
+    host=$GIP_HOST
+fi
+
+if [[ $1 =~ .+/.+ ]]; then
+    username=$(echo $1 | cut -d"/" -f1)
+    eggname=$(echo $1 | cut -d"/" -f2)
+else
+    username=$GIP_USERNAME
+    eggname=$1
+fi
+
+# TODO -- this only works if the project name is the same as the pypi name, it might not be (eg bangtext)
+
+pip install --upgrade "git+${host}/${username}/${eggname}#egg=${eggname}"
+
