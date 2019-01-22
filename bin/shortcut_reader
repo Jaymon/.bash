@@ -51,4 +51,11 @@ for f in "$curdir"/*.url; do
     #eval printf "$template" "$FILENAME" "$URL"
     #echo "${f#./} = $url"
 done
+
+# now handle apple's .webloc files
+for f in "$curdir"/*.webloc; do
+    URL=$(/usr/libexec/PlistBuddy -c "Print URL" "$f")
+    FILENAME=${f#./}
+    eval echo "$template"
+done
 shopt -u nocaseglob
