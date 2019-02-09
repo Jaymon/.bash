@@ -5,8 +5,9 @@
 
 if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
 
-    echo "usage: $(basename $0)"
+    echo "usage: $(basename $0) [--tab|-t]"
     echo "Opens a new shell in the pwd of the current shell"
+    echo -e "\t--tab, -t\tOpen new shell in a tab instead of a window"
     exit 0
 
 fi
@@ -17,12 +18,25 @@ if ! uname | grep -q "Darwin"; then
     exit 1
 fi
 
-/usr/bin/osascript <<EOT
-    tell application "iTerm2"
-        set newWindow to (create window with default profile)
-        tell current session of newWindow
-            write text "cd '$(pwd)'"
+
+# this statement will run if at least one argument is passed in
+if [[ $1 == "--tab" ]] || [[ $1 == "-t" ]]; then
+
+    open . -a $TERM_PROGRAM
+
+else
+
+    # https://apple.stackexchange.com/questions/286943/how-do-i-write-a-script-that-opens-an-iterm2-window-and-runs-a-command
+    /usr/bin/osascript <<EOT
+        tell application "iTerm2"
+            set newWindow to (create window with default profile)
+            tell current session of newWindow
+                write text "cd '$(pwd)'"
+            end tell
         end tell
-    end tell
 EOT
+
+fi
+
+
 
