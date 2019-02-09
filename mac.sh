@@ -194,6 +194,14 @@ EOT
 }
 
 
+# bunch of aliases for bin/neww (I can't decide which one I want to use)
+alias nw=neww
+alias new=neww
+alias shell=neww
+alias owd=neww
+alias again=neww
+alias another=neww
+
 ###############################################################################
 # Bash completions
 ###############################################################################

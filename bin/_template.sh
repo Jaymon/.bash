@@ -26,7 +26,15 @@ fi
 if [ "$#" -eq 0 ]; then
 fi
 
+
 # this statement will run if at least one argument is passed in
 if [ "$#" -gt 0 ]; then
     echo $1
+fi
+
+
+# only run this if we are in MacOS
+if ! uname | grep -q "Darwin"; then
+    >&2 echo "$(basename $0) only available on MacOS"
+    exit 1
 fi

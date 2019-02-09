@@ -1,0 +1,28 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Opens a new shell in the pwd of the current shell"
+    exit 0
+
+fi
+
+# only run this if we are in MacOS
+if ! uname | grep -q "Darwin"; then
+    >&2 echo "$(basename $0) only available on MacOS"
+    exit 1
+fi
+
+/usr/bin/osascript <<EOT
+    tell application "iTerm2"
+        set newWindow to (create window with default profile)
+        tell current session of newWindow
+            write text "cd '$(pwd)'"
+        end tell
+    end tell
+EOT
+
