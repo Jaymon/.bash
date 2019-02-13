@@ -150,7 +150,7 @@ function bgcolor_auto () {
       path=$(dirname "$path")
     done
 
-    if [[ found -eq 0 ]]; then
+    if [[ $found -eq 0 ]]; then
       bgcolor $BGCOLOR_DEFAULT
     fi
 

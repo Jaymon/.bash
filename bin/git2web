@@ -32,8 +32,7 @@ if [[ $# -gt 0 ]]; then
 
     if [[ -d $1 ]]; then
 
-      basegit_d=$(dirname $1)/.git
-      git_config=$basegit_d/config
+      current_d=$(cd $1; pwd)
 
     else
 
@@ -44,12 +43,17 @@ if [[ $# -gt 0 ]]; then
 
 else
 
-  basegit_d=$(pwd)/.git
-  git_config=$basegit_d/config
+  current_d=$(pwd)
 
 fi
 
 if [[ -z $git_url ]]; then
+
+  base_d=$(gitroot $current_d)
+  path=${current_d##$base_d}
+  basegit_d=$base_d/.git
+  git_config=$basegit_d/config
+
   if [[ ! -f $git_config ]]; then
     (>&2 echo "You need to pass in a directory that contains a .git directory")
     exit 1
@@ -78,6 +82,12 @@ fi
 
 # get rid of trailing .git
 git_url=$(echo $git_url | sed -e 's/\.git$//')
+
+if [[ -n $path ]]; then
+    if [[ $git_url == *"github."* ]]; then
+        git_url=${git_url}/tree/master${path}
+    fi
+fi
 
 echo $git_url
 

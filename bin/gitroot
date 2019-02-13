@@ -1,0 +1,35 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [DIRECTORY]"
+    echo "Find the base/root directory of the current github repo"
+    exit 0
+
+fi
+
+
+# default to the current working dir if nothing was passed in
+if [[ "$#" -eq 0 ]]; then
+    path=$(pwd)
+else
+    path=$(cd $1; pwd)
+fi
+
+found=0
+root=""
+while [[ $path != "/" ]]; do
+    root=$path/.git
+    if [[ -d $root ]]; then
+        found=1
+        break
+    fi
+    path=$(dirname "$path")
+done
+
+if [[ $found -eq 1 ]]; then
+    echo $path
+fi
+
