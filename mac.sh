@@ -26,8 +26,9 @@ fi
 alias clipboard=pbcopy
 
 
-#? which -> better which implementation that shows aliases also
-alias which='type -all'
+#? witch -> better which implementation that shows aliases also
+alias witch='type -all'
+
 
 
 #? fopen <PATH> -> Opens PATH in MacOS Finder
