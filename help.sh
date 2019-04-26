@@ -146,6 +146,8 @@ function bashHelp(){
   printHelp "cmd > file 2>&1 -> pipe all cmd output to a file or /dev/null"
   printHelp ". file -> pull aliases and functions from file into shell"
   printHelp "set -x/set +x -> turn on/off bash shell debugging"
+  # https://askubuntu.com/questions/325368/how-do-i-remove-an-alias/325380#325380
+  printHelp "unalias ALIASNAME > remove an alias from the shell"
   
   # http://www.cyberciti.biz/tips/linux-debian-package-management-cheat-sheet.html
   printHelp "dpkg -L <NAME> -> list files owned by the installed package NAME"
