@@ -228,51 +228,75 @@ alias pykill=pydone
 alias pyclear=pydone
 
 
-#? pymk PATH -> take a path and make a python module (eg, foo/bar would create foo/__init__.py etc)
-function pymk() {
-
-  #set -x
-
-  if [ "$#" -eq 0 ]; then
-    >&2 echo "pymk DIRECTORY"
-  fi
-
-  mkdir -p "$1"
-
-  if [[ ${1:0:1} == "/" ]]; then
-    base="/"
-  else
-    base=""
-  fi
-
-  IFS=$'/'; ds=( $1 ); unset IFS
-  for d in ${ds[@]}; do
-    base="${base}${d}/"
-    init_f="${base}__init__.py"
-
-    if [[ ! -f "$init_f" ]]; then
-      touch "$init_f"
-    fi
-  done
-
-  #set +x
-}
-alias mkpy=pymk
-alias pymake=pymk
-
-
+#? pytouch PATH -> take a path and make a python module (eg, foo/bar/ would create foo/__init__.py etc)
 #? pytouch NAME -> create NAME (eg foo.py) using a template if PYENV_TEMPLATE is set
 function pytouch() {
-    name="$1"
-    if [[ ! $name =~ \.py$ ]]; then
-        name="${name}.py"
+
+    if [[ $# -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+        >&2 echo "usage: $(basename $0) NAME"
+        >&2 echo "create NAME (eg foo.py) using a template if PYENV_TEMPLATE is set"
+        >&2 echo ""
+        >&2 echo "NAME can be a path (foo/bar/che), if you want to create a package,"
+        >&2 echo "end NAME with a / (eg, foo/bar/), otherwise a .py file will be created"
+        >&2 echo "(eg, foo would create foo.py while foo/bar would create foo/bar.py)"
+        exit 0
     fi
 
-    if [[ -n $PYENV_TEMPLATE ]]; then
-        cp "$PYENV_TEMPLATE" "$name"
+    #set -x
+
+    # figure out if we have an absolute path or not
+    if [[ ${1:0:1} == "/" ]]; then
+        base="/"
     else
-        touch "$name"
+        base=""
     fi
-}
 
+    # split on / so we can make the different directories
+    IFS=$'/'; ds=( $1 ); unset IFS
+    basename=${ds[-1]}
+
+    # iterate through all the subfolders and create directories and add __init__.py file
+    # https://stackoverflow.com/a/44939917/5006
+    for d in ${ds[@]::${#ds[@]}-1}; do
+        base="${base}${d}/"
+        mkdir -p "$base"
+
+        init_f="${base}__init__.py"
+        if [[ ! -f "$init_f" ]]; then
+            if [[ -n $PYENV_TEMPLATE ]]; then
+                cp "$PYENV_TEMPLATE" "$init_f"
+            else
+                touch "$init_f"
+            fi
+        fi
+    done
+
+    # if we end with / then we want the final basename to be a package (eg foo/bar/
+    # would create foo/bar/__init__.py) but if it doesn't end with / then it would
+    # create foo/bar.py
+    if [[ $1 =~ /$ ]]; then
+        base="${base}${basename}/"
+        mkdir -p "$base"
+        name="${base}__init__.py"
+    else
+        if [[ ! $basename =~ \.py$ ]]; then
+            name="${base}${basename}.py"
+        else
+            name="${base}${basename}"
+        fi
+    fi
+
+    if [[ ! -f "$name" ]]; then
+        if [[ -n $PYENV_TEMPLATE ]]; then
+            cp "$PYENV_TEMPLATE" "$name"
+        else
+            touch "$name"
+        fi
+    fi
+
+    #set +x
+}
+alias pymk=pytouch
+alias mkpy=pymk
+alias pymake=pymk
 
