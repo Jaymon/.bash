@@ -6,15 +6,33 @@ function pyload() {
   # http://inre.dundeemt.com/2014-05-04/pypi-vs-readme-rst-a-tale-of-frustration-and-unnecessary-binding/
   if python setup.py check --restructuredtext --strict; then
     python setup.py sdist upload
-
-    # !!! get rid of all the left over folders and files
-    rm README.rst
-    rm -rf dist
-    rm -rf *.egg-info
+    pyclean
 
   fi
 }
 alias pyup=pyload
+
+
+#? pyclean -> clean up the current directory of the residual python sdist crap
+function pyclean() {
+    # !!! get rid of all the left over folders and files
+    if [[ -f setup.py ]]; then
+        if which trash > /dev/null 2>&1; then
+            trash README.rst > /dev/null 2>&1
+            trash dist > /dev/null 2>&1
+            trash *.egg-info > /dev/null 2>&1
+            trash build > /dev/null 2>&1
+        else
+            rm README.rst
+            rm -rf dist
+            rm -rf *.egg-info
+            rm -rf build
+        fi
+
+    fi
+
+    pycrm
+}
 
 
 #? pyreg -> register the python project in the current directory (must have setup.py)
