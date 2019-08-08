@@ -5,8 +5,9 @@
 
 if [[ "$#" -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
 
-    echo "usage: $(basename $0) username/repo"
+    echo "usage: $(basename $0) username/repo [VERSION]"
     echo "install a git repo from github using pip"
+    echo "\tVERSION - if 3 then use pip3 instead of pip"
     exit 0
 
 fi
@@ -25,7 +26,13 @@ else
     eggname=$1
 fi
 
+bin=pip
+if [[ $2 -eq 3 ]]; then
+    bin=pip3
+fi
+
+
 # TODO -- this only works if the project name is the same as the pypi name, it might not be (eg bangtext)
 
-pip install --upgrade "git+${host}/${username}/${eggname}#egg=${eggname}"
+$bin install --upgrade "git+${host}/${username}/${eggname}#egg=${eggname}"
 
