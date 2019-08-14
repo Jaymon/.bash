@@ -92,6 +92,16 @@ function freespace () {
 }
 alias fs=freespace
 
+
+#? dfs -> Directory used space, the file size of folders and files ordered by biggest
+# https://stackoverflow.com/a/14749369/5006
+function dfs () {
+    du -a -h | sort -hr
+}
+alias dus=dfs
+alias ds=dfs
+
+
 #? cs INPUT -> search all the files in current folder
 function cs () {
   grep --color=auto --exclude=*.pyc -Rin "$1" *
