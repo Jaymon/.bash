@@ -95,6 +95,7 @@ alias fs=freespace
 
 #? dfs -> Directory used space, the file size of folders and files ordered by biggest
 # https://stackoverflow.com/a/14749369/5006
+# search: bash print size of files from current directory
 function dfs () {
     du -a -h | sort -hr
 }
