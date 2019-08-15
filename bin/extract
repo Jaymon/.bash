@@ -7,27 +7,51 @@
 # Jarid showed me this, magical
 #
 # http://natelandau.com/my-mac-osx-bash_profile/
+#
+# unrar and leave checksum error failing files: unrar -kb e FILE
 ###############################################################################
 #? extract FILEPATH -> figure out how to extract a file and extract it
-if [[ -f $1 ]]; then
-  case "$1" in
-    *.tar.bz2)   tar xjf "$1"     ;;
-    *.tar.gz)    tar xzf "$1"     ;;
-    *.tar.xz)    tar xzf "$1"     ;; # https://ctrl.blog/entry/archive-utility-xz
-    *.bz2)       bunzip2 "$1"     ;;
-    *.rar)       unrar e "$1"     ;;
-    *.r00)       unrar e "$1"     ;;
-    *.gz)        gunzip "$1"      ;;
-    *.tar)       tar xf "$1"      ;;
-    *.tbz2)      tar xjf "$1"     ;;
-    *.tgz)       tar xzf "$1"     ;;
-    *.zip)       unzip "$1"       ;;
-    *.Z)         uncompress "$1"  ;;
-    *.7z)        7z x "$1"        ;;
-    *.001)       7z x "$1"        ;;
-    *)           echo "'$1' cannot be extracted via extract()" ;;
+
+# autodiscover the file to be extracted if no filename was passed in
+if [[ -z $1 ]]; then
+    filename=$(find . -name "*.part01.rar" | head -n 1)
+
+    if [[ -z $filename ]]; then
+        filename=$(find . -name "*.rar" | head -n 1)
+        #filename=$(find . -name "*.r00")
+    fi
+
+    if [[ -z $filename ]]; then
+        filename=$(find . -name "*.001" | head -n 1)
+    fi
+
+    echo "Autodiscovered filepath: '$filename'"
+
+else
+    filename=$1
+
+fi
+
+
+if [[ -f $filename ]]; then
+  case "$filename" in
+    *.tar.bz2)   tar xjf "$filename"     ;;
+    *.tar.gz)    tar xzf "$filename"     ;;
+    *.tar.xz)    tar xzf "$filename"     ;; # https://ctrl.blog/entry/archive-utility-xz
+    *.bz2)       bunzip2 "$filename"     ;;
+    *.rar)       unrar e "$filename"     ;;
+    *.r00)       unrar e "$filename"     ;;
+    *.gz)        gunzip "$filename"      ;;
+    *.tar)       tar xf "$filename"      ;;
+    *.tbz2)      tar xjf "$filename"     ;;
+    *.tgz)       tar xzf "$filename"     ;;
+    *.zip)       unzip "$filename"       ;;
+    *.Z)         uncompress "$filename"  ;;
+    *.7z)        7z x "$filename"        ;;
+    *.001)       7z x "$filename"        ;;
+    *)           echo "'$filename' cannot be extracted via extract()" ;;
      esac
 else
-  echo "'$1' is not a valid file"
+  echo "'$filename' is not a valid file"
 fi
 
