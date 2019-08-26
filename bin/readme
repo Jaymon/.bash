@@ -15,8 +15,13 @@ if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
 fi
 
 directory=.
-basename="README.md"
-filepath=$(find "$directory" -type f -iname "README.*")
+fileroot="README"
+basename="${fileroot}.md"
+# turns out in node/npm projects this will take a gazillion years to run even with
+# so we limit depth now
+#filepath=$(find "$directory" -type f -iname "README.*")
+#filepath=$(ls $directory/README.* | head -1)
+filepath=$(find "$directory" -type f -maxdepth 1 -iname "${fileroot}.*")
 
 if [[ ! -f "$filepath" ]]; then
     touch "$basename"
