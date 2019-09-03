@@ -318,3 +318,25 @@ alias pymk=pytouch
 alias mkpy=pymk
 alias pymake=pymk
 
+
+#? pytouch PATH -> take a path and make a python test module, uses PYENV_TEMPLATE_TEST env variable 
+function pytesttouch() {
+
+    #test_name=$(basename $1)
+    test_name=$1
+    test_name=${test_name%.py}
+    test_name=${test_name%_test}
+    echo $test_name
+
+    orig_template=$PYENV_TEMPLATE
+    PYENV_TEMPLATE=$PYENV_TEMPLATE_TEST
+
+    pytouch "${test_name}_test"
+
+    PYENV_TEMPLATE=$orig_template
+
+}
+alias mkpyt=pytesttouch
+alias pymaket=pytesttouch
+alias pytmk=pytesttouch
+
