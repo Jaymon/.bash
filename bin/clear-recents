@@ -1,0 +1,39 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# Clears recent places
+#
+# links:
+#   https://www.maketecheasier.com/manage-recent-places-osx/
+#
+# search:
+#   macos open/save dialog clear recent folders
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Clears the recent places in the save/open dialog on MacOS"
+    exit 0
+
+fi
+
+# only run this if we are in MacOS
+if ! uname | grep -q "Darwin"; then
+    >&2 echo "$(basename $0) only available on MacOS"
+    exit 1
+fi
+
+defaults delete -g NSNavRecentPlaces
+
+
+# you can set the limit using:
+#   defaults write -g NSNavRecentPlacesLimit -int NUM
+#
+# you can disable the recent places entirely using:
+#   defaults write -g NSNavRecentPlacesLimit -int 0
+#
+# you can remove the limit:
+#   defaults delete -g NSNavRecentPlacesLimit
+
