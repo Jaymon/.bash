@@ -1,0 +1,27 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# https://www.online-tech-tips.com/mac-os-x/quickly-empty-the-trash-in-os-x/
+# https://alvinalexander.com/mac-os-x/mac-osx-empty-trash-terminal-command-line
+#
+# Search:
+#   macos empty trash from command line
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Empty the trash"
+    exit 0
+
+fi
+
+# only run this if we are in MacOS
+if ! uname | grep -q "Darwin"; then
+    >&2 echo "$(basename $0) only available on MacOS"
+    exit 1
+fi
+
+rm -rf ~/.Trash/*
+
