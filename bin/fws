@@ -1,0 +1,26 @@
+#!/usr/bin/osascript
+# -*- mode: applescript -*-
+# vi: set ft=applescript :
+###############################################################################
+# print out all the open finder windows
+#
+# This just prints to the terminal all the finder windows that are open
+###############################################################################
+set ret to ""
+
+if application "Finder" is running then
+    tell application "Finder"
+        repeat with i from 1 to count of Finder windows
+            #set p to POSIX path of ((target of window i) as alias)
+            set p to POSIX path of ((target of window i) as string)
+            #log (p)
+            set ret to ret & p & "\n" 
+        end repeat
+    end tell
+end if
+
+#log(ret)
+#return ret
+# the -2 removes the \n
+return text 1 thru -2 of ret
+

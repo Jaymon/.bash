@@ -25,7 +25,10 @@ if ! uname | grep -q "Darwin"; then
     exit 1
 fi
 
-defaults delete -g NSNavRecentPlaces
+defaults delete -g NSNavRecentPlaces > /dev/null 2>&1
+# if there are no recent places in the cache then it will throw this error:
+#   Domain (kCFPreferencesAnyApplication) not found.
+#   Defaults have not been changed.
 
 
 # you can set the limit using:

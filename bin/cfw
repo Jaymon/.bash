@@ -1,0 +1,39 @@
+#!/usr/bin/osascript
+# -*- mode: applescript -*-
+# vi: set ft=applescript :
+###############################################################################
+# Closes all windows matching the passed in argument
+###############################################################################
+# TODO -- it would be cool if this would close all windows that match the path, so
+# it would go through terminal, and notepad and things like that
+on run argv
+    set closeWindows to {}
+    if application "Finder" is running then
+        tell application "Finder"
+            repeat with i from 1 to count of Finder windows
+                set p to POSIX path of ((target of window i) as string)
+                if p contains (item 1 of argv)
+                    log (p)
+                    # we copy the windows to another list and then close that so
+                    # the window list won't change while we are iterating through
+                    # it
+                    copy (window i) to end of closeWindows
+                end if
+            end repeat
+
+            # actually close the matching windows
+            repeat with w in closeWindows
+                tell w to close
+            end repeat
+        end tell
+    end if
+end run
+
+
+# search:
+#   applescript find all windows then close them
+#
+# links:
+#   https://apple.stackexchange.com/questions/306770/applescript-close-all-open-windows
+#   https://superuser.com/questions/526624/how-do-i-close-a-window-from-an-application-passing-the-file-name
+#   https://discussions.apple.com/thread/8446982

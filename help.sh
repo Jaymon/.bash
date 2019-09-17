@@ -142,8 +142,8 @@ function bashHelp(){
 
   # http://www.cyberciti.biz/faq/redirecting-stderr-to-stdout/
   # http://www.cyberciti.biz/faq/how-to-redirect-output-and-errors-to-devnull/
-  printHelp "cmd &> file -> pipe the cmd stderr output to a file"
-  printHelp "cmd > file 2>&1 -> pipe all cmd output to a file or /dev/null"
+  printHelp "cmd &> file -> pipe the cmd stdout to a file or to /dev/null"
+  printHelp "cmd > file 2>&1 -> pipe all cmd output to file or /dev/null"
   printHelp ". file -> pull aliases and functions from file into shell"
   printHelp "set -x/set +x -> turn on/off bash shell debugging"
   # https://askubuntu.com/questions/325368/how-do-i-remove-an-alias/325380#325380
