@@ -12,9 +12,11 @@ if application "Finder" is running then
     tell application "Finder"
         repeat with i from 1 to count of Finder windows
             #set p to POSIX path of ((target of window i) as alias)
-            set p to POSIX path of ((target of window i) as string)
-            #log (p)
-            set ret to ret & p & "\n" 
+            try
+                set p to POSIX path of ((target of window i) as string)
+                #log (p)
+                set ret to ret & p & "\n" 
+            end try
         end repeat
     end tell
 end if
