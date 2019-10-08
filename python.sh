@@ -22,11 +22,13 @@ function pyclean() {
             trash dist > /dev/null 2>&1
             trash *.egg-info > /dev/null 2>&1
             trash build > /dev/null 2>&1
+            trash .eggs > /dev/null 2>&1
         else
             rm README.rst
             rm -rf dist
             rm -rf *.egg-info
             rm -rf build
+            rm -rf .eggs
         fi
 
     fi
