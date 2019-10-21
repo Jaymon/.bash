@@ -24,5 +24,12 @@ end if
 #log(ret)
 #return ret
 # the -2 removes the \n
-return text 1 thru -2 of ret
+#return text 1 thru -2 of ret
+
+try
+    # the -2 removes the \n
+    return text 1 thru -2 of ret
+on error errStr number errorNumber
+    return ret
+end try
 
