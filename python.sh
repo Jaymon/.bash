@@ -2,6 +2,21 @@
 
 #? pyload -> upload the python project to pypi
 function pyload() {
+
+    # https://stackoverflow.com/questions/26737222/how-to-make-pypi-description-markdown-work
+    # https://stackoverflow.com/a/26737258/5006
+    if python3 setup.py check; then
+        python3 setup.py sdist
+        # https://pypi.org/project/twine/
+        twine upload dist/*
+        pyclean
+    fi
+
+}
+alias pyup=pyload
+
+# This is here just in case while I switch over all setup.py to support markdown
+function pyloadold () {
   pandoc --from=markdown --to=rst --output=README.rst README.md
   # http://inre.dundeemt.com/2014-05-04/pypi-vs-readme-rst-a-tale-of-frustration-and-unnecessary-binding/
   if python setup.py check --restructuredtext --strict; then
@@ -10,8 +25,6 @@ function pyload() {
 
   fi
 }
-alias pyup=pyload
-
 
 #? pyclean -> clean up the current directory of the residual python sdist crap
 function pyclean() {
@@ -24,7 +37,7 @@ function pyclean() {
             trash build > /dev/null 2>&1
             trash .eggs > /dev/null 2>&1
         else
-            rm README.rst
+            rm README.rst > /dev/null 2>&1
             rm -rf dist
             rm -rf *.egg-info
             rm -rf build
