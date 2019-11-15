@@ -108,28 +108,38 @@ function pycd() {
 #? pyenv3 [VIRTUAL-ENV-NAME] -> create a python3 virtual environment in current directory
 function pyvir3() {
 
-  env="venv3"
   if [ "$#" -gt 0 ]; then
     env=$1
+  else
+      if [[ -d "venv3" ]]; then
+          env="venv3"
+      else
+          env=".venv3"
+      fi
   fi
 
-  pyenv $env --python=python3 ${@:2}
+  pyvenv $env --python=python3 ${@:2}
 
 }
-alias pyenv3=pyvir3
+alias pyvenv3=pyvir3
 
 
 function pyvir2() {
 
-  env="venv"
   if [ "$#" -gt 0 ]; then
     env=$1
+  else
+      if [[ -d "venv" ]]; then
+          env="venv"
+      else
+          env=".venv"
+      fi
   fi
 
-  pyenv $env ${@:2}
+  pyvenv $env ${@:2}
 
 }
-alias pyenv2=pyvir2
+alias pyvenv2=pyvir2
 
 
 function pycreate() {
@@ -142,10 +152,14 @@ function pycreate() {
   virtualenv --no-site-packages ${@:2} "$env"
 
   # create an evironment shell file that custom config can be added to
-  if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
-    cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
-  else
-    touch "$env/environ.sh"
+  if [[ ! -f ".env" ]]; then
+      if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
+        #cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
+        cp "$PYENV_ENVIRON_FILE" ".env"
+      else
+        #touch "$env/environ.sh"
+        touch ".env"
+      fi
   fi
 
   # create a usercustomize python file to customize the python installation
@@ -159,65 +173,82 @@ function pycreate() {
   # our virtualenv python gets run
   py_d=$(find "$env/lib" -type d -name "python*")
   #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
-  $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd &>/dev/null)
+  $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd) &>/dev/null
 
 }
 
 # http://docs.python-guide.org/en/latest/dev/virtualenvs/
-#? pyenv [VIRTUAL-ENV-NAME] -> create a virtual environment in current directory
-function pyenv() {
+#? pyvenv [VIRTUAL-ENV-NAME] -> create a virtual environment in current directory
+function pyvenv() {
 
-  # we want to fail on any command failing in the script
-  # http://stackoverflow.com/questions/821396/aborting-a-shell-script-if-any-command-returns-a-non-zero-value
-  #set -e
-  set -o pipefail
+    # we want to fail on any command failing in the script
+    # http://stackoverflow.com/questions/821396/aborting-a-shell-script-if-any-command-returns-a-non-zero-value
+    #set -e
+    set -o pipefail
 
-  set -x
+    set -x
 
-  if [ "$#" -gt 0 ]; then
-    search=$1
-  else
-    search="venv*"
-  fi
-
-  # search for the virtual env name forwards first
-  env=$(find . -type d -iname "$search" | head -n 1 | xargs basename)
-
-  # if we don't find the environment moving forward then move backwards
-  if [[ ! -d "$env" ]]; then
-    path=$PWD
-    while [[ $path != "/" ]]; do
-      env=$(find "$path" -type d -maxdepth 1 -iname "venv*" | head -n 1 | xargs basename)
-      if [[ -d "$env" ]]; then
-        break
-      fi
-      path=$(dirname "$path")
-    done
-  fi
-
-  if [[ ! -d "$env" ]]; then
-    env="venv"
-    pycreate $env ${@:2}
-    created_env=1
-  fi
-  pyact $env
-
-  if [[ -n "$created_env" ]]; then
-    if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
-      # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
-      pip -q install --upgrade pip
-      pip -q install -r "$PYENV_REQUIREMENTS_FILE"
+    search=""
+    if [ "$#" -gt 0 ]; then
+        search=$1
     fi
-  fi
 
-  set +x
+    # SEARCH FORWARD - search for the virtual env name forwards first
+    if [[ -n $search ]]; then
+        env=$(find . -type d -iname "$search" | head -n 1 | xargs basename)
+    else
+        env=$(find . -type d -iname ".venv*" -o -iname "venv*" | head -n 1 | xargs basename)
+    fi
 
-  set +e
-  set +o pipefail
+    # SEARCH BACKWARD - if we don't find the environment moving forward then move backwards
+    if [[ ! -d $env ]]; then
+        path=$PWD
+        while [[ $path != "/" ]]; do
+            #echo $path
+            if [[ -n $search ]]; then
+                env=$(find "$path" -type d -maxdepth 1 -iname "$search" | head -n 1 | xargs basename)
+            else
+                env=$(find "$path" -type d -maxdepth 1 -iname ".venv*" -o -iname "venv*" | head -n 1 | xargs basename)
+            fi
+          if [[ -d "$env" ]]; then
+            break
+          fi
+          path=$(dirname "$path")
+        done
+    fi
+
+    if [[ ! -d "$env" ]]; then
+        env=".venv"
+        pycreate $env ${@:2}
+        created_env=1
+    fi
+
+    pyact $env
+
+    if [[ -n "$created_env" ]]; then
+        if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
+            # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
+            pip -q install --upgrade pip
+            pip -q install -r "$PYENV_REQUIREMENTS_FILE"
+        fi
+
+        if which python3 > /dev/null 2>&1; then
+            pymodules=$(python3 -c "import distutils.core; print('\n'.join(distutils.core.run_setup('setup.py').install_requires))")
+            for f in $pymodules; do
+                pip install "$f"
+            done
+        fi
+
+    fi
+
+    set +x
+
+    set +e
+    set +o pipefail
 
 }
-alias vigo=pyenv
-alias venv=pyenv
+alias vigo=pyvenv
+alias venv=pyvenv
 
 #? pyact [VIRTUAL-ENV-NAME] -> activate a virtual environment
 function pyact() {
@@ -229,6 +260,11 @@ function pyact() {
   # source a custom environment variable if it is there
   env_d=$(dirname $(dirname $fp))
   environ_f="$env_d/environ.sh"
+  if [[ -f "$environ_f" ]]; then
+    . "$environ_f"
+  fi
+
+  environ_f=".env"
   if [[ -f "$environ_f" ]]; then
     . "$environ_f"
   fi
