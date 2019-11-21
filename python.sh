@@ -145,7 +145,7 @@ function pyvir2() {
       if [[ -d "venv" ]]; then
           env="venv"
       else
-          env=".venv"
+          env=".venv2"
       fi
   fi
 
@@ -231,7 +231,11 @@ function pyvenv() {
     fi
 
     if [[ ! -d "$env" ]]; then
-        env=".venv"
+        if [[ -n $search ]]; then
+            env=$search
+        else
+            env=".venv"
+        fi
         pycreate $env ${@:2}
         created_env=1
     fi
@@ -246,6 +250,7 @@ function pyvenv() {
         fi
 
         if which python3 > /dev/null 2>&1; then
+            # https://stackoverflow.com/a/52701117/5006
             pymodules=$(python3 -c "import distutils.core; print('\n'.join(distutils.core.run_setup('setup.py').install_requires))")
             for f in $pymodules; do
                 pip install "$f"
