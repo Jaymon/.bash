@@ -11,6 +11,12 @@ alias gp='git push'
 alias gpo='git push origin'
 alias gpom='git push origin master'
 
+alias gl='git pull'
+alias glo='git pull origin'
+alias glom="git pull origin master"
+alias gloms='git submodule foreach git pull origin master' # update all submodules in repo
+alias gsub=gloms
+
 alias gr='git remote -v'
 alias grem=gr
 alias gre=gr
@@ -21,10 +27,6 @@ alias gbr='git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2'
 function gpob () {
   git push origin $(gbr)
 }
-
-alias gl='git pull'
-alias glo='git pull origin'
-alias glom="git pull origin master"
 
 function glob () {
   git pull origin $(gbr)

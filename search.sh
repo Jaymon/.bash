@@ -90,6 +90,18 @@ function wheref() {
   sudo find / -type f -iname "$1"
 }
 
+#? f <VALUES> -> wildcard join values and search for matches from the current dir down
+function f() {
+    # set command: https://stackoverflow.com/a/2853811/5006 (bash display command)
+    # find not part: https://askubuntu.com/a/318211 (find ignore dot directories)
+    # wildcard joining: https://unix.stackexchange.com/a/528536/118750 (bash join passed in arguments with delimiter)
+    v=$(printf "%s*" "$@")
+    v="*${v}"
+    set -x
+    find . -not -path '*/\.*' -ipath "$v"
+    set +x
+}
+
 
 #? biggest DIR LIMIT -> Finding the biggest files in DIR, showing LIMIT results
 # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Raghav-Yadav-2
