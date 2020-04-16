@@ -1,0 +1,66 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# print out the computer's current ip address or information about a passed in ip
+#
+# $ myip <IP ADDRESS>
+#
+# http://www.coderholic.com/invaluable-command-line-tools-for-web-developers/
+###############################################################################
+
+#? myip -> print out current external ip address
+function myip(){
+
+  if which curl &> /dev/null; then
+
+    curl http://icanhazip.com 2> /dev/null
+    #curl http://ifconfig.me/ip
+
+  else
+
+    wget -qO- http://icanhazip.com
+    #wget -qO- http://ifconfig.me/ip
+
+  fi
+
+}
+#alias mip=myip
+
+
+#? whoip <IPADDR> -> print information about the ip address
+# http://stackoverflow.com/questions/13222564/what-information-can-i-get-from-an-ip-address
+function whoip(){
+  if which curl &> /dev/null; then
+
+    curl https://ipinfo.io/$1 2> /dev/null
+
+  else
+
+    wget -qO- https://ipinfo.io/$1
+
+  fi
+}
+#alias wip=whoip
+
+
+if [[ -z $1 ]]; then
+
+    ip=$(myip)
+
+else
+
+    ip=$1
+
+fi
+
+
+echo $ip
+echo "-------------------"
+whoip $ip
+echo ""
+
+
+
+
+

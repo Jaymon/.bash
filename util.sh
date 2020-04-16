@@ -90,37 +90,6 @@ function zombies(){
 }
 
 
-
-# print out the computer's current ip address
-# http://www.coderholic.com/invaluable-command-line-tools-for-web-developers/
-#? myip -> print out current external ip address
-#alias myip='curl ifconfig.me'
-function myip(){
-
-  if [ $(which curl &> /dev/null; echo $?) -eq 0 ]; then
-
-    curl http://icanhazip.com
-    #curl http://ifconfig.me/ip
-
-  else
-
-    wget -qO- http://icanhazip.com
-    #wget -qO- http://ifconfig.me/ip
-
-  fi
-
-}
-alias mip=myip
-
-
-#? whoip <IPADDR> -> print information about the ip address
-# http://stackoverflow.com/questions/13222564/what-information-can-i-get-from-an-ip-address
-function whoip(){
-  curl ipinfo.io/$1
-}
-alias wip=whoip
-
-
 # http://stackoverflow.com/questions/941338/shell-script-how-to-pass-command-line-arguments-to-an-unix-alias
 # quickly check what processes are running
 #? running <NAME> -> return what processes matching NAME are currently running

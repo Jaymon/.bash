@@ -1,0 +1,62 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# this is a really basic cert generator script to make self signed certs
+#
+# use it like this, make sure permissions are at least 655:
+#
+#   certgen <NAME>
+#
+###############################################################################
+
+# TODO -- automate parts of this with expect? See pssh function in sysadmin.sh
+# https://likegeeks.com/expect-command/
+
+# fail if any of the commands fail
+# https://stackoverflow.com/a/19469570/5006
+set -e
+set -o pipefail
+
+if [[ -z $1 ]]; then
+    >&2 echo "usage: $(basename $0) NAME"
+    exit 1
+fi
+
+echo "Will prompt for key phrase 2x (use 1234)"
+echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+openssl genrsa -des3 -out $1.key 2048
+
+#if [[ ! -f $1.key ]]; then
+#    >&2 echo 'Failed to generate key'
+#    exit 1
+#fi
+
+echo ""
+echo "Will prompt for:"
+echo "* key phrase (use 1234)"
+echo "* country"
+echo "* state"
+echo "* city"
+echo "* organization name"
+echo "* section"
+echo "* host (use localhost)"
+echo "* email (leave blank)"
+echo "* password (leave blank)"
+echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+openssl req -new -key $1.key -out $1.csr
+# TODO -- pass in -subj "/C=US/ST=California/L=San Francisco/O=<COMPANY NAME>/OU=<SECTION>/CN=localhost
+
+cp $1.key $1.key.org
+
+echo ""
+echo "Will prompt for key phrase (use 1234)"
+echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+openssl rsa -in $1.key.org -out $1.key
+
+rm $1.key.org
+
+echo ""
+echo "Generating $1.crt using $1.key"
+openssl x509 -req -days 365 -in $1.csr -signkey $1.key -out $1.crt
+

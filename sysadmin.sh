@@ -157,6 +157,7 @@ function pssh () {
   echo "ssh_password $ssh_password"
   echo "ssh_args $ssh_args"
 
+  # https://likegeeks.com/expect-command/
   ssh_script=$TMPDIR/pssh.sh
   echo -e "#!/usr/bin/expect" > $ssh_script
   echo -e "" >> $ssh_script
