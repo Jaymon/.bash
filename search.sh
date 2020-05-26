@@ -90,8 +90,8 @@ function wheref() {
   sudo find / -type f -iname "$1"
 }
 
-#? f <VALUES> -> wildcard join values and search for matches from the current dir down
-function f() {
+#? fi <VALUES> -> (find file) wildcard join values and search for matches from the current dir down
+function ff() {
     # set command: https://stackoverflow.com/a/2853811/5006 (bash display command)
     # find not part: https://askubuntu.com/a/318211 (find ignore dot directories)
     # wildcard joining: https://unix.stackexchange.com/a/528536/118750 (bash join passed in arguments with delimiter)
@@ -99,6 +99,16 @@ function f() {
     v="*${v}"
     set -x
     find . -not -path '*/\.*' -ipath "$v"
+    set +x
+}
+
+#? fi <VALUES> -> (find IN file) grep all files in all subdirectories
+# https://stackoverflow.com/a/15287418/5006
+function fi() {
+    v=$(printf "%s*" "$@")
+    v="*${v}"
+    set -x
+    grep -ir "$v" *
     set +x
 }
 
