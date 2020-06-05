@@ -90,7 +90,7 @@ function wheref() {
   sudo find / -type f -iname "$1"
 }
 
-#? fi <VALUES> -> (find file) wildcard join values and search for matches from the current dir down
+#? ff <VALUES> -> (find file) wildcard join values and search for matches from the current dir down
 function ff() {
     # set command: https://stackoverflow.com/a/2853811/5006 (bash display command)
     # find not part: https://askubuntu.com/a/318211 (find ignore dot directories)
