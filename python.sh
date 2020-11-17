@@ -118,75 +118,44 @@ function pycd() {
 }
 
 
-#? pyenv3 [VIRTUAL-ENV-NAME] -> create a python3 virtual environment in current directory
-function pyvir3() {
-
-  if [ "$#" -gt 0 ]; then
-    env=$1
-  else
-      if [[ -d "venv3" ]]; then
-          env="venv3"
-      else
-          env=".venv3"
-      fi
-  fi
-
-  pyvenv $env --python=python3 ${@:2}
-
-}
-alias pyvenv3=pyvir3
-
-
-function pyvir2() {
-
-  if [ "$#" -gt 0 ]; then
-    env=$1
-  else
-      if [[ -d "venv" ]]; then
-          env="venv"
-      else
-          env=".venv2"
-      fi
-  fi
-
-  pyvenv $env ${@:2}
-
-}
-alias pyvenv2=pyvir2
-
-
 function pycreate() {
-  if [ "$#" -eq 0 ]; then
-    echo "no VIRTUAL-ENV-NAME specified"
-    return 1
-  fi
+    if [ "$#" -eq 0 ]; then
+        echo "no VIRTUAL-ENV-NAME specified"
+        return 1
+    fi
 
-  env=$1
-  virtualenv --no-site-packages ${@:2} "$env"
+    env=$1
 
-  # create an evironment shell file that custom config can be added to
-  if [[ ! -f ".env" ]]; then
-      if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
-        #cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
-        cp "$PYENV_ENVIRON_FILE" ".env"
-      else
-        #touch "$env/environ.sh"
-        touch ".env"
-      fi
-  fi
+    if python --version | grep "Python 3." > /dev/null 2>&1; then
+        # https://stackoverflow.com/a/30233408/5006
+        python -m venv ${@:2} "$env"
+    else
+        virtualenv ${@:2} "$env"
+    fi
 
-  # create a usercustomize python file to customize the python installation
-  if [[ -n "$PYENV_CUSTOMIZE_FILE" ]]; then
-    cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
-  else
-    touch "$env/environ.py"
-  fi
+    # create an evironment shell file that custom config can be added to
+    if [[ ! -f ".env" ]]; then
+        if [[ -n "$PYENV_ENVIRON_FILE" ]]; then
+            #cp "$PYENV_ENVIRON_FILE" "$env/environ.sh"
+            cp "$PYENV_ENVIRON_FILE" ".env"
+        else
+            #touch "$env/environ.sh"
+            touch ".env"
+        fi
+    fi
 
-  # we map our custom environ.py file to the sitecustomize so it gets run when
-  # our virtualenv python gets run
-  py_d=$(find "$env/lib" -type d -name "python*")
-  #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
-  $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd) &>/dev/null
+    # create a usercustomize python file to customize the python installation
+    if [[ -n "$PYENV_CUSTOMIZE_FILE" ]]; then
+        cp "$PYENV_CUSTOMIZE_FILE" "$env/environ.py"
+    else
+        touch "$env/environ.py"
+    fi
+
+    # we map our custom environ.py file to the sitecustomize so it gets run when
+    # our virtualenv python gets run
+    py_d=$(find "$env/lib" -type d -name "python*")
+    #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
+    $(pushd "$py_d"; ln -s ../../environ.py sitecustomize.py; popd) &>/dev/null
 
 }
 
@@ -243,18 +212,27 @@ function pyvenv() {
     pyact $env
 
     if [[ -n "$created_env" ]]; then
+        # this fixes openssh errors by linking to the brew openssh if it exists
+        # https://github.com/pyca/cryptography/issues/3489#issuecomment-312607156
+        if [[ -d /usr/local/opt/openssl ]]; then
+            export CPPFLAGS=-I/usr/local/opt/openssl/include
+            export LDFLAGS=-L/usr/local/opt/openssl/lib
+        fi
+
         if [[ -n "$PYENV_REQUIREMENTS_FILE" ]]; then
             # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
             pip -q install --upgrade pip
             pip -q install -r "$PYENV_REQUIREMENTS_FILE"
         fi
 
-        if which python3 > /dev/null 2>&1; then
+        if python --version | grep "Python 3." > /dev/null 2>&1; then
             # https://stackoverflow.com/a/52701117/5006
-            pymodules=$(python3 -c "import distutils.core; print('\n'.join(distutils.core.run_setup('setup.py').install_requires))")
-            for f in $pymodules; do
-                pip install "$f"
-            done
+            if [[ -f setup.py ]]; then
+                pymodules=$(python -c "import distutils.core; print('\n'.join(distutils.core.run_setup('setup.py').install_requires))")
+                for f in $pymodules; do
+                    pip install "$f"
+                done
+            fi
         fi
 
     fi
