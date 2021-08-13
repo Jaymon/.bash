@@ -1,0 +1,18 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -eq 0 ]]; then
+
+    echo "usage: $(basename $0) SRC_PATH DEST_PATH"
+    echo "Convert SRC_PATH to DEST_PATH using ffmpeg"
+    exit 0
+
+fi
+
+srcpath=$1
+destpath=$2
+
+echo "Converting '$srcpath' to '$destpath'"
+ffmpeg -i "$srcpath" "$destpath"
+

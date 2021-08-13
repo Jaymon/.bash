@@ -113,25 +113,6 @@ function fi() {
 }
 
 
-#? biggest DIR LIMIT -> Finding the biggest files in DIR, showing LIMIT results
-# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Raghav-Yadav-2
-# http://unix.stackexchange.com/questions/17812/how-to-list-all-directories-according-to-their-size-without-including-the-pare
-#alias biggest='ls -lSrh'
-function biggest() {
-  path=$1
-  if [[ -z $path ]]; then
-    path=.
-  fi
-
-  size=$2
-  if [[ -z $size ]]; then
-    size="25"
-  fi
-
-  # http://stackoverflow.com/a/18496493/5006
-  find "$path" -maxdepth 5 -exec du -s {} + | sort -n | tail -$size | cut -d$'\t' -f2 | xargs -I{} du -h -s "{}"
-}
-
 #? mostused -> lists the most used commands on the shell
 # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Abhiroop-Sarkar
 alias mostused="history | awk '{a[$2]++}END{for(i in a){print a[i] \" \" i}}' | sort -rn | head"

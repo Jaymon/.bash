@@ -1,0 +1,42 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# biggest DIR LIMIT -> Finding the biggest files in DIR, showing LIMIT results
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Raghav-Yadav-2
+# http://unix.stackexchange.com/questions/17812/how-to-list-all-directories-according-to-their-size-without-including-the-pare
+#alias biggest='ls -lSrh'
+###############################################################################
+
+if [[ $# -gt 0 ]]; then 
+  if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [DIRECTORY]"
+    echo "Find the biggest files in DIRECTORY"
+    exit 0
+
+  fi
+fi
+
+
+path=$1
+if [[ -z $path ]]; then
+    path=.
+fi
+
+size=$2
+if [[ -z $size ]]; then
+    size="15"
+fi
+
+# find -exec finds all the files in $path and runs du on them, so they print out NNNN /path
+# sort - sorts the files numerically (sorts on the NNNN) and in reverse order
+# cut - gets rid of the NNNN
+# tr - converts the newline deliminated list into a NULL deliminated list, the reason we do
+#   this is because if a filename has a quote it will mess up xargs with the error:
+#   "xargs: unterminated quote"
+# xargs - run disk usage one more time, but this time make it human readable (eg, 1.8mb, 2.9G)
+
+# http://stackoverflow.com/a/18496493/5006
+find "$path" -type f -maxdepth 5 -exec du -s {} + | sort -nr | head -$size | cut -d$'\t' -f2 | tr '\n' '\0' | xargs -I{} -0 du -h -s "{}"
+

@@ -14,7 +14,7 @@
 
 # autodiscover the file to be extracted if no filename was passed in
 if [[ -z $1 ]]; then
-    filename=$(find . -name "*.part01.rar" | head -n 1)
+    filename=$(find . -name "*.part01.*" | head -n 1)
 
     if [[ -z $filename ]]; then
         filename=$(find . -name "*.rar" | head -n 1)

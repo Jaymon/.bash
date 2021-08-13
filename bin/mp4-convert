@@ -1,0 +1,23 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -eq 0 ]]; then
+
+    echo "usage: $(basename $0) SRC_PATH [SRC_PATH, ...]"
+    echo "Convert SRC_PATH(s) to mp4 using ffmpeg"
+    exit 0
+
+fi
+
+for srcpath in "$@"; do
+    fileroot="${srcpath%.*}"
+    destpath="${fileroot}.mp4"
+
+    if [[ -f $destpath ]]; then
+        echo "Skipping '$destpath' because it already exists"
+    else
+        video-convert "$srcpath" "$destpath"
+    fi
+done
+
