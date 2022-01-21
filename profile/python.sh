@@ -96,6 +96,9 @@ function pyname() {
 # virtual environment
 ###############################################################################
 
+# NOTE -- The pyvenv, pycreate, and pyactivate methods have to be functions because
+# they mess with the actual shell environment
+
 # pycreate [VIRTUAL-ENV-NAME] -> create a virtual environment
 function pycreate() {
 
@@ -223,27 +226,6 @@ function pyvenv() {
 
     pyactivate $env
 
-#    if [[ -n "$created_env" ]]; then
-##        if [[ -n "$PYVENV_REQUIREMENTS_FILE" ]]; then
-##            # we upgrade pip because https://github.com/pyca/cryptography/issues/2692
-##            #pip -q install --upgrade pip
-##            pip -q install -r "$PYVENV_REQUIREMENTS_FILE"
-##        fi
-#
-#        # this is for installing dependencies from the setup.py file, since I've moved
-#        # to just including my development repos in my path this could cause problems
-##        if python --version | grep "Python 3." > /dev/null 2>&1; then
-##            # https://stackoverflow.com/a/52701117/5006
-##            if [[ -f setup.py ]]; then
-##                pymodules=$(python -c "import distutils.core; print('\n'.join(distutils.core.run_setup('setup.py').install_requires))")
-##                for f in $pymodules; do
-##                    pip install "$f"
-##                done
-##            fi
-##        fi
-#
-#    fi
-
     #set +x
     #set +e
     set +o pipefail
@@ -267,14 +249,6 @@ function pycrm(){
 
 }
 alias rmpyc=pycrm
-
-
-### NOTE -- none of these seem to work, but pout.json does
-# ? ppj -> pretty print json to be used with pipe: cat json.txt|ppj
-# http://stackoverflow.com/questions/352098/how-to-pretty-print-json-from-the-command-line
-#jsonpp='python -mjson.tool'
-#ppj=jsonpp
-#ppjson=jsonpp
 
 
 #? pycd MODULE -> go to the source of the python module (eg, pycd foo.bar)
@@ -303,7 +277,6 @@ function pytouch() {
     fi
 
     #set -x
-
 
     # decide what template to use, if name ends with test then use test template
     template=$PYVENV_TEMPLATE

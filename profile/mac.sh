@@ -30,7 +30,6 @@ alias clipboard=pbcopy
 alias witch='type -all'
 
 
-
 #? fopen <PATH> -> Opens PATH in MacOS Finder
 #alias fopen='open -a Finder ./'
 function fopen () {

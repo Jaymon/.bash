@@ -130,10 +130,6 @@ alias less='less -M'
 alias ret='echo $?'
 
 
-
-###############################################################################
-
-
 #? incognito -> turn history off for this shell session
 # http://unix.stackexchange.com/a/10923
 function incognito () {
@@ -149,15 +145,4 @@ function incognito () {
   export TERM_TITLE="Incognito Mode"
 }
 alias incog=incognito
-
-# ? unincognito -> turn history back on for this shell session
-# TODO -- to make this work again, we would need to save the original HISTFILE
-# value and then restore it, but I normally just close the shell, so I've decided
-# to just remove this for now
-#function unincognito () {
-#  set -o history
-#  echo "You are no longer in incognito mode"
-#}
-
-
 

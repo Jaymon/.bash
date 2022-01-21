@@ -1,13 +1,4 @@
 
-###############################################################################
-# Includes
-###############################################################################
-# http://stackoverflow.com/a/12694189/5006
-#SH_INCLUDE_DIR="${BASH_SOURCE%/*}"
-#if [[ ! -d "$SH_INCLUDE_DIR" ]]; then SH_INCLUDE_DIR="$PWD"; fi
-#. "$SH_INCLUDE_DIR/env.sh"
-
-
 #? bd <NUM> -> how many directories to move back (eg, bd 2 = cd ../..)
 function bd() {
   back_dir=""
