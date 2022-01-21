@@ -42,45 +42,30 @@ Then you need to change your preferred shell to the new bash:
 
 Now, any newly opened terminals should use the new bash by default, you can verify by running:
 
-$ bash --version
+    $ bash --version
 
 
 ## To Install .bash
 
 Just clone this repository into some directory, and then source it in your `.bash_aliases` or `.bash_profile` file
 
-    . /path/to/repo/all.sh
-
-
-Usually, I do a little more checking:
-
-```sh
-# source my common library of bash things
-if [ -f ~/.bash/all.sh ]; then
-  . ~/.bash/all.sh
-fi
-```
-
-If you only want specific file, say just the utility functions:
-
-    . /path/to/repo/util.sh
-
-That's it! If you have sourced `all.sh`, you can see all the new commands you have at any time by running:
-
-    $ ?
-
-Yup, just the question mark. That should print out a helpful menu of all the commands available (remember, this only works if you sourced `all.sh`).
+    source /path/to/repo/bash_profile.sh
 
 
 ## Goodness
 
 ### Background color
 
-If you have sourced `mac.sh` and you drop a `.bgcolor` file in a directory with a format like this:
+If you have sourced `navigation.sh` and you drop a `.bgcolor` file in a directory with a format like this:
 
     R G B
 
 Where R, G, and B are integers between 1-255, then whenever you go into that directory, or a sub directory, the shell's background color will switch to the defined color. When you move out of that shell it will reset to whatever is defined in the environment variable `BGCOLOR_DEFAULT`.
+
+You just have to add `bgcolor_auto` to your prompt:
+
+    export PROMPT_COMMAND="$PROMPT_COMMAND;bgcolor_auto"
+
 
 ### TERM_TITLE
 
