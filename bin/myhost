@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? myhost -> return the hostname of the computer
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "return the hostname of the computer"
+    exit 0
+
+fi
+
+
+# http://apple.stackexchange.com/a/53042
+# http://superuser.com/a/430209
+if [ $(is_os Darwin) -eq 0 ]; then
+    scutil --get LocalHostName
+else
+    echo $HOSTNAME
+fi
+

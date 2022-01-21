@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? ncpu -> how many cpus and cores this machine has
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "how many cpus and cores this machine has"
+    exit 0
+
+fi
+
+
+# http://superuser.com/questions/49659/how-many-cores-i-am-using-on-a-linux-server
+# 5-30-12
+if [ $(is_os Darwin) -eq 0 ]; then
+
+    # Apple computers
+    system_profiler SPHardwareDataType
+
+else
+
+    # Linux
+    num_cpus=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
+    if [ $num_cpus -eq 0 ]; then num_cpus=1; fi
+
+    num_cores=$(grep -c ^processor /proc/cpuinfo)
+
+    echo "number of cpus: $num_cpus"
+    echo "number of cores: $num_cores"
+    echo "number of cores per cpu: $(($num_cores / $num_cpus))"
+
+fi
+

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? flussh IP-ADDRESS -> flush the ip address from the hosts file
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) USERNAME@HOST"
+    echo "flush the ip address from the hosts file"
+    exit 0
+
+fi
+
+
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
+
+# https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
+ssh-keygen -R "$@"
+

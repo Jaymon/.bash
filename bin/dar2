@@ -1,0 +1,61 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# put the computer to sleep
+#
+# example:
+#   $ touched
+#   $ touched /some/path
+#   $ touched /some/path 10
+#
+###############################################################################
+#? dar DIR SEARCH CMD [CMD-PARAMS] -> find sub path n DIR and run CMD [CMD-PARAMS] found-path
+
+function cd() {
+  pushd "$1"
+  dp=$(pwd)
+  echo $dp
+  export PWD="$dp"
+  echo $PWD
+  export CDPATH="$dp"
+}
+
+
+if [[ $# -eq 0 ]]; then
+  echo "dar - find subdirectories using SEARCH in DIR and run CMD"
+  echo "usage: dar DIR SEARCH CMD [CMD-PARAMS]"
+  return 1
+fi
+
+# let's build a prefix search string that find can use
+echo "getting directories..."
+directories=$(convert_to_prefix_search_path2 $2)
+echo "searching $1 for $directories"
+# http://unix.stackexchange.com/questions/24557/how-do-i-stop-a-find-from-descending-into-found-directories
+ds=$(find "$1" -not -path "*/\.*" -type d -iregex "$directories" -prune)
+
+echo "prompting..."
+IFS=$'\n'; ds=( $ds ); unset IFS
+userprompt_chosen=$(userprompt2 "${ds[@]}")
+#echo -e $userprompt_chosen
+#IFS=$'\n'; ds=( $(echo -e $prompt_choices) ); unset IFS
+echo "preparing chosen..."
+dar_cmd=${@:3}
+c=""
+IFS=$'\n'; ds=( $userprompt_chosen ); unset IFS
+for d in ${ds[@]}; do
+  if [[ -n "$c" ]]; then
+    c="$c;""$dar_cmd ${d}"
+  else
+    c="$dar_cmd ${d}"
+  fi
+done
+#echo $ds
+
+if [[ -n "$c" ]]; then
+  echo "running $3 with chosen directories..."
+  echo $c
+  eval $c
+fi
+

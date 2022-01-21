@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# gets a full path inside the temp directory for the given pieces
+#
+# code is based off of this gist: https://gist.github.com/cdown/1163649
+###############################################################################
+
+
+urlencode() {
+    # urlencode <string>
+
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-]) printf "$c" ;;
+            *) printf '%%%02X' "'$c"
+        esac
+    done
+}
+
+
+urldecode() {
+    # urldecode <string>
+
+    local url_encoded="${1//+/ }"
+    # https://gist.github.com/cdown/1163649#gistcomment-1277382 (fixes bug from original gist)
+    printf '%b' "${url_encoded//%/\\x}"
+}
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -eq 0 ]]; then
+
+    echo "usage: $(basename $0) {encode,decode} <STRING>"
+    echo "Encode or decode a url"
+    exit 0
+
+fi
+
+
+# https://stackoverflow.com/a/9057392/5006
+url${1} "${@:2}"
+

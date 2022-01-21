@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? wheref <NAME> -> find all files matching <NAME>
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) NAME"
+    echo "Find all files matching <NAME>"
+    exit 0
+
+fi
+
+>&2 echo "sudo find / -type f -iname $1"
+sudo find / -type f -iname "$1"
+

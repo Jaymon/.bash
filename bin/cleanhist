@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? cleanhist -> cleans up the .bash_history file
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "cleans up the .bash_history file, removes duplicated lines"
+    exit 0
+
+    #echo "Usage: remove duplicated lines without sortdt"
+    #echo "  cleanfile ~/.bash_history"
+fi
+
+path="~/.bash_history"
+
+if [[ -f "$path" ]]; then
+
+    local bkfile="${path}.backup"
+    # \+ does not work in OSX sed
+    # delte short commands, delete git related commands
+    sed 's/ *$//g;' ${path} | sed '/^.\{1,4\}$/d' | sed '/^g[nlabcdusfp]\{1,5\} .*/d' | sed '/^git [nr] /d' | sed '/^rm /d' | sed '/^cgnb /d' | sed '/^touch /d' > $bkfile
+    # @see Page on stack Overflow/questions/11532157/unix-removing-duplicate-lines-without-sorting
+    cat $bkfile | awk ' !x[$0]++' > ${path}
+    rm $bkfile
+
+fi
+

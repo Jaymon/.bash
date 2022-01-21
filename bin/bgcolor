@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#? bgcolor R G B -> set the bg color of the terminal, each color value from 1-255
+# currently works only with iTerm2
+# from https://gist.github.com/thomd/956095
+# howto for linux: http://askubuntu.com/questions/558280/changing-colour-of-text-and-background-of-terminal
+###############################################################################
+
+# we only want to bother if we are in MacOS
+if ! uname | grep -q "Darwin"; then
+    echo "CANNOT CHANGE TERMINAL COLOR ON NON-MAC TERMINAL"
+    exit 1
+fi
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) <R> <G> <B>"
+    echo "set the bg color of the terminal, each color value from 1-255"
+    echo "NOTE -- Only works on iTerm2"
+    exit 0
+
+fi
+
+
+R=$1
+G=$2
+B=$3
+
+# http://apple.stackexchange.com/questions/118464
+if [[ $TERM_PROGRAM == "iTerm.app" ]]; then
+
+    if [[ $TERM_PROGRAM_VERSION == 3* ]]; then
+
+        # iTerm >= 3
+        # found new syntax here: http://stackoverflow.com/a/28512260/5006
+        /usr/bin/osascript <<EOF
+tell application "iTerm"
+  tell current session of current window
+    set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+  end tell
+end tell
+EOF
+
+    else
+
+        # iTerm2 < 3
+        /usr/bin/osascript <<EOF
+tell application "iTerm"
+  tell the current terminal
+    tell the current session
+      set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+    end tell
+  end tell
+end tell
+EOF
+
+    fi
+
+fi
+

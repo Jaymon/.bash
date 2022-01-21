@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? ff <VALUES> -> (find file) wildcard join values and search for matches from the current dir down
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) NAME"
+    echo "(find file) wildcard join values and search for matches from the current dir down"
+    exit 0
+
+fi
+
+
+# set command: https://stackoverflow.com/a/2853811/5006 (bash display command)
+# find not part: https://askubuntu.com/a/318211 (find ignore dot directories)
+# wildcard joining: https://unix.stackexchange.com/a/528536/118750 (bash join passed in arguments with delimiter)
+v=$(printf "%s*" "$@")
+v="*${v}"
+set -x
+find . -not -path '*/\.*' -ipath "$v"
+set +x
+

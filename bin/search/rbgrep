@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? rbgrep PATTERN -> search ruby files for PATTERN
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) PATTERN"
+    echo "search ruby files for PATTERN"
+    exit 0
+
+fi
+
+typegrep rb "$@"
+

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+# this is here because I can never remember how to untar and unzip a freaking .tar.gz file
+#? untar FILE -> untar and unzip FILE (a .tar.gz file)
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <FILEPATH>"
+    echo "untar and unzip FILE (a .tar.gz file)"
+    exit 0
+
+fi
+
+
+# 2-20-12
+echo tar -xzf $1
+tar -xzf $1
+

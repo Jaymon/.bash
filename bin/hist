@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? hist <cmd|n> -> get rows in history matching cmd, or last n rows
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [CMD|N]"
+    echo "get rows in history matching cmd, or last n rows"
+    exit 0
+
+fi
+
+
+# since 3-14-12 this combined with histl (created 3-10-12)
+
+# set -x
+
+if [ "$#" -eq 0 ]; then
+
+    history | tail -n 25
+
+elif [ $(is_int $1) -eq 0 ]; then
+
+    history | tail -n $1
+
+else
+
+    history | grep $1
+
+fi
+
+# set +x
+

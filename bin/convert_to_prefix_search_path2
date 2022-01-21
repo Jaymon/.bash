@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+# build a prefix search path from an easier path, so fo/ba would become fo*/ba*$
+#
+###############################################################################
+#? convert_to_prefix_search_path [PATH] -> so fo/ba would become fo*/ba*$
+
+# So I originally had the shebang /bin/bash but that didn't work because this uses
+# some bash4 syntax and my /bin/bash is bash3
+# http://stackoverflow.com/questions/10376206/what-is-the-preferred-bash-shebang
+
+#set -x
+
+#directories="^.*"
+directories=".*"
+IFS=$'/'; ds=( $1 ); unset IFS
+dlast=${ds[-1]}
+ds=( ${ds[@]:0:${#ds[@]}-1} )
+for d in ${ds[@]}; do
+  directories+="${d}[^/]*/"
+done
+directories+="${dlast}[^/]*"
+echo $directories
+
+#set +x
+

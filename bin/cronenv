@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# turn current shell into an environment similar to what a cron script would run in
+#
+###############################################################################
+#? cronenv -> convert the shell to an environment similar to what a cron script would run in
+# http://stackoverflow.com/a/2546509/5006
+cron_env+="HOME=$HOME\n"
+cron_env+="LOGNAME=$LOGNAME\n"
+cron_env+="PATH=/usr/bin:/bin\n"
+cron_env+="SHELL=/bin/sh\n"
+cron_env+="PWD=$PWD\n"
+
+if [[ ! -z $LC_ALL ]]; then
+cron_env+="LC_ALL=$LC_ALL\n"
+fi
+
+env - `echo -e $cron_env` /bin/sh
+
+

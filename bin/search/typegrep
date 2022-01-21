@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? typegrep TYPE PATTERN -> search only files with extension TYPE for PATTERN
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 2 ]]; then
+
+    echo "usage: $(basename $0) TYPE PATTERN"
+    echo "search file with extension TYPE for PATTERN"
+    exit 0
+
+fi
+
+
+#set -x
+flags="-Rin"
+if [[ $2 =~ [A-Z] ]]; then
+    flags="-Rn"
+fi
+
+# http://stackoverflow.com/a/8906229/5006
+if git -C . rev-parse  > /dev/null 2>&1; then
+
+    # in order to filter the gitignored files we first just return the files that
+    # have matches, then whittle those down and then print the matches to the screen
+    grep $flags --include=*.$1 --files-with-matches "$2" "${@:3}" . \
+        | git check-ignore -vn --stdin \
+        | grep "^::" \
+        | cut -d$'\t' -f2 \
+        | tr '\n' '\0' \
+        | xargs -0 grep ${flags}H --line-number --color "$2"
+
+else
+
+    grep $flags --color --line-number --include=*.$1 "$2" "${@:3}" .
+
+fi
+#set +x
+
+

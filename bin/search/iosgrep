@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? iosgrep PATTERN -> search obj-c and swift files for PATTERN
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) PATTERN"
+    echo "search iOS files (*.m, *.h, and *.swift) files for PATTERN"
+    exit 0
+
+fi
+
+typegrep m "$@"
+typegrep h "$@"
+typegrep swift "$@"
+

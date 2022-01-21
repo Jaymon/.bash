@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? freespacedir -> Directory used space, the file size of folders and files ordered by biggest
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Directory used space, the file size of folders and files ordered by biggest"
+    exit 0
+
+fi
+
+
+#? dfs -> Directory used space, the file size of folders and files ordered by biggest
+# https://stackoverflow.com/a/14749369/5006
+# search: bash print size of files from current directory
+du -a -h | sort -hr
+
+

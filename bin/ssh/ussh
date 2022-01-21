@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? ussh -> unsecured ssh, this is handy for AWS and other boxes where the box's host key can change
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) USERNAME@HOST"
+    echo "unsecured ssh, this is handy for AWS and other boxes where the box's host key can change"
+    exit 0
+
+fi
+
+
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
+

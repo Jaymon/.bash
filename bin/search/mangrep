@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? mangrep <MANPAGE> <Q> -> Search manpage given in agument '1' for term given in argument '2' (case insensitive)
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 2 ]]; then
+
+    echo "usage: $(basename $0) <MANPAGE> <Q>"
+    echo "Search manpage given in agument '1' for term given in argument '2' (case insensitive)"
+    echo "Example: $(basename $0) mplayer codec"
+    exit 0
+
+fi
+
+
+# displays paginated result with colored search terms and two lines surrounding each hit.
+man $1 | grep -iC2 --color=always $2 | less
+

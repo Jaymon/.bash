@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? mostused -> lists the most used commands on the shell
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Lists the most used commands on the shell"
+    exit 0
+
+fi
+
+
+# https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Abhiroop-Sarkar
+history | awk '{a[$2]++}END{for(i in a){print a[i] \" \" i}}' | sort -rn | head
+

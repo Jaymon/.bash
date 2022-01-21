@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# gets a full path inside the temp directory for the given pieces
+#
+###############################################################################
+#? get_tmp [PATH] -> get the system appropriate temp directory
+tmp_dir="/tmp/" 
+
+if [ "$TMPDIR" != "" ]; then
+    tmp_dir="$TMPDIR"
+elif [ "$TMP" != "" ]; then
+    tmp_dir="$TMP"
+elif [ "$TEMP" != "" ]; then
+    tmp_dir="$TEMP"
+fi
+
+# make sure last char is a /
+# http://www.unix.com/shell-programming-scripting/14462-testing-last-character-string.html
+if [[ $tmp_dir != */ ]]; then
+    tmp_dir="$tmp_dir"/
+fi
+
+# http://stackoverflow.com/questions/12283463/in-bash-how-do-i-join-n-parameters-together-as-a-string
+if [ $# -gt 0 ]; then
+    IFS="/"
+    tmp_dir="$tmp_dir""$*"
+    unset IFS
+fi
+
+echo "$tmp_dir"
+

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? where <NAME> -> find all files and folders with NAME (supports * wildcard)
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) NAME"
+    echo "find all files and folders with NAME (supports * wildcard)"
+    exit 0
+
+fi
+
+
+BLUE='\033[0;34m'
+NONE='\033[0m' # Text Reset
+
+
+>&2 echo -e "${BLUE} = = = = Directories${NONE}"
+whered "$@"
+>&2 echo -e "${BLUE} = = = = Files${NONE}"
+wheref "$@"
+

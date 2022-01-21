@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? cs INPUT -> search all the files in current folder
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) NAME"
+    echo "search all the files in current folder"
+    exit 0
+
+fi
+
+
+grep --color=auto --exclude=*.pyc -Rin "$1" *
+

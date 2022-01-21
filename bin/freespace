@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? freespace -> how much free space is left on the hard drive
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "how much free space is left on the hard drive"
+    exit 0
+
+fi
+
+
+df -h | head -2 | tail -1 | tr -s ' ' | cut -d' ' -f4
+

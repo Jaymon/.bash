@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? running <NAME> -> return what processes matching NAME are currently running
+#
+# http://stackoverflow.com/questions/941338/shell-script-how-to-pass-command-line-arguments-to-an-unix-alias
+# quickly check what processes are running
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <NAME>"
+    echo "return what processes matching NAME are currently running"
+    exit 0
+
+fi
+
+
+# filter out the grep process
+ps aux | grep -v "grep" | grep $1
+

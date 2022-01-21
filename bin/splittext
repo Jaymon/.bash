@@ -1,0 +1,28 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+# https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash
+# search: bash split text on character
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
+
+    echo "usage: $(basename $0) DELIM TEXT"
+    echo "Split TEXT on DELIM without removing DELIM"
+    exit 0
+
+fi
+
+
+if [[ "$#" -eq 2 ]]; then
+    delim=$1
+    text=$2
+
+    OIFS=$IFS
+    IFS=$delim
+    for x in $text; do
+        echo "$x$delim"
+    done
+
+    IFS=$OIFS
+
+fi
+

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+# get the running time of the process that match user passed in value
+#? rtime <NAME> -> get running time of processes matching name'
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <NAME>"
+    echo "get the running time of the process that match user passed in value"
+    exit 0
+
+fi
+
+
+ps -eo pid,etime,args | grep -v "grep" | grep $1
+
+

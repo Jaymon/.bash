@@ -1,3 +1,5 @@
+# https://ss64.com/bash/syntax-inputrc.html
+
 # I actually don't think this works with my symlink, if I want to include it more
 # directly:
 #   bind -f ./inputrc
@@ -13,12 +15,23 @@
 # "\e\e[C": forward-word
 # "\e\e[D": backward-word
 
+
 # starts in insert mode, hit escape to move around the command line using vi bindings
 # for some reason, this needs to be before menu-complete, otherwise it turns off
 # menu completion
 set editing-mode vi
 
+
+# https://stackoverflow.com/a/51732355/5006
+# display all possible matches for an ambiguous pattern at first tab
 set show-all-if-ambiguous on
+
+# next tab(s) will cycle through matches
+TAB: menu-complete
+# shift tab cycles backward
+"\e[Z": menu-complete-backward
+
+
 set completion-ignore-case on
 set page-completions off
 
@@ -29,9 +42,11 @@ set page-completions off
 # on 5-26-2016 I disabled the above line because I found it way more annoying than
 # I thought I would and way less helpful
 
+
 # type control-d from anywhere on the line and the whole line is gone and you’re
 # ready to start fresh.
 "\C-d": kill-whole-line
+
 
 # http://old.nabble.com/show-all-if-ambiguous-broken--td1613156.html
 # http://stackoverflow.com/a/68449/5006
@@ -40,6 +55,13 @@ set page-completions off
 set mark-symlinked-directories on
 set show-all-if-unmodified on
 
+
 # none, visible or audible
 set bell-style none
+
+
+# Allow UTF-8 input and output, instead of showing stuff like $'\0123\0456'
+set input-meta on
+set output-meta on
+set convert-meta off
 

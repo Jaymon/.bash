@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? zombies -> list any found zombies
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "list any found zombies"
+    exit 0
+
+fi
+
+
+# since 3-12-12
+# http://www.debian-administration.org/articles/261
+ps -A -ostat,ppid,pid,args | grep -e '^[Zz]'
+

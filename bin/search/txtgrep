@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? txtgrep PATTERN -> search txt files for PATTERN
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) PATTERN"
+    echo "search text and markdown files for PATTERN"
+    exit 0
+
+fi
+
+typegrep txt "$@"
+typegrep md "$@"
+

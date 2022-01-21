@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? whered <NAME> -> find all directories matching <NAME>
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) NAME"
+    echo "Find all directories matching <NAME>"
+    exit 0
+
+fi
+
+>&2 echo "sudo find / -type d -iname $1"
+sudo find / -type d -iname "$1"
+

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? sticker <delim> <vars...> -> joins <vars> by <delim>
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 3 ]]; then
+
+    echo "usage: $(basename $0) <DELIM> <VARS...>"
+    echo "joins <VARS> by <DELIM>"
+    exit 0
+
+fi
+
+
+# http://stackoverflow.com/a/12283900
+delim=$1      # join delimiter
+shift
+oldIFS=$IFS   # save IFS, the field separator
+IFS=$delim
+result="$*"
+IFS=$oldIFS   # restore IFS
+echo $result
+

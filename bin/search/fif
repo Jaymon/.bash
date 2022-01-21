@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? fi <VALUES> -> (find IN file) grep all files in all subdirectories
+# https://stackoverflow.com/a/15287418/5006
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) NAME"
+    echo "(find IN file) grep all files in all subdirectories"
+    exit 0
+
+fi
+
+
+v=$(printf "%s*" "$@")
+v="*${v}"
+set -x
+grep -ir "$v" *
+set +x
+

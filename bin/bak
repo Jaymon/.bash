@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? bak <filepath> -> make a copy of filepath named filepath.bak
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <FILEPATH>"
+    echo "make a copy of FILEPATH named FILEPATH.bak"
+    exit 0
+
+fi
+
+
+# http://stackoverflow.com/a/68600/5006
+if [ -r $1 ]; then
+    cp $1{,.bak}
+else
+    sudo cp $1{,.bak}
+fi

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? uscp -> unsecured scp, this is handy for AWS and other boxes where the box's host key can change
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) PATHSRC PATHDEST"
+    echo "unsecured scp, this is handy for AWS and other boxes where the box's host key can change"
+    exit 0
+
+fi
+
+
+scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
+
+

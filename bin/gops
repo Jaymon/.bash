@@ -1,0 +1,46 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# This will convert a git url to a web url that can be opened in a browser
+#
+# This is handy when you have a shell open in a git repo and you want to open up
+# the repo's homepage on like Github in order to check something, which is something
+# I seem to do frequently
+#
+# possible urls that are converted
+# https://github.com/Jaymon/.bash.git
+# git@github.com:Jaymon/.bash.git
+# git@bitbucket.org:Username/repo.git
+# https://Username@bitbucket.org/Username/repo.git
+###############################################################################
+ 
+
+export FOO="foo"
+
+
+#builtin `echo ${0##*/} | tr \[:upper:] \[:lower:]` ${1+"$@"}
+builtin ${1+"$@"}
+
+exit 0
+
+
+while getopts "a:b:" opt; do
+  case $opt in
+    a)
+      echo "-$opt was triggered, Parameter: $OPTARG" >&2
+      ;;
+    b)
+      echo "-$opt was triggered, Parameter: $OPTARG" >&2
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+

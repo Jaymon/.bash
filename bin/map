@@ -1,0 +1,31 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# Copy the current working directory to the clipboard
+#
+# I spend more time than I care to admit running pwd, and then selecting it and
+# hitting cmd-c
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
+
+    echo "usage: $(basename $0) PATTERN COMMAND"
+    echo "Copy the current working directory to the clipboard"
+    exit 0
+
+fi
+
+pattern=$1
+cmd="${@:2}"
+echo "$pattern"
+echo "$cmd"
+
+#exit 0
+
+
+for f in $pattern; do
+    [[ -e "$f" ]] || continue
+    eval "$cmd"
+    #echo $f
+done

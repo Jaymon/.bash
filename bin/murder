@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? murder <NAME> -> run every process that matches NAME through sudo kill -9
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <NAME>"
+    echo "run every process that matches NAME through sudo kill -9"
+    exit 0
+
+fi
+
+
+RED='\033[0;31m'
+NONE='\033[0m' # Text Reset
+
+
+# 2-20-12
+# http://stackoverflow.com/questions/262597/how-to-kill-a-linux-process-by-stime-dangling-svnserve-processes
+echo -e "${RED}These will be killed:${NONE}"
+ps -eo pid,args | grep -v "grep" | grep $1
+# first 3 commands find the right running processes
+# sed - gets rid of any whitespace from the front of the command
+# cut - gets the first column (in this case, the pid)
+# xargs - runs each found pid through the kill command
+ps -eo pid,args | grep -v "grep" | grep "$1" | sed "s/^ *//" | cut -d' ' -f1 | xargs -i sudo kill -9 "{}"
+

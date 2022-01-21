@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? exif IMAGE_PATH -> Return all the information about an image
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <IMAGEPATH>"
+    echo "Return all the information about an image"
+    exit 0
+
+fi
+
+
+identify -verbose "$@"
+

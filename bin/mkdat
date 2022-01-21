@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? mkdat [SIZE] -> Creates a file of SIZE mb in current directory (all zeros)
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Creates a file of SIZE mb in current directory (all zeros)"
+    exit 0
+
+fi
+
+
+mkfile "$1"m ./"$1"MB.dat
+
