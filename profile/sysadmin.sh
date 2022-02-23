@@ -146,3 +146,19 @@ function incognito () {
 }
 alias incog=incognito
 
+
+#? envfile [FILE] -> Export all the environment variables of <FILE> (default to ./.env) into the current session
+function envfile () {
+    path=./.env
+    if [[ -n $1 ]]; then
+        path=$1
+    fi
+
+    if [[ -f "$path" ]]; then
+        set -o allexport
+        source "$path"
+        set +o allexport
+    fi
+}
+alias ef=envfile
+

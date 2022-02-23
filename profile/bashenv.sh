@@ -106,7 +106,8 @@ function set_bashenv() {
 }
 
 # I can't for the life of me figure out how to get the last command exit code in PS1, so I have to use PROMPT_COMMAND
-ret_prompt='RET=$?; history -a;set_bashenv'
+#ret_prompt='RET=$?; history -a;set_bashenv'
+ret_prompt='RET=$?; set_bashenv'
 if [[ -n $PROMPT_COMMAND ]]; then
   if [[ $PROMPT_COMMAND =~ ^[[:space:]]*\; ]]; then
     export PROMPT_COMMAND="$ret_prompt$PROMPT_COMMAND"
@@ -116,6 +117,10 @@ if [[ -n $PROMPT_COMMAND ]]; then
 else
   export PROMPT_COMMAND="$ret_prompt"
 fi
+
+
+#trap 'history -a' EXIT
+
 
 # http://niczsoft.com/2010/05/my-git-prompt/
 # http://stackoverflow.com/questions/4133904/ps1-line-with-git-current-branch-and-colors

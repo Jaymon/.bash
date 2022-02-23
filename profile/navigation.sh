@@ -151,9 +151,16 @@ function mkcd(){
 # from https://gist.github.com/thomd/956095
 # howto for linux: http://askubuntu.com/questions/558280/changing-colour-of-text-and-background-of-terminal
 #
-# This is designed to be used in a shell prompt
+# This is designed to be used in a shell prompt, something like:
+#
+#    export PROMPT_COMMAND="$PROMPT_COMMAND;bgcolor_auto"
+#
 ###############################################################################
 function bgcolor_auto () {
+
+    # NOTE -- I tried making this a command in the bin directory but it made the
+    # prompt really really slow, putting it back as a function sped the prompt back
+    # up to acceptably slow instead of infuriatingly slow
 
     # if we haven't specified a default bgcolor then go ahead and use my default
     # TODO -- probably make this pull the default from iterm, but this will work for
