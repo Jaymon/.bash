@@ -23,5 +23,13 @@ if ! uname | grep -q "Darwin"; then
     exit 1
 fi
 
-rm -rf ~/.Trash/*
+#rm -rf ~/.Trash/*
 
+# https://stackoverflow.com/a/48599695/5006
+/usr/bin/osascript > /dev/null 2>&1 <<EOT
+    tell application "Finder"
+        set warns before emptying of trash to false
+        empty trash
+        set warns before emptying of trash to true
+    end tell
+EOT

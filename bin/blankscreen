@@ -4,10 +4,30 @@
 ###############################################################################
 # blank the screen, but don't put the computer to sleep
 #
+# Ctrl+Shift+Eject will also blank the screen
+#
+# if your computer doesn't go to sleep you can use:
+#
+#   $ pmset -g
+#
+# and that will tell if you anything is keeping displaysleep from firing
+#
 # example:
 #   $ blankscreen
 #
 ###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0)"
+    echo "Turns off the screen/monitor but doesn't put the computer to sleep"
+    echo ""
+    echo "Ctrl+Shift+Eject will also blank the screen"
+    echo ""
+    pmset -g
+    exit 0
+
+fi
 
 
 # macos
@@ -15,6 +35,34 @@ if uname | grep -q "Darwin"; then
   # http://apple.stackexchange.com/a/266103
   echo "pmset displaysleepnow"
   pmset displaysleepnow
+
+  # This can fail with error: "pmset: Failed to put the display to sleep, error 1006"
+  # and I haven't been able to find a fix for it (March 25, 2022), the closest I found
+  # was:
+  #
+  #     $ osascript -e 'tell application "System Events" to sleep'
+  #
+  # but it puts the whole computer to sleep, not just the monitor. I looked up system
+  # events and there didn't seem to be any displaysleep event.(found how to browse
+  # the events from https://stackoverflow.com/questions/40456065/where-can-i-find-documentation-for-system-events#comment98874279_40456562)
+  #
+  # There are a bunch of pages about this, but there weren't really any better suggestions
+  # than using pmset
+  #
+  #     * https://apple.stackexchange.com/questions/35699/how-can-i-sleep-the-display-from-terminal
+  #     * https://forum.keyboardmaestro.com/t/sleep-screen-action-not-working-on-m1-mac/21188/6 - this
+  #       hints that pmset should be working in macos Monterey
+  #     * https://apple.stackexchange.com/questions/30420/applescript-to-disable-screen-saver-through-sending-keystroke
+  #     * https://arstechnica.com/civis/viewtopic.php?f=19&t=141290
+  #     * https://stackoverflow.com/questions/7701735/putting-the-display-to-sleep-shiftcontroleject-in-applescript
+  #     * https://superuser.com/questions/78222/applescript-to-lock-the-screen
+  #     * https://macscripter.net/viewtopic.php?id=24825
+  #     * https://web.archive.org/web/20161106204726/http://www.cocoabuilder.com/archive/cocoa/191807-sleep-display.html
+  #
+  # search:
+  #     * applescript system events reference
+  #     * applescript Ctrl+Shift+Eject
+
 fi
 
 
