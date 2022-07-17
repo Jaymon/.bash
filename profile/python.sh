@@ -164,11 +164,11 @@ function pyactivate() {
     echo "Sourced environ file: $environ_f"
   fi
 
-  req_f="requirements.txt"
-  if [[ -f "$req_f" ]]; then
-    pip install -r "$req_f"
-    echo "Installed dependencies in file: $req_f"
-  fi
+#  req_f="requirements.txt"
+#  if [[ -f "$req_f" ]]; then
+#    pip install -r "$req_f"
+#    echo "Installed dependencies in file: $req_f"
+#  fi
 
 }
 
