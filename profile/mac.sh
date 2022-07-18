@@ -91,7 +91,14 @@ alias rmds=dsrm
 
 #? pml <path> -> convert a binary plist to an xml plist you can read
 # http://initwithfunk.com/blog/2013/05/31/breaking-bad-with-dtrace/
-alias pml='plutil -convert xml1'
+#
+# via: https://scriptingosx.com/2016/11/editing-property-lists/
+# It looks like -extract is meant to get values from a property list, but there
+# is caveat. -extract will not merely get the value of a key in the property list
+# but will write it to a new file! And by default if you do not provide an new
+# output file path with the -o option it will overwrite the current file with
+# the extracted data.
+alias pml='plutil -convert xml1 -o -'
 alias plistxml=pml
 
 
