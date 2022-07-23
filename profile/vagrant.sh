@@ -6,7 +6,10 @@
 
 # echo out the box id in the given directory
 function get_vagrant_box_id () {
-  cat ./.vagrant/machines/default/virtualbox/id
+
+  if [[ -d "./.vagrant" ]]; then
+      cat $(find ./.vagrant -type f -iname id)
+  fi
 }
 
 # echo out the box ssh port

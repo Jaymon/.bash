@@ -168,3 +168,48 @@ function envfile () {
 }
 alias ef=envfile
 
+
+###############################################################################
+#
+#? h <cmd|n> -> get rows in history matching cmd, or last n rows
+#
+# since 3-14-12 this combined with histl (created 3-10-12), this was converted to
+# a bin script but bin scripts can't run history:
+# 
+# https://unix.stackexchange.com/questions/112354/history-stops-working-when-run-inside-bash-script
+#
+# So I've converted it back to an alias/function
+#
+###############################################################################
+function h () {
+    if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+        echo "usage: ${FUNCNAME[0]} [CMD|N]"
+        echo "get rows in history matching cmd, or last N rows"
+        return 0
+
+    fi
+
+    if [[ "$#" -eq 0 ]]; then
+
+        echo "history | tail -n 25"
+        history | tail -n 25
+        #cat $history_file | tail -n 25
+
+    elif [[ $(is_int $1; echo $?) -eq 0 ]]; then
+
+        echo "history | tail -n $1"
+        history | tail -n $1
+        #cat $history_file | tail -n $1
+
+    else
+
+        echo "history | grep -i $1"
+        history | grep -i $1
+        #cat $history_file | grep -i $1
+
+    fi
+
+}
+alias hist=h
+

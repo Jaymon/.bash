@@ -5,6 +5,8 @@
 #
 #? hist <cmd|n> -> get rows in history matching cmd, or last n rows
 #
+# https://unix.stackexchange.com/questions/112354/history-stops-working-when-run-inside-bash-script
+#
 ###############################################################################
 
 if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
@@ -15,22 +17,30 @@ if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
 
 fi
 
+history_file=~/.bash_history
+if [[ -n $HISTFILE ]]; then
+    history_file=$HISTFILE
+fi
+
 
 # since 3-14-12 this combined with histl (created 3-10-12)
 
 # set -x
 
-if [ "$#" -eq 0 ]; then
+if [[ "$#" -eq 0 ]]; then
 
-    history | tail -n 25
+    echo "history | tail -n 25"
+    cat $history_file | tail -n 25
 
-elif [ $(is_int $1) -eq 0 ]; then
+elif [[ $(is_int $1; echo $?) -eq 0 ]]; then
 
-    history | tail -n $1
+    echo "history | tail -n $1"
+    cat $history_file | tail -n $1
 
 else
 
-    history | grep $1
+    echo "history | grep -i $1"
+    cat $history_file | grep -i $1
 
 fi
 

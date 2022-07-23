@@ -17,6 +17,14 @@ if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
 fi
 
 
+history_file=~/.bash_history
+if [[ -n $HISTFILE ]]; then
+    history_file=$HISTFILE
+fi
+
 # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Abhiroop-Sarkar
-history | awk '{a[$2]++}END{for(i in a){print a[i] \" \" i}}' | sort -rn | head
+echo "= = = = Most Used Base Commands = = = ="
+cat "$history_file" | awk '{a[$1]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
+echo "= = = = Most Used Full Commands = = = ="
+cat "$history_file" | awk '{a[$0]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
 
