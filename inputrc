@@ -27,9 +27,13 @@ set editing-mode vi
 set show-all-if-ambiguous on
 
 # next tab(s) will cycle through matches
-TAB: menu-complete
+#TAB: menu-complete
 # shift tab cycles backward
-"\e[Z": menu-complete-backward
+#"\e[Z": menu-complete-backward
+# on 5-26-2016 I disabled the above line because I found it way more annoying than
+# I thought I would and way less helpful
+# I re-activated this on 1-21-2022 and have been annoyed by it ever since, so I'm
+# disabling this again on 12-10-2022
 
 
 set completion-ignore-case on
