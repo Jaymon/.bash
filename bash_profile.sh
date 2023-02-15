@@ -38,9 +38,14 @@ export DOTBASH_BIN_DIR=$DOTBASH_DIR/bin
 
 
 # add our bin file to the end of path
-export PATH="$PATH:$DOTBASH_BIN_DIR"
-export PATH="$PATH:$DOTBASH_BIN_DIR/search"
-export PATH="$PATH:$DOTBASH_BIN_DIR/ssh"
+for di in $(find "$DOTBASH_BIN_DIR" -type d); do
+    #echo $di
+    export PATH="$PATH:$di"
+done
+
+#export PATH="$PATH:$DOTBASH_BIN_DIR"
+#export PATH="$PATH:$DOTBASH_BIN_DIR/search"
+#export PATH="$PATH:$DOTBASH_BIN_DIR/ssh"
 
 
 # source all the environment files

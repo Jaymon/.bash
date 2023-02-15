@@ -5,6 +5,10 @@
 # sets the environment like the prompt and certain bash options
 ###############################################################################
 
+# this file should only be ran in login/interactive shells
+[ -z "$PS1" ] && return
+
+
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
