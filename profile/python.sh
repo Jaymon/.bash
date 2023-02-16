@@ -342,3 +342,11 @@ alias pymk=pytouch
 alias mkpy=pymk
 alias pymake=pymk
 
+
+# py-check-imports -> uses pylint to check for all unused imports
+function py-unused-imports() {
+    # https://github.com/PyCQA/pylint
+    # https://stackoverflow.com/questions/2540202/#comment81968262_2540211
+    pylint * | grep "unused-import"
+}
+
