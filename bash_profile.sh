@@ -33,7 +33,7 @@ if [[ -z "$DOTBASH_DIR" ]]; then
 fi
 
 export DOTBASH_INCLUDE_DIR=$DOTBASH_DIR/include
-export DOTBASH_PROFILE_DIR=$DOTBASH_DIR/profile
+export DOTBASH_PROFILE_DIR=$DOTBASH_DIR/profile.d
 export DOTBASH_BIN_DIR=$DOTBASH_DIR/bin
 
 

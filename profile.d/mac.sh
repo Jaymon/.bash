@@ -224,6 +224,13 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
 
   eval "$(/opt/homebrew/bin/brew shellenv)"
 
+  # add all the completions installed by homebrew
+  completion_d=$(brew --prefix)/etc/bash_completion.d
+  #completion_d=/usr/local/etc/bash_completion.d
+  for f in $completion_d/*; do
+    . "$f"
+  done
+
 fi
 
 
