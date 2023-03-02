@@ -227,8 +227,6 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
 fi
 
 
-
-
 # if which brew > /dev/null; then
 # 
 #   # Move (or Add) /usr/local/bin to the front of the PATH, this is for brew
