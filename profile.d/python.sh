@@ -7,6 +7,14 @@
 #? pyload -> upload the python project to pypi
 function pyload() {
 
+    if ! which twine > /dev/null; then
+        {
+            echo "twine is missing, install it!"
+            echo -e "\tpip install --upgrade twine"
+        } >&2
+        return 1
+    fi
+
     # https://stackoverflow.com/questions/26737222/how-to-make-pypi-description-markdown-work
     # https://stackoverflow.com/a/26737258/5006
     if python3 setup.py check; then

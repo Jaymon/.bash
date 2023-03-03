@@ -42,14 +42,6 @@ function fopen () {
 }
 
 
-if ! which trash > /dev/null 2>&1; then
-  # this is blocked because there is a brew script that can be installed that adds
-  # a trash command, which should take precedence
-  #? trash -> Moves a file to the MacOS trash
-  trash () { command mv "$@" ~/.Trash ; }
-fi
-
-
 #? preview -> Opens any file in MacOS Quicklook Preview
 preview () {
   qlmanage -p "$*" >& /dev/null;
@@ -226,33 +218,9 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
 
   # add all the completions installed by homebrew
   completion_d=$(brew --prefix)/etc/bash_completion.d
-  #completion_d=/usr/local/etc/bash_completion.d
   for f in $completion_d/*; do
     . "$f"
   done
 
 fi
-
-
-# if which brew > /dev/null; then
-# 
-#   # Move (or Add) /usr/local/bin to the front of the PATH, this is for brew
-#   # via: http://vim.1045645.n5.nabble.com/instructions-for-installing-macvim-td5580175.html
-#   [ -d /usr/local/bin ] && export PATH=$(echo /usr/local/bin:$PATH | sed -e 's;:/usr/local/bin;;')
-# 
-# 
-#   # add the brew sbin directory
-#   export PATH="$PATH:/usr/local/sbin"
-# 
-#   # add all the completions installed by homebrew
-#   #completion_d=$(brew --prefix)/etc/bash_completion.d
-#   completion_d=/usr/local/etc/bash_completion.d
-#   for f in $completion_d/*; do
-#     . "$f"
-#   done
-# 
-#   # https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md#opting-out
-#   export HOMEBREW_NO_ANALYTICS=1
-# 
-# fi
 
