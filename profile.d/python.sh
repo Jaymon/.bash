@@ -200,7 +200,8 @@ function pyvenv() {
     set -o pipefail
     #set -x
 
-    search=".venv"
+    python_version=$(python --version | cut -d ' ' -f2)
+    search=".venv${python_version}"
     if [ "$#" -gt 0 ]; then
         search=$1
     fi
