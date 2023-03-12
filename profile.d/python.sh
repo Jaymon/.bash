@@ -7,7 +7,7 @@
 #? pyload -> upload the python project to pypi
 function pyload() {
 
-    if ! which twine > /dev/null; then
+    if ! twine -h > /dev/null 2>&1; then
         {
             echo "twine is missing, install it!"
             echo -e "\tpip install --upgrade twine"
