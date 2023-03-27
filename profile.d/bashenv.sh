@@ -45,6 +45,15 @@ shopt -s cdspell
 shopt -s autocd
 
 
+# Only show the last 3 directories in the bash \w prompt
+# https://superuser.com/a/1067793/164279
+#   If set to a number greater than zero, the value is used as the number of
+#   trailing directory components to retain when expanding the \w and \W prompt
+#   string escapes (see PROMPTING below). Characters removed are replaced with
+#   an ellipsis
+PROMPT_DIRTRIM=3
+
+
 ###############################################################################
 # colors
 ###############################################################################

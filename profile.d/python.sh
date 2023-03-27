@@ -352,10 +352,85 @@ alias mkpy=pymk
 alias pymake=pymk
 
 
-# py-check-imports -> uses pylint to check for all unused imports
+#? py-check-imports -> uses pylint to check for all unused imports
 function py-unused-imports() {
     # https://github.com/PyCQA/pylint
     # https://stackoverflow.com/questions/2540202/#comment81968262_2540211
     pylint * | grep "unused-import"
+}
+
+
+#? pyreqs -> check requirements.txt file in current directory and only install modules
+# that are installed and managed by pip. The reason this exists is because I've
+# got a lot of packages I maintain that I don't want installed by default because I
+# have them in my PYTHONPATH and want them in my requirements.txt file for other
+# devs
+function pyreqs() {
+
+  dry_run=0
+  if [[ $1 == "--dry-run" ]]; then
+    dry_run=1
+  fi
+
+  if [[ -f "requirements.txt" ]]; then
+    requirements=$(cat "requirements.txt")
+
+  elif [[ -f "setup.py" ]]; then
+    # https://stackoverflow.com/a/58833680/
+    # https://stackoverflow.com/a/52701117/
+    # https://linuxize.com/post/bash-heredoc/
+    requirements=$(python <<- HEREDOC
+import distutils.core
+setup = distutils.core.run_setup('setup.py')
+for m in setup.install_requires:
+  print(m)
+print('# extras require')
+for k, ms in setup.extras_require.items():
+  print('# {}'.format(k))
+  for m in ms:
+    print(m)
+print('# tests require')
+for m in setup.tests_require:
+  print(m)
+HEREDOC
+    )
+
+  fi
+
+  # what's currently installed with pip?
+  pipped=$(pip freeze)
+
+  while read -r line; do
+    # ignore commented lines and empyt lines
+    [[ "$line" =~ ^[[:blank:]]*# ]] && continue
+    [[ -z "$line" ]] && continue
+
+    # many times pip name is foo-bar but python needs foo_bar
+    modname=$(echo $line | cut -d '=' -f1)
+    pymodname=${modname//-/_}
+
+    # check to see if the module is installed, if it isn't installed already then
+    # install it
+    if python -c "import $pymodname" 2>&1 | grep -q "No module named '$pymodname'"; then
+      if [[ $dry_run -eq 1 ]]; then
+        echo $line
+      else
+        pip install $line
+      fi
+
+    else
+      # if it is installed make sure it was installed by pip, if it wasn't installed
+      # by pip then ignore it
+      if echo $pipped | grep -qw "$modname"; then
+        if [[ $dry_run -eq 1 ]]; then
+          echo $line
+        else
+          pip install $line
+        fi
+      fi
+    fi
+
+  done <<< "$requirements"
+
 }
 
