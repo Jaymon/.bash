@@ -370,6 +370,13 @@ function pyreqs() {
   dry_run=0
   if [[ $1 == "--dry-run" ]]; then
     dry_run=1
+
+  elif [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+      >&2 echo "usage: $(basename $0) [--dry-run|--help]"
+      >&2 echo "Check project directory for dependencies and install them"
+      >&2 echo ""
+      >&2 echo "If --dry-run is specified then list dependencies but don't install them"
+      exit 0
   fi
 
   if [[ -f "requirements.txt" ]]; then
@@ -382,16 +389,19 @@ function pyreqs() {
     requirements=$(python <<- HEREDOC
 import distutils.core
 setup = distutils.core.run_setup('setup.py')
-for m in setup.install_requires:
-  print(m)
-print('# extras require')
-for k, ms in setup.extras_require.items():
-  print('# {}'.format(k))
-  for m in ms:
+if setup.install_requires:
+  for m in setup.install_requires:
     print(m)
-print('# tests require')
-for m in setup.tests_require:
-  print(m)
+if setup.extras_require:
+  print('# extras require')
+  for k, ms in setup.extras_require.items():
+    print('# {}'.format(k))
+    for m in ms:
+      print(m)
+if setup.tests_require:
+  print('# tests require')
+  for m in setup.tests_require:
+    print(m)
 HEREDOC
     )
 
