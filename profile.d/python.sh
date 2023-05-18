@@ -117,7 +117,7 @@ function pycreate() {
 
     env=$1
 
-    if python --version | grep "Python 3." > /dev/null 2>&1; then
+    if python --version 2>&1 | grep "Python 3." > /dev/null; then
         # https://stackoverflow.com/a/30233408/5006
         python -m venv ${@:2} "$env"
     else
@@ -200,7 +200,7 @@ function pyvenv() {
     set -o pipefail
     #set -x
 
-    python_version=$(python --version | cut -d ' ' -f2)
+    python_version=$(python --version 2>&1 | cut -d ' ' -f2)
     search=".venv${python_version}"
     if [ "$#" -gt 0 ]; then
         search=$1
