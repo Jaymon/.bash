@@ -182,6 +182,7 @@ printHelp "ll -t -> list entries sorted by modified date"
 # http://www.cyberciti.biz/faq/how-to-redirect-output-and-errors-to-devnull/
 printHelp "cmd &> file -> pipe the cmd stdout to a file or to /dev/null"
 printHelp "cmd > file 2>&1 -> pipe all cmd output to file or /dev/null"
+printHelp ">&2 echo -> echo to stderr"
 printHelp ". file -> pull aliases and functions from file into shell"
 printHelp "set -x/set +x -> turn on/off bash shell debugging"
 # https://askubuntu.com/questions/325368/how-do-i-remove-an-alias/325380#325380

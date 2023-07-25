@@ -210,6 +210,7 @@ alias another=neww
 ###############################################################################
 
 if [[ -f /opt/homebrew/bin/brew ]]; then
+  # https://docs.brew.sh/Shell-Completion
 
   # https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md#opting-out
   export HOMEBREW_NO_ANALYTICS=1
