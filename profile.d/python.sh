@@ -354,9 +354,14 @@ alias pymake=pymk
 
 #? py-check-imports -> uses pylint to check for all unused imports
 function py-unused-imports() {
+  if [[ -n $1 ]]; then
+    pylint "$1" | grep "unused-import"
+
+  else
     # https://github.com/PyCQA/pylint
     # https://stackoverflow.com/questions/2540202/#comment81968262_2540211
     pylint * | grep "unused-import"
+  fi
 }
 
 
