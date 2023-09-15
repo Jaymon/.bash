@@ -6,7 +6,6 @@
 
 #? pyload -> upload the python project to pypi
 function pyload() {
-
     if ! twine -h > /dev/null 2>&1; then
         {
             echo "twine is missing, install it!"
@@ -15,43 +14,53 @@ function pyload() {
         return 1
     fi
 
+    pybuild
+
     # https://stackoverflow.com/questions/26737222/how-to-make-pypi-description-markdown-work
     # https://stackoverflow.com/a/26737258/5006
-    if python3 setup.py check; then
-        python3 setup.py sdist
+    if pycheck; then
         # https://pypi.org/project/twine/
         twine upload dist/*
-        pyclean
     fi
 
+    pyclean
 }
 alias pyup=pyload
+alias pyupload=pyload
 
 
-# This is here just in case while I switch over all setup.py to support markdown
-function pyloadold () {
-  pandoc --from=markdown --to=rst --output=README.rst README.md
-  # http://inre.dundeemt.com/2014-05-04/pypi-vs-readme-rst-a-tale-of-frustration-and-unnecessary-binding/
-  if python setup.py check --restructuredtext --strict; then
-    python setup.py sdist upload
-    pyclean
+#? pycheck -> make sure the compiled python project is valid and ready for pypi
+function pycheck() {
+  twine check dist/*
+}
 
-  fi
+
+#? pybuild -> build dist and wheels for the module found in current directory
+function pybuild() {
+    if ! python -m build --help > /dev/null 2>&1; then
+        {
+            echo "build is missing, install it!"
+            echo -e "\tpip install --upgrade build"
+        } >&2
+        return 1
+    fi
+
+    python -m build --sdist --wheel
 }
 
 
 #? pyclean -> clean up the current directory of the residual python sdist crap
 function pyclean() {
     # !!! get rid of all the left over folders and files
-    if [[ -f setup.py ]]; then
+    if [[ -f setup.py ]] || [[ -f pyproject.toml ]]; then
         if which trash > /dev/null 2>&1; then
-            trash README.rst > /dev/null 2>&1
+            #trash README.rst > /dev/null 2>&1
             trash dist > /dev/null 2>&1
             trash *.egg-info > /dev/null 2>&1
             trash build > /dev/null 2>&1
             trash .eggs > /dev/null 2>&1
         else
-            rm README.rst > /dev/null 2>&1
+            #rm README.rst > /dev/null 2>&1
             rm -rf dist
             rm -rf *.egg-info
             rm -rf build
@@ -65,23 +74,8 @@ function pyclean() {
 
 
 #? pyreg -> register the python project in the current directory (must have setup.py)
+# TODO -- this needs to be switched over to twine register
 alias pyreg='python setup.py register'
-
-
-#? pycount [PACKAGE_NAME] -> print out how many downloads the given module has received
-function pycount() {
-  package_name=$1
-  if [[ -z $package_name ]]; then
-    package_name=$(python setup.py --name)
-  fi
-
-  if [[ -n $package_name ]]; then
-    # http://www.cambus.net/parsing-json-from-command-line-using-python/
-    curl "https://pypi.python.org/pypi/$package_name/json" -s | python -c 'import sys, json; print json.load(sys.stdin)["urls"][0]["downloads"]'
-  else
-    echo "No package name passed in and no setup.py found in current directory"
-  fi
-}
 
 
 #? pyname [PACKAGE_NAME] -> return whether there is a package with this name
