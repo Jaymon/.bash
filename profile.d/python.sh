@@ -375,7 +375,7 @@ function pyreqs() {
       >&2 echo "Check project directory for dependencies and install them"
       >&2 echo ""
       >&2 echo "If --dry-run is specified then list dependencies but don't install them"
-      exit 0
+      return 0
   fi
 
   if [[ -f "requirements.txt" ]]; then
