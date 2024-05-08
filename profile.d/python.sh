@@ -156,8 +156,7 @@ function pycreate() {
 # pyactivate [VIRTUAL-ENV-NAME] -> activate a virtual environment
 function pyactivate() {
 
-  fp=$(find . -type f -ipath "*$1/bin/activate")
-  #source "$fp"
+  fp=$(find "$1" -type f -ipath "*/bin/activate")
   . "$fp"
 
   environ_f=".env"
@@ -200,31 +199,19 @@ function pyvenv() {
         search=$1
     fi
 
-    # SEARCH FORWARD - search for the virtual env name forwards first
-    env=$(find . -type d -iname "$search" | head -n 1 | xargs basename)
-
-    # SEARCH BACKWARD - if we don't find the environment moving forward then move backwards
-    if [[ ! -d $env ]]; then
-        path=$PWD
-        while [[ $path != "/" ]]; do
-            env=$(find "$path" -type d -maxdepth 1 -iname "$search" | head -n 1 | xargs basename)
-          if [[ -d "$env" ]]; then
-            break
-          fi
-          path=$(dirname "$path")
-        done
-    fi
+    env=$(seek fb "$search")
+    basename=$(basename "$env")
 
     # We didn't find a current environment so let's set it to the default
     if [[ -z "$env" ]]; then
-        env=$search
+        basename=$search
     fi
 
-    echo "Using $env as the virtual environment name"
+    echo "Using $basename as the virtual environment name"
 
     if [[ ! -d "$env" ]]; then
-        pycreate $env ${@:2}
-        created_env=1
+        pycreate $basename ${@:2}
+        env=$(realpath "$basename")
     fi
 
     pyactivate $env

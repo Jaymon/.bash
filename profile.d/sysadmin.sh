@@ -213,3 +213,58 @@ function h () {
 }
 alias hist=h
 
+
+###############################################################################
+#
+# Golang specific stuff
+#
+###############################################################################
+
+#? govenv [NAME] -> Creates a pseudo golang virtual environment
+# Golang doesn't really need a virtual environment but sometimes I don't want
+# to pollute the global ~/.go directory with a bunch of crap
+function govenv() {
+
+    # we want to fail on any command failing in the script
+    #set -e
+    set -o pipefail
+    #set -x
+
+    version=$(go version | cut -d ' ' -f3 | cut -c 3-)
+    search=".govenv${version}"
+    if [ "$#" -gt 0 ]; then
+        search=$1
+
+    fi
+
+    env=$(seek fb "$search")
+    basename=$(basename "$env")
+
+    # We didn't find a current environment so let's set it to the default
+    if [[ -z "$env" ]]; then
+        basename=$search
+    fi
+
+    echo "Using $basename as the virtual environment name"
+
+    if [[ ! -d "$env" ]]; then
+      mkdir -p "$env/go"
+      #mkdir -p "$env/bin"
+
+    fi
+
+    # realpath has to be called after the $env path actually exists
+    env=$(realpath "$env")
+
+    # https://pkg.go.dev/cmd/go#hdr-GOPATH_environment_variable
+    export GOPATH="$env/go"
+    #export GOBIN="$env/bin"
+    export PATH="$PATH:${GOPATH}/go/bin"
+    # go env -w GOBIN=
+
+    #set +x
+    #set +e
+    set +o pipefail
+
+}
+

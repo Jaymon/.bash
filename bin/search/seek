@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? seek CMD DIRNAME [START-DIR] -> Find DIRNAME forward, backward, or both (CMD) in START-DIR
+#
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 2 ]]; then
+
+    echo "usage: $(basename $0) CMD DIRNAME [START-DIR]"
+    echo "Find DIRNAME in START-DIR"
+    echo "  * DIRNAME = The directory basename to find"
+    echo "  * CMD = forward, back, or both"
+    echo "  * START-DIR = The starting directory, defaults to ."
+    exit 0
+
+fi
+
+
+# we want to fail on any command failing in the script
+set -o pipefail
+
+
+basename=$2
+startdir=$3
+if [[ -z "$startdir" ]]; then
+    startdir=.
+
+fi
+
+if [[ $1 == "forward" ]] || [[ $1 == "f" ]]; then
+    # SEARCH FORWARD - search for the virtual env name forwards first
+    ret=$(find . -type d -iname "$basename" | head -n 1)
+
+elif [[ $1 == "back" ]] || [[ $1 == "backward" ]] || [[ $1 == "b" ]]; then
+    # SEARCH BACKWARD - if we don't find the environment moving forward then
+    # move backwards
+    path=$PWD
+    while [[ $path != "/" ]]; do
+        ret=$(find "$path" -type d -maxdepth 1 -iname "$basename" | head -n 1)
+
+        if [[ -d "$ret" ]]; then
+            break
+
+        fi
+
+        path=$(dirname "$path")
+
+    done
+
+elif [[ $1 == "bf" ]]; then
+    ret=$(seek backward "$basename" "$startdir")
+    if [[ ! -d "$ret" ]]; then
+        ret=$(seek forward "$basename" "$startdir")
+
+    fi
+
+elif [[ $1 == "fb" ]] || [[ $1 == "both" ]]; then
+    ret=$(seek forward "$basename" "$startdir")
+    if [[ ! -d "$ret" ]]; then
+        ret=$(seek backward "$basename" "$startdir")
+
+    fi
+
+else
+    >&2 echo "Unknown CMD $1"
+    seek --help
+    exit 1
+
+fi
+
+if [[ -d "$ret" ]]; then
+    ret=$(realpath "$ret")
+    echo $ret
+    exit 0
+
+else
+    exit 1
+
+fi
+
+set +o pipefail
+
