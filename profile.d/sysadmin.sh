@@ -242,7 +242,8 @@ function govenv() {
 
     # We didn't find a current environment so let's set it to the default
     if [[ -z "$env" ]]; then
-        basename=$search
+        env=$search
+        basename=$(basename $search)
     fi
 
     echo "Using $basename as the virtual environment name"
