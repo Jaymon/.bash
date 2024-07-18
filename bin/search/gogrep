@@ -3,19 +3,18 @@
 # vi: set ft=sh :
 ###############################################################################
 #
-#? pygrep PATTERN -> search python files for PATTERN
+#? pygrep PATTERN -> search golang files for PATTERN
 #
 ###############################################################################
 
 if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
 
     echo "usage: $(basename $0) PATTERN"
-    echo "search python files for PATTERN"
+    echo "search golang files for PATTERN"
     exit 0
 
 fi
 
-# http://stackoverflow.com/a/3816747 "$@" is handled as a special case by the
-# shell.  That is, "$@" is equivalent to "$1" "$2" ...
-typegrep py "$@" --exclude=*.pyc --exclude-dir="python2*" --exclude-dir="python3*"
+# https://unix.stackexchange.com/a/744968
+typegrep go "$@" --exclude-dir="./.*"
 
