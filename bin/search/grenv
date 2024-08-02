@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) <NEEDLE>"
+    echo "Search environment for <NEEDLE>"
+    exit 0
+
+fi
+
+
+env | grep -i --color=AUTO "$@"
+
