@@ -159,11 +159,16 @@ function pyactivate() {
   fp=$(find "$1" -type f -ipath "*/bin/activate")
   . "$fp"
 
-  environ_f=".env"
-  if [[ -f "$environ_f" ]]; then
-    . "$environ_f"
-    echo "Sourced environ file: $environ_f"
-  fi
+  environ_fs=(
+    ".envrc"
+    ".env"
+  )
+  for environ_f in "${environ_fs[@]}"; do
+    if [[ -f "$environ_f" ]]; then
+      . "$environ_f"
+      echo "Sourced environ file: $environ_f"
+    fi
+  done
 
 #  req_f="requirements.txt"
 #  if [[ -f "$req_f" ]]; then
