@@ -2,9 +2,7 @@
 # -*- mode: sh -*-
 # vi: set ft=sh :
 ###############################################################################
-# gets a full path inside the temp directory for the given pieces
-#
-# code is based off of this gist: https://gist.github.com/cdown/1163649
+# Encode or decode a URL, this changes %NN values to their actual character
 ###############################################################################
 
 
@@ -42,4 +40,5 @@ fi
 
 # https://stackoverflow.com/a/9057392/5006
 url${1} "${@:2}"
+echo ""
 
