@@ -1,0 +1,48 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
+    echo "usage: $(basename $0) <COUNT>"
+    echo "Count down passed in COUNT seconds"
+    exit 0
+
+fi
+
+
+interval=60
+total=0
+
+if [[ "$1" =~ "m"$ ]]; then
+  #echo "minutes"
+  # arithmetic operator is $(( ))
+  total=$((${1%m} * 60))
+
+elif [[ "$1" =~ "s"$ ]]; then
+  #echo "seconds"
+  total=${1%s}
+
+elif [[ "$1" =~ "h"$ ]]; then
+  #echo "hours"
+  total=$((${1%h} * 60 * 60))
+
+else
+  #echo "seconds"
+  total=${1::-1}
+
+fi
+
+# https://superuser.com/a/1368308
+padding=$(printf '%*s' ${#total} "")
+#echo ".${padding}."
+
+while [[ $total > 0 ]]; do
+    # https://stackoverflow.com/questions/12628327/how-to-show-and-update-echo-on-same-line#comment71448409_12628482
+    printf "${total}${padding}"\\r
+    total=$(($total - 1))
+    sleep 1
+
+done
+
+echo ""
+
