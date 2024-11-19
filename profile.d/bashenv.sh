@@ -89,6 +89,7 @@ C_LIGHTYELLOW="\[\033[1;33m\]"
 C_LIGHTBLUE="\[\033[1;34m\]"
 C_LIGHTPURPLE="\[\033[1;35m\]"
 C_LIGHTCYAN="\[\033[1;36m\]"
+# background colors
 C_BG_BLACK="\[\033[40m\]"
 C_BG_RED="\[\033[41m\]"
 C_BG_GREEN="\[\033[42m\]"
