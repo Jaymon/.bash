@@ -34,7 +34,7 @@ fi
 
 
 # only run this if we are in MacOS
-if ! uname | grep -q "Darwin"; then
+if uname | grep -q "Darwin"; then
     >&2 echo "$(basename $0) only available on MacOS"
     exit 1
 fi
