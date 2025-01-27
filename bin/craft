@@ -1,0 +1,151 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+# This script was made with the help of:
+# https://www.mux.com/articles/create-gifs-from-video-clips-with-ffmpeg
+# https://stackoverflow.com/questions/46508055/using-ffmpeg-to-cut-audio-from-to-position
+###############################################################################
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
+
+    echo "usage: $(basename $0) TYPE INPUT_PATH OUTPUT_PATH [--start HH:MM:SS] [--duration HH:MM:SS]"
+    echo "Create a TYPE file at OUTPUT_PATH from INPUT_PATH"
+    echo "TYPE is either 'gif' or 'mp3'"
+    echo "--start is the timecode in INPUT_PATH you want to start creating the gif"
+    echo "--duration is the length the gif should be (eg, 00:00:10 would be 10 seconds)"
+    exit 0
+
+fi
+
+# Parse the arguments
+
+output_type=""
+input_path=""
+output_path=""
+output_start=""
+output_run=""
+
+# https://stackoverflow.com/a/75827771
+args=("${@}")
+total_args=$#
+index=0
+while [[ $index -lt $total_args ]]; do
+    arg="${args[$index]}"
+    argval=""
+    if [[ $arg =~ ^-{1,2}[a-zA-Z0-9_-]+= ]]; then
+        argval="${arg#*=}"
+        arg="${arg%%=*}"
+
+    fi
+
+    case $arg in
+        --start | -s | -ss)
+            if [[ -n $argval ]]; then
+                output_start=$argval
+
+            else
+                index=$(($index + 1))
+                output_start="${args[$index]}"
+
+            fi
+            ;;
+
+        --duration | --runtime | -t)
+            if [[ -n $argval ]]; then
+                output_run=$argval
+
+            else
+                index=$(($index + 1))
+                output_run="${args[$index]}"
+
+            fi
+            ;;
+
+        *)
+            if [[ -z $output_type ]]; then
+                output_type="${args[$index]}"
+
+            else
+                if [[ -n $input_path ]]; then
+                    output_path="${args[$index]}"
+
+                else
+                    input_path="${args[$index]}"
+
+                fi
+            fi
+            ;;
+
+    esac
+
+    index=$(($index + 1))
+
+done
+
+
+# Build the command from the parsed arguments and run it
+
+cmd="ffmpeg"
+
+if [[ -n $output_start ]]; then
+    cmd="${cmd} -ss ${output_start}"
+
+fi
+
+if [[ -n $output_run ]]; then
+    cmd="${cmd} -t ${output_run}"
+
+fi
+
+if [[ -n $input_path ]]; then
+    cmd="${cmd} -i \"${input_path}\""
+    #cmd="${cmd} -i ${input_path}"
+
+else
+    >&2 echo "No input path specified"
+    exit 1
+
+fi
+
+if [[ $output_type == "gif" ]]; then
+    cmd="${cmd} -vf \"fps=15,scale=320:-1:flags=lanczos,split[s0][s1];"
+    cmd="${cmd}[s0]palettegen=max_colors=128:stats_mode=diff[p];"
+    cmd="${cmd}[s1][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle\""
+
+elif [[ $output_type == "mp3" ]]; then
+    # right now I'm not doing anything special
+    cmd="${cmd}"
+
+fi
+
+if [[ -n $output_path ]]; then
+    cmd="${cmd} \"${output_path}\""
+    #cmd="${cmd} ${output_path}"
+
+else
+    >&2 echo "No output path specified"
+    exit 1
+
+fi
+
+echo $cmd
+
+# for some reason, if there are quotes around input and output path then
+# ffmpeg no longer understands the path and so it can't find the input file
+# or write to the output file and I can't figure out why, this is only a
+# problem in a wrapper script like this, I can copy/paste the same command
+# into the terminal and it works just fine
+#
+# I'm getting around this problem by doing another bash call but I think I
+# could also dump all the variables into an array and then just pass the array
+# to ffmpeg like: "${ffmpeg_options[@]}"
+#
+# See:
+# https://stackoverflow.com/a/24663458 - for the array idea
+# https://wiki.keyboardmaestro.com/action/Execute_a_Shell_Script#Quoting_Strings
+#   this got me the closest to understanding the problem
+#   via: https://forum.keyboardmaestro.com/t/help-with-shell-script-on-selected-finder-images/36288/15
+
+bash -c "$cmd"
+
