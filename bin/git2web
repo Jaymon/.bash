@@ -86,8 +86,9 @@ fi
 git_url=$(echo $git_url | sed -e 's/\.git$//' | sed -e 's/\.giturl$//')
 
 if [[ -n $path ]]; then
+    branch=$(gitbranch)
     if [[ $git_url == *"github."* ]]; then
-        git_url=${git_url}/tree/master${path}
+        git_url=${git_url}/tree/${branch}${path}
     fi
 fi
 

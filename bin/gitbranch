@@ -1,0 +1,20 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+
+    echo "usage: $(basename $0) [DIRECTORY]"
+    echo "Find the current branch name of the github repo"
+    exit 0
+
+fi
+
+
+# default to the current working dir if nothing was passed in
+if [[ "$#" -gt 0 ]]; then
+    cd $1
+fi
+
+git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2
+

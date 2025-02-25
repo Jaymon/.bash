@@ -22,7 +22,7 @@ alias grem=gr
 alias gre=gr
 
 #? gbr -> return the name of the current branch
-alias gbr='git branch 2> /dev/null | grep -e ^* | cut -d" " -f 2'
+alias gbr=gitbranch
 
 function gpob () {
   git push origin $(gbr)
