@@ -1,0 +1,18 @@
+#!/bin/bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+
+# this will run if no arguments or --help|-h are passed in
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
+    echo "usage: $(basename $0) PATH-TO-AUDIO-FILE"
+    echo "Get the bitrate of an audio file"
+    exit 0
+
+fi
+
+# https://discussions.apple.com/thread/6011250?sortBy=rank
+bitrate=$(mdls -raw -name kMDItemTotalBitRate "$1")
+
+# print out the bitrate in kbps
+echo $((($bitrate / 1000)))
+
