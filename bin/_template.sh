@@ -8,10 +8,8 @@
 ###############################################################################
 
 # to use this template as a base for a new bin script
-# cp _template.sh NAME 
+# cp _template.sh <NAME>
 
-# there is an enote "Bash syntax" that has a lot of little code snippets that
-# are useful for remembering how to do things in bash
 
 # this will run if no arguments or --help|-h are passed in
 if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
@@ -22,39 +20,51 @@ if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
 fi
 
 
-# this will go through all passed in arguments letting the script support flags
-# (eg --NAME=VALUE, --NAME VALUE, -N VALUE). You specify the flags you want in
-# the case statement and set them accordingly
+# Flag/input parsing
+# this will go through all passed in keyword arguments letting the script
+# support flags (eg --NAME=VALUE, --NAME VALUE, -N VALUE). You specify the
+# flags you want in the case statement and set them accordingly.
+# The `*` catch-all handles positional arguments
 args=("${@}")
 total_args=$#
 index=0
 while [[ $index -lt $total_args ]]; do
-    arg="${args[$index]}"
-    argval=""
+    argval="${args[$index]}"
+    argname=$argval
+
     # support --NAME=VALUE syntax
-    if [[ $arg =~ ^-{1,2}[a-zA-Z0-9_-]+= ]]; then
+    if [[ $argval =~ ^-{1,2}[a-zA-Z0-9_-]+= ]]; then
         argval="${arg#*=}"
-        arg="${arg%%=*}"
+        argname="${arg%%=*}"
 
     fi
 
-    case $arg in
+    case $argval in
         --name | -n)
             if [[ -n $argval ]]; then
-                # use $argval to set the value of a variable to use later
-                #...=$argval
+                # You can use $argval to set the value of a variable to use
+                # later:
+                # <VARNAME>=$argval
 
             else
-                # increment index and then set the value to a variable to use
-                # later
-                #index=$(($index + 1))
-                #...="${args[$index]}"
+                # This supports --NAME VALUE syntax, increment index and then
+                # use the $args[$index] value to set the variable:
+                # index=$(($index + 1))
+                # <VARNAME>="${args[$index]}"
+
+                # or, this could be a boolean --NAME flag with no value, so
+                # set variable to true value
+                # <VARNAME>=1
+
+                # Remove this whole block if unneeded
 
             fi
             ;;
 
         *)
-            # this is a positional argument not a keyword argument
+            # this is a positional argument not a keyword argument so do
+            # something with $argval
+            # <VARNAME>=$argval
             ;;
 
     esac
@@ -77,7 +87,7 @@ if [[ "$#" -gt 0 ]]; then
 fi
 
 
-# only run this if we are in MacOS
+# only run in MacOS
 if uname | grep -q "Darwin"; then
     >&2 echo "$(basename $0) only available on MacOS"
     exit 1
