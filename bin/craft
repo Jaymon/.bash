@@ -114,8 +114,8 @@ if [[ $output_type == "gif" ]]; then
     cmd="${cmd}[s1][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle\""
 
 elif [[ $output_type == "mp3" ]]; then
-    # right now I'm not doing anything special
-    cmd="${cmd}"
+    # don't re-encode the audio, just cut
+    cmd="${cmd} -c:a copy"
 
 fi
 
