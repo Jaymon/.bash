@@ -34,8 +34,8 @@ while [[ $index -lt $total_args ]]; do
 
     # support --NAME=VALUE syntax
     if [[ $argval =~ ^-{1,2}[a-zA-Z0-9_-]+= ]]; then
-        argval="${arg#*=}"
-        argname="${arg%%=*}"
+        argname="${argval%%=*}"
+        argval="${argval#*=}"
 
     fi
 
