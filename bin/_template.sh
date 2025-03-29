@@ -11,10 +11,17 @@
 # cp _template.sh <NAME>
 
 
-# this will run if no arguments or --help|-h are passed in
-if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ "$#" -eq 0 ]]; then
+usage () {
     echo "usage: $(basename $0) ARGS GO HERE"
     echo "HELP DESCRIPTION"
+
+}
+
+
+# this will run if no arguments or --help|-h are passed in
+# you can remove --help|-h flag check if using input parsing below
+if [[ "$#" -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+    usage
     exit 0
 
 fi
@@ -26,50 +33,52 @@ fi
 # flags you want in the case statement and set them accordingly.
 # The `*` catch-all handles positional arguments
 args=("${@}")
-total_args=$#
 index=0
-while [[ $index -lt $total_args ]]; do
-    argval="${args[$index]}"
-    argname=$argval
+while [[ $index -lt $# ]]; do
+    arg="${args[$index]}"
+    index=$(($index + 1))
 
-    # support --NAME=VALUE syntax
-    if [[ $argval =~ ^-{1,2}[a-zA-Z0-9_-]+= ]]; then
-        argname="${argval%%=*}"
-        argval="${argval#*=}"
-
-    fi
-
-    case $argval in
+    case $arg in
         --name | -n)
-            if [[ -n $argval ]]; then
-                # You can use $argval to set the value of a variable to use
-                # later:
-                # <VARNAME>=$argval
+            # --NAME VALUE syntax, use the $args[$index] value to set the
+            # variable:
+            #   <VARNAME>="${args[$index]}"
+
+            # --NAME boolean flag with no value, so set variable to true
+            # value:
+            #   <VARNAME>=1
+            ;;
+
+        --name=*)
+            # --NAME=VALUE syntax, use the `$argval` value to set the
+            # variable:
+            #   <VARNAME>=$argval
+            argname="${arg%%=*}"
+            argval="${arg#*=}"
+
+            # if you want to combine --name | --name=*
+            regex="^-{1,2}[a-zA-Z0-9_-]+="
+            if [[ $arg =~ $regex ]]; then
+                # <VARNAME>=""${arg#*=}""
 
             else
-                # This supports --NAME VALUE syntax, increment index and then
-                # use the $args[$index] value to set the variable:
-                # index=$(($index + 1))
                 # <VARNAME>="${args[$index]}"
 
-                # or, this could be a boolean --NAME flag with no value, so
-                # set variable to true value
-                # <VARNAME>=1
-
-                # Remove this whole block if unneeded
-
             fi
+            ;;
+
+        --help | -h)
+            usage
+            exit 0
             ;;
 
         *)
             # this is a positional argument not a keyword argument so do
             # something with $argval
-            # <VARNAME>=$argval
+            # <VARNAME>=$arg
             ;;
 
     esac
-
-    index=$(($index + 1))
 
 done
 
@@ -93,4 +102,8 @@ if uname | grep -q "Darwin"; then
     exit 1
 
 fi
+
+# print out all passed in arguments
+#echo "${args[@]}"
+echo "$@"
 
