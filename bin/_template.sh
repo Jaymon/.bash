@@ -38,11 +38,13 @@ while [[ $index -lt $# ]]; do
     arg="${args[$index]}"
     index=$(($index + 1))
 
+    # ;; is stop, ;& is fallthrough to next rule
     case $arg in
         --name | -n)
             # --NAME VALUE syntax, use the $args[$index] value to set the
             # variable:
-            #   <VARNAME>="${args[$index]}"
+            #   <VARNAME>="${args[$index]}" # consume value
+            #   index=$(($index + 1)) # move passed consumed value
 
             # --NAME boolean flag with no value, so set variable to true
             # value:
@@ -106,4 +108,7 @@ fi
 # print out all passed in arguments
 #echo "${args[@]}"
 echo "$@"
+
+# run a string command
+# bash -c "$cmd"
 
