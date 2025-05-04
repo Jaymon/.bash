@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 # -*- mode: sh -*-
 # vi: set ft=sh :
-###############################################################################
-# BRIEF DESCRIPTION
-#
-# LONGER DESCRIPTION
-###############################################################################
 
 # to use this template as a base for a new bin script
 # cp _template.sh <NAME>
@@ -18,9 +13,15 @@ usage () {
 }
 
 
-# this will run if no arguments or --help|-h are passed in
-# you can remove --help|-h flag check if using input parsing below
-if [[ "$#" -eq 0 ]] || [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
+# print usage if no arguments are passed in
+if [[ "$#" -eq 0 ]]; then
+    usage
+    exit 0
+
+fi
+
+# print usage if requested
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then
     usage
     exit 0
 
@@ -28,10 +29,6 @@ fi
 
 
 # Flag/input parsing
-# this will go through all passed in keyword arguments letting the script
-# support flags (eg --NAME=VALUE, --NAME VALUE, -N VALUE). You specify the
-# flags you want in the case statement and set them accordingly.
-# The `*` catch-all handles positional arguments
 args=("${@}")
 index=0
 while [[ $index -lt $# ]]; do
@@ -75,8 +72,10 @@ while [[ $index -lt $# ]]; do
             ;;
 
         *)
+            # Catch-all to handle positional arguments
+
             # this is a positional argument not a keyword argument so do
-            # something with $argval
+            # something with $arg
             # <VARNAME>=$arg
             ;;
 
