@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ $# -lt 1 ]]; then
+
+    echo "usage: $(basename $0) PATTERN"
+    echo "search javascript/typescript files for PATTERN"
+    exit 0
+
+fi
+
+
+# grep -Rin --include="*.ts" --include="*.js" --exclude-dir="node_modules" "<SEARCH>" .
+
+# https://unix.stackexchange.com/a/744968
+typegrep js "$@" --exclude-dir="node_modules"
+typegrep ts "$@" --exclude-dir="node_modules"
+typegrep tsx "$@" --exclude-dir="node_modules"
+typegrep jsx "$@" --exclude-dir="node_modules"
+
