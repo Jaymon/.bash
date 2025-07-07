@@ -144,11 +144,12 @@ function pycreate() {
         echo "Created blank site customize file: $site_f"
     fi
 
-    # we map our custom sitecustomize.py.py file to the sitecustomize so it gets run when
-    # our virtualenv python gets run, this is really just for convenience
+    # we map our custom sitecustomize.py.py file to the sitecustomize so it
+    # gets run when our virtualenv python gets run, this is really just for
+    # convenience
     py_d=$(find "$env/lib" -type d -name "python*")
     #cp "$PYENV_CUSTOMIZE_FILE" "$py_d/sitecustomize.py"
-    $(pushd "$py_d"; ln -s ../../sitecustomize.py sitecustomize.py; popd) &>/dev/null
+    $(pushd "$py_d"; ln -s ../../sitecustomize.py sitecustomize.py; popd) &> /dev/null
 
 }
 
@@ -199,6 +200,7 @@ function pyvenv() {
     #set -x
 
     python_version=$(python --version 2>&1 | cut -d ' ' -f2)
+
     search=".venv${python_version}"
     if [ "$#" -gt 0 ]; then
         search=$1
@@ -217,6 +219,13 @@ function pyvenv() {
     if [[ ! -d "$env" ]]; then
         pycreate $basename ${@:2}
         env=$(realpath "$basename")
+    fi
+
+    # create an asdf file
+    asdf_basename=".tool-versions"
+    if [[ ! -f "$asdf_basename" ]]; then
+      echo "python ${python_version}" > "$asdf_basename"
+      echo "Created ${asdf_basename} with python $python_version"
     fi
 
     pyactivate $env
