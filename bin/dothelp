@@ -231,3 +231,6 @@ printHelp "ps auxf -> Show process tree/hierarchy"
 # http://www.cyberciti.biz/faq/unix-creating-symbolic-link-ln-command/
 printHelp "ln -s EXISTING_FILEPATH SYMBOLIC_FILEPATH -> I can never remember the order"
 
+# I can never remember this command
+printHelp "cut -d <CHAR> -f<INDEX> -> Divide line by <CHAR> and return <INDEX> column"
+
