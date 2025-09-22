@@ -211,7 +211,7 @@ printHelp "apt-get install --no-install-recommends <NAME> -> install the minimum
 printHelp "lsof -i :<PORT> -> see what is listening on that port"
 printHelp "pgrep <VALUE> -> process grep for VALUE"
 printHelp "shopt -> displays bash options settings"
-printHelp "stty sane -> Restore terminal settings when screwed up"
+printHelp "stty sane -> Restore terminal settings when screwed up or typed text is not appearing"
 # https://www.quora.com/What-are-some-time-saving-tips-that-every-Linux-user-should-know/answer/Sundeep-Agarwal-2
 printHelp "whatis <COMMAND> -> prints a single line description of command"
 
