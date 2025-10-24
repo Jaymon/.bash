@@ -234,3 +234,5 @@ printHelp "ln -s EXISTING_FILEPATH SYMBOLIC_FILEPATH -> I can never remember the
 # I can never remember this command
 printHelp "cut -d <CHAR> -f<INDEX> -> Divide line by <CHAR> and return <INDEX> column"
 
+printHelp "export TERM_TITLE=\"<WINDOW TITLE>\" -> Change terminal window title"
+
