@@ -248,8 +248,14 @@ function govenv() {
 
     echo "Using $basename as the virtual environment name"
 
+    gopath="$env/go"
+    gocache="$env/cache"
+    gobin="$gopath/bin"
+
     if [[ ! -d "$env" ]]; then
-      mkdir -p "$env/go"
+      mkdir -p "$env"
+      mkdir -p "$gopath"
+      mkdir -p "$gocache"
       #mkdir -p "$env/bin"
 
     fi
@@ -258,7 +264,8 @@ function govenv() {
     env=$(realpath "$env")
 
     # https://pkg.go.dev/cmd/go#hdr-GOPATH_environment_variable
-    export GOPATH="$env/go"
+    export GOPATH="$gopath"
+    export GOCACH="$gocache"
     #export GOBIN="$env/bin"
     export PATH="$PATH:${GOPATH}/go/bin"
     # go env -w GOBIN=
