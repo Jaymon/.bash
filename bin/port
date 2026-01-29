@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# -*- mode: sh -*-
+# vi: set ft=sh :
+###############################################################################
+#
+#? port PORT -> See what's listening on PORT
+#
+###############################################################################
+
+
+if [[ $1 == "--help" ]] || [[ $1 == "-h" ]] || [[ -z $1 ]]; then
+
+    echo "usage: $(basename $0) PORT"
+    echo "See what's listening on PORT"
+    exit 0
+
+fi
+
+echo "* * * lsof"
+lsof -i :$1
+echo ""
+
+echo "* * * netstat"
+netstat -vatn|grep $1
