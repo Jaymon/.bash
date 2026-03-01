@@ -21,4 +21,9 @@ lsof -i :$1
 echo ""
 
 echo "* * * netstat"
-netstat -vatn|grep $1
+noutput=$(netstat -vatn|grep "\.$1")
+if [[ -n $noutput ]]; then
+    netstat -vatn| head -n 2
+    echo "$noutput"
+
+fi
